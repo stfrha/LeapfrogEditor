@@ -1,0 +1,95 @@
+﻿<Window x:Class="LeapfrogEditor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ZoomAndPan="clr-namespace:ZoomAndPan;assembly=ZoomAndPan"
+        xmlns:local="clr-namespace:LeapfrogEditor"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="600" Width="1500">
+   <Window.DataContext>
+      <local:MainViewModel x:Name="myMainViewModel"/>
+   </Window.DataContext>
+   <Window.Resources>
+      <DataTemplate DataType="{x:Type local:CompoundObjectViewModel}">
+         <local:CompoundObjectUserControl />
+      </DataTemplate>
+   </Window.Resources>
+   <Grid>
+      <Grid.RowDefinitions>
+         <RowDefinition Height="25" />
+         <RowDefinition Height="*" />
+      </Grid.RowDefinitions>
+      <StackPanel Grid.Row="0" HorizontalAlignment="Left" Orientation="Horizontal">
+         <Button Content="Read" Width="75" Margin="2" 
+            Command="{Binding Reload}"/>
+         <Button Content="Save" Width="75" Margin="2"
+            Command="{Binding Save}"/>
+      </StackPanel>
+      <DockPanel Grid.Row="1">
+         <ScrollViewer
+			x:Name="scroller"
+            CanContentScroll="True"
+            VerticalScrollBarVisibility="Visible"
+            HorizontalScrollBarVisibility="Visible"
+            >
+
+            <!--
+            This is the control that handles zooming and panning.
+            -->
+            <ZoomAndPan:ZoomAndPanControl
+                x:Name="zoomAndPanControl"
+                Background="LightGray"
+	            MouseDown="zoomAndPanControl_MouseDown"
+	            MouseUp="zoomAndPanControl_MouseUp"
+	            MouseMove="zoomAndPanControl_MouseMove"
+	            MouseWheel="zoomAndPanControl_MouseWheel"
+                >
+
+               <!-- 
+				This is the content that is displayed.
+				-->
+               <Grid
+                    x:Name="theGrid"
+                    Width="2000"
+                    Height="2000"
+					>
+                  <!--
+            		This Canvas is the main part of the content that is displayed.
+					-->
+                  <Canvas
+						x:Name="content"
+						Background="White"
+					   MouseUp="Canvas_MouseUp"
+                  >
+                     <ContentControl 
+                        DataContext="{Binding MyCpVm}"
+                        Canvas.Left="{Binding PosX}"
+                        Canvas.Top="{Binding PosY}"
+                        Content="{Binding}"
+							   Cursor="Hand" />
+                  </Canvas>
+
+                  <!--
+					This Canvas and Border are used as a very simple way to render a drag rectangle that the user
+					uses to specify an area to zoom in on.
+					-->
+                  <Canvas
+						x:Name="dragZoomCanvas"
+						Visibility="Collapsed"
+						>
+                     <Border 
+							x:Name="dragZoomBorder"
+							BorderBrush="Black"
+							BorderThickness="1"
+							Background="Silver"
+							CornerRadius="1"
+							Opacity="0"
+							/>
+                  </Canvas>
+               </Grid>
+            </ZoomAndPan:ZoomAndPanControl>
+         </ScrollViewer>
+      </DockPanel>
+   </Grid>
+</Window>
