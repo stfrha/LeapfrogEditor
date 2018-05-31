@@ -14,26 +14,28 @@ namespace LeapfrogEditor
    {
       #region Declarations
 
-      private CompoundObject _modelObject;
-      private CompoundObjectViewModel _parent;
-      private CompositeCollection _shapes = new CompositeCollection()
-      {
-         new CollectionContainer { Collection = new ObservableCollection<StaticBoxViewModel>() },
-         new CollectionContainer { Collection = new ObservableCollection<DynamicBoxViewModel>() },
-         new CollectionContainer { Collection = new ObservableCollection<StaticPolygonViewModel>() },
-         new CollectionContainer { Collection = new ObservableCollection<DynamicPolygonViewModel>() },
-         new CollectionContainer { Collection = new ObservableCollection<BoxedSpritePolygonViewModel>() }
-      };
+      private CompoundObjectRef _refObject = new CompoundObjectRef();
+      private CompoundObjectViewModel _parent = new CompoundObjectViewModel();
+
+      private int _selectedStateIndex = 0;
+      private ObservableCollection<string> _states = new ObservableCollection<string>();
+
+      // Shapes and children collections are two dimensional to accomondate for all 
+      // State properties
+      private ObservableCollection<CompositeCollection> _shapes = new ObservableCollection<CompositeCollection>();
+
+      //private CompositeCollection _shapes = new CompositeCollection()
+      //{
+      //   new CollectionContainer { Collection = new ObservableCollection<StaticBoxViewModel>() },
+      //   new CollectionContainer { Collection = new ObservableCollection<DynamicBoxViewModel>() },
+      //   new CollectionContainer { Collection = new ObservableCollection<StaticPolygonViewModel>() },
+      //   new CollectionContainer { Collection = new ObservableCollection<DynamicPolygonViewModel>() },
+      //   new CollectionContainer { Collection = new ObservableCollection<BoxedSpritePolygonViewModel>() }
+      //};
+
+      private ObservableCollection<ObservableCollection<CompoundObjectViewModel>> _childObjects = new ObservableCollection<ObservableCollection<CompoundObjectViewModel>>();
 
       private bool _isSelected;
-
-      //private ObservableCollection<StaticBoxViewModel> _staticBoxes = new ObservableCollection<StaticBoxViewModel>();
-      //private ObservableCollection<DynamicBoxViewModel> _dynamicBoxes = new ObservableCollection<DynamicBoxViewModel>();
-      //private ObservableCollection<StaticPolygonViewModel> _staticPolygons = new ObservableCollection<StaticPolygonViewModel>();
-      //private ObservableCollection<DynamicPolygonViewModel> _dynamicPolygons = new ObservableCollection<DynamicPolygonViewModel>();
-      //private ObservableCollection<BoxedSpritePolygonViewModel> _boxedSpritePolygons = new ObservableCollection<BoxedSpritePolygonViewModel>();
-      private ObservableCollection<CompoundObjectViewModel> _childObjects = new ObservableCollection<CompoundObjectViewModel>();
-
 
       #endregion
 
@@ -41,22 +43,29 @@ namespace LeapfrogEditor
 
       public CompoundObjectViewModel()
       {
-         Parent = null;
-         ModelObject = new CompoundObject();
       }
 
       #endregion
 
       #region Properties
 
-      public CompoundObject ModelObject
+      public CompoundObjectRef RefObject
       {
-         get { return _modelObject; }
+         get { return _refObject; }
          set
          {
-            _modelObject = value;
+            _refObject = value;
             OnPropertyChanged("");
          }
+      }
+
+      public CompoundObject ModelObject
+      {
+         get
+         {
+            return _refObject.StateProperties[_selectedStateIndex].CompObj;
+         }
+         set { }
       }
 
       public CompoundObjectViewModel Parent
@@ -71,30 +80,30 @@ namespace LeapfrogEditor
 
       public string Name
       {
-         get { return _modelObject.Name; }
+         get { return _refObject.Name; }
          set
          {
-            _modelObject.Name = value;
+            _refObject.Name = value;
             OnPropertyChanged("Name");
          }
       }
 
       public string Type
       {
-         get { return _modelObject.Type; }
+         get { return ModelObject.Type; }
          set
          {
-            _modelObject.Type = value;
+            ModelObject.Type = value;
             OnPropertyChanged("Type");
          }
       }
 
       public string File
       {
-         get { return _modelObject.File; }
+         get { return _refObject.StateProperties[_selectedStateIndex].File; }
          set
          {
-            _modelObject.File = value;
+            _refObject.StateProperties[_selectedStateIndex].File = value;
             OnPropertyChanged("File");
          }
       }
@@ -103,11 +112,11 @@ namespace LeapfrogEditor
       {
          get
          {
-            return _modelObject.PosX;
+            return _refObject.StateProperties[_selectedStateIndex].PosX;
          }
          set
          {
-            _modelObject.PosX = value;
+            _refObject.StateProperties[_selectedStateIndex].PosX = value;
             OnPropertyChanged("PosX");
             OnPropertyChanged("BoundingBox");
 
@@ -121,16 +130,15 @@ namespace LeapfrogEditor
          }
       }
 
-
       public double PosY
       {
          get
          {
-            return _modelObject.PosY;
+            return _refObject.StateProperties[_selectedStateIndex].PosY;
          }
          set
          {
-            _modelObject.PosY = value;
+            _refObject.StateProperties[_selectedStateIndex].PosY = value;
             OnPropertyChanged("PosY");
             OnPropertyChanged("BoundingBox");
 
@@ -144,13 +152,30 @@ namespace LeapfrogEditor
          }
       }
 
-      public CompositeCollection Shapes
+      public int SelectedStateIndex
+      {
+         get { return _selectedStateIndex; }
+         set
+         {
+            _selectedStateIndex = value;
+            DeselectAllChildren();
+            OnPropertyChanged("");
+         }
+      }
+
+      public ObservableCollection<string> States
+      {
+         get { return _states; }
+         set { _states = value; }
+      }
+
+      public ObservableCollection<CompositeCollection> Shapes
       {
          get { return _shapes; }
          set { _shapes = value; }
       }
 
-      public ObservableCollection<CompoundObjectViewModel> ChildObjects
+      public ObservableCollection<ObservableCollection<CompoundObjectViewModel>> ChildObjects
       {
          get { return _childObjects; }
          set { _childObjects = value; }
@@ -162,14 +187,14 @@ namespace LeapfrogEditor
          {
             BoundingBoxRect bbr = new BoundingBoxRect();
 
-            foreach (IShapeInterface shape in Shapes)
+            foreach (IShapeInterface shape in Shapes[_selectedStateIndex])
             {
                Rect cb = shape.BoundingBox;
                cb.Offset(new Vector(shape.PosX, shape.PosY));
                bbr.AddRect(cb);
             }
 
-            foreach (CompoundObjectViewModel child in ChildObjects)
+            foreach (CompoundObjectViewModel child in ChildObjects[_selectedStateIndex])
             {
                Rect cb = child.BoundingBox;
                cb.Offset(new Vector(child.PosX, child.PosY));
@@ -194,21 +219,25 @@ namespace LeapfrogEditor
 
       #endregion
 
-      #region Public Methods
+      #region Private Methods
 
-      public void BuildViewModel(CompoundObject co)
+      private CompositeCollection SetShapes(CompoundObject co)
       {
-         Shapes.Clear();
-         ChildObjects.Clear();
-
-         ModelObject = co;
+         CompositeCollection shapes = new CompositeCollection()
+         {
+            new CollectionContainer { Collection = new ObservableCollection<StaticBoxViewModel>() },
+            new CollectionContainer { Collection = new ObservableCollection<DynamicBoxViewModel>() },
+            new CollectionContainer { Collection = new ObservableCollection<StaticPolygonViewModel>() },
+            new CollectionContainer { Collection = new ObservableCollection<DynamicPolygonViewModel>() },
+            new CollectionContainer { Collection = new ObservableCollection<BoxedSpritePolygonViewModel>() }
+         };
 
          foreach (StaticBox sb in co.StaticBoxes)
          {
             StaticBoxViewModel shapevm = new StaticBoxViewModel();
             shapevm.ModelObject = sb;
             shapevm.Parent = this;
-            Shapes.Add(shapevm);
+            shapes.Add(shapevm);
          }
 
          foreach (DynamicBox db in co.DynamicBoxes)
@@ -216,7 +245,7 @@ namespace LeapfrogEditor
             DynamicBoxViewModel shapevm = new DynamicBoxViewModel();
             shapevm.ModelObject = db;
             shapevm.Parent = this;
-            Shapes.Add(shapevm);
+            shapes.Add(shapevm);
          }
 
          foreach (StaticPolygon sp in co.StaticPolygons)
@@ -233,7 +262,7 @@ namespace LeapfrogEditor
             }
 
             shapevm.Parent = this;
-            Shapes.Add(shapevm);
+            shapes.Add(shapevm);
          }
 
          foreach (DynamicPolygon dp in co.DynamicPolygons)
@@ -250,7 +279,7 @@ namespace LeapfrogEditor
             }
 
             shapevm.Parent = this;
-            Shapes.Add(shapevm);
+            shapes.Add(shapevm);
          }
 
          foreach (BoxedSpritePolygon bsp in co.BoxedSpritePolygons)
@@ -267,27 +296,53 @@ namespace LeapfrogEditor
             }
 
             shapevm.Parent = this;
-            Shapes.Add(shapevm);
+            shapes.Add(shapevm);
          }
 
-         foreach (CompoundObject tco in co.ChildObjects)
+         return shapes;
+
+      }
+
+      private ObservableCollection<CompoundObjectViewModel> SetChildren(CompoundObject co)
+      {
+         ObservableCollection<CompoundObjectViewModel> tempChildren = new ObservableCollection<CompoundObjectViewModel>();
+
+         foreach (CompoundObjectRef tco in co.ChildObjectRefs)
          {
             CompoundObjectViewModel covm = new CompoundObjectViewModel();
-            covm.BuildViewModel(tco);
+            covm.RefObject = tco;
             covm.Parent = this;
-            ChildObjects.Add(covm);
+            covm.BuildViewModel(tco);
+            tempChildren.Add(covm);
          }
 
+         return tempChildren;
+      }
+
+      #endregion
+
+      #region Public Methods
+
+      public void BuildViewModel(CompoundObjectRef cor)
+      {
+         Shapes.Clear();
+         ChildObjects.Clear();
+
+         foreach (ObjectRefStateProperties sp in cor.StateProperties)
+         {
+            Shapes.Add(SetShapes(sp.CompObj));
+            ChildObjects.Add(SetChildren(sp.CompObj));
+         }
       }
 
       public void DeselectAllChildren()
       {
-         foreach (IShapeInterface shape in Shapes)
+         foreach (IShapeInterface shape in Shapes[_selectedStateIndex])
          {
             shape.IsSelected = false;
          }
 
-         foreach (CompoundObjectViewModel child in ChildObjects)
+         foreach (CompoundObjectViewModel child in ChildObjects[_selectedStateIndex])
          {
             child.DeselectAllChildren();
             child.IsSelected = false;

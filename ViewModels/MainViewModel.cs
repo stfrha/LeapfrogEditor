@@ -17,6 +17,8 @@ namespace LeapfrogEditor
 
       #region Declarations
 
+      private CompoundObjectRef _myCpRef = new CompoundObjectRef();
+      private ObjectRefStateProperties _myStateProp = new ObjectRefStateProperties();
       private CompoundObject _myCP = null;
       private CompoundObjectViewModel _myCpVm = new CompoundObjectViewModel();
 
@@ -27,13 +29,27 @@ namespace LeapfrogEditor
       public MainViewModel()
       {
          MyCP = CompoundObject.ReadFromFile("landing_scene.xml");
+         MyStateProp.CompObj = MyCP;
+         MyCpRef.StateProperties.Add(MyStateProp);
 
-         MyCpVm.BuildViewModel(MyCP);
+         MyCpVm.BuildViewModel(MyCpRef);
       }
 
       #endregion
 
       #region Properties
+
+      public CompoundObjectRef MyCpRef
+      {
+         get { return _myCpRef; }
+         set { _myCpRef = value; }
+      }
+
+      public ObjectRefStateProperties MyStateProp
+      {
+         get { return _myStateProp; }
+         set { _myStateProp = value; }
+      }
 
       public CompoundObject MyCP
       {
@@ -53,11 +69,11 @@ namespace LeapfrogEditor
 
       void ReloadExecute(Object parameter)
       {
-         MyCP = null;
-
          MyCP = CompoundObject.ReadFromFile("landing_scene.xml");
+         MyStateProp.CompObj = MyCP;
+         MyCpRef.StateProperties.Add(MyStateProp);
 
-         MyCpVm.BuildViewModel(MyCP);
+         MyCpVm.BuildViewModel(MyCpRef);
 
       }
 

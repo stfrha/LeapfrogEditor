@@ -60,6 +60,7 @@
     <Compile Include="Models\DragablePoint.cs" />
     <Compile Include="Models\DynamicBox.cs" />
     <Compile Include="Models\DynamicPolygon.cs" />
+    <Compile Include="Models\ObjectRefStateProperties.cs" />
     <Compile Include="Models\ScalableTexturePolygon.cs" />
     <Compile Include="Models\EditablePolygon.cs" />
     <Compile Include="Models\StaticBox.cs" />

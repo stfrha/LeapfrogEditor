@@ -362,7 +362,7 @@
    </UserControl.Resources>
    <Canvas
       x:Name="content" >
-      <ItemsControl ItemsSource="{Binding Shapes}">
+      <ItemsControl ItemsSource="{Binding Shapes[SelectedStateIndex]}">
          <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
                <Canvas/>
@@ -375,7 +375,7 @@
             </Style>
          </ItemsControl.ItemContainerStyle>
       </ItemsControl>
-      <ItemsControl ItemsSource="{Binding ChildObjects}">
+      <ItemsControl ItemsSource="{Binding ChildObjects[SelectedStateIndex]}">
          <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
                <Canvas/>

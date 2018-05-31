@@ -14,10 +14,7 @@ namespace LeapfrogEditor
       #region Declarations
 
       private string _name;
-      private string _type;
-      private string _file;
-      private double _posY;
-      private double _posX;
+      private ObservableCollection<ObjectRefStateProperties> _stateProperties = new ObservableCollection<ObjectRefStateProperties>();
 
       #endregion
 
@@ -39,34 +36,13 @@ namespace LeapfrogEditor
          set { _name = value; }
       }
 
-      [XmlAttribute("type")]
-      public string Type
+      [XmlElement("stateProperties")]
+      public ObservableCollection<ObjectRefStateProperties> StateProperties
       {
-         get { return _type; }
-         set { _type = value; }
+         get { return _stateProperties; }
+         set { _stateProperties = value; }
       }
-
-      [XmlAttribute("file")]
-      public string File
-      {
-         get { return _file; }
-         set { _file = value; }
-      }
-
-      [XmlAttribute("posX")]
-      public double PosX
-      {
-         get { return _posX; }
-         set { _posX = value; }
-      }
-
-      [XmlAttribute("posY")]
-      public double PosY
-      {
-         get { return _posY; }
-         set { _posY = value; }
-      }
-
+         
       #endregion
    }
 }
