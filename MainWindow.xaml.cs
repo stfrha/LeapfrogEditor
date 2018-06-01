@@ -443,7 +443,7 @@ namespace LeapfrogEditor
 
          if (mouseButtonDown == MouseButton.Left)
          {
-            mouseHandlingMode = MouseHandlingMode.DraggingRectangles;
+            mouseHandlingMode = MouseHandlingMode.DraggingObjects;
             origContentMouseDownPoint = e.GetPosition(content);
 
             UIElement rectangle = (UIElement)sender;
@@ -458,7 +458,7 @@ namespace LeapfrogEditor
       /// </summary>
       private void Rectangle_MouseUp(object sender, MouseButtonEventArgs e)
       {
-         if (mouseHandlingMode != MouseHandlingMode.DraggingRectangles)
+         if (mouseHandlingMode != MouseHandlingMode.DraggingObjects)
          {
             //
             // We are not in rectangle dragging mode.
@@ -484,7 +484,7 @@ namespace LeapfrogEditor
       /// </summary>
       private void Rectangle_MouseMove(object sender, MouseEventArgs e)
       {
-         if (mouseHandlingMode != MouseHandlingMode.DraggingRectangles)
+         if (mouseHandlingMode != MouseHandlingMode.DraggingObjects)
          {
             //
             // We are not in rectangle dragging mode, so don't do anything.

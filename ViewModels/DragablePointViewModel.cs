@@ -10,6 +10,7 @@ namespace LeapfrogEditor
    {
       #region Declarations
 
+      private MainViewModel _mainVm;
       private DragablePoint _modelObject;
       private EditablePolygonViewModel _parent;
 
@@ -20,30 +21,23 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public DragablePointViewModel()
+      public DragablePointViewModel(MainViewModel mainVm, EditablePolygonViewModel parent, DragablePoint modelObject)
       {
-         ModelObject = new DragablePoint();
-         Parent = null;
-         IsSelected = false;
-      }
-
-      public DragablePointViewModel(double posX, double posY, EditablePolygonViewModel parent)
-      {
+         MainVm = mainVm;
          Parent = parent;
-
-         if (Parent != null)
-         {
-            ModelObject = new DragablePoint(0, posX - Parent.PosX, posY - Parent.PosY);
-         }
-         else
-         {
-            ModelObject = new DragablePoint(0, posX, posY);
-         }
+         ModelObject = modelObject;
+         IsSelected = false;
       }
 
       #endregion
 
       #region Properties
+
+      public MainViewModel MainVm
+      {
+         get { return _mainVm; }
+         set { _mainVm = value; }
+      }
 
       public DragablePoint ModelObject
       {

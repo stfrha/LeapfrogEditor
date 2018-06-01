@@ -14,11 +14,11 @@ namespace LeapfrogEditor
    {
       #region Declarations
 
-      private CompoundObjectRef _refObject = new CompoundObjectRef();
-      private CompoundObjectViewModel _parent = new CompoundObjectViewModel();
+      private CompoundObjectRef _refObject;
+      private CompoundObjectViewModel _parent;
+      private MainViewModel _mainVm;
 
       private int _selectedStateIndex = 0;
-      private ObservableCollection<string> _states = new ObservableCollection<string>();
 
       // Shapes and children collections are two dimensional to accomondate for all 
       // State properties
@@ -41,13 +41,22 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public CompoundObjectViewModel()
+      public CompoundObjectViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, CompoundObjectRef refObject)
       {
+         MainVm = mainVm;
+         Parent = parent;
+         RefObject = refObject;
       }
 
       #endregion
 
       #region Properties
+
+      public MainViewModel MainVm
+      {
+         get { return _mainVm; }
+         set { _mainVm = value; }
+      }
 
       public CompoundObjectRef RefObject
       {
@@ -63,7 +72,14 @@ namespace LeapfrogEditor
       {
          get
          {
-            return _refObject.StateProperties[_selectedStateIndex].CompObj;
+            if (_refObject != null)
+            {
+               if (_refObject.StateProperties.Count > 0)
+               {
+                  return _refObject.StateProperties[_selectedStateIndex].CompObj;
+               }
+            }
+            return null;
          }
          set { }
       }
@@ -112,20 +128,34 @@ namespace LeapfrogEditor
       {
          get
          {
-            return _refObject.StateProperties[_selectedStateIndex].PosX;
+            if (_refObject != null)
+            {
+               if (_refObject.StateProperties.Count > 0)
+               {
+                  return _refObject.StateProperties[_selectedStateIndex].PosX;
+               }
+            }
+            return 0;
          }
          set
          {
-            _refObject.StateProperties[_selectedStateIndex].PosX = value;
-            OnPropertyChanged("PosX");
-            OnPropertyChanged("BoundingBox");
-
-            CompoundObjectViewModel p = Parent;
-
-            while (p != null)
+            if (_refObject != null)
             {
-               p.OnPropertyChanged("BoundingBox");
-               p = p.Parent;
+               if (_refObject.StateProperties.Count > 0)
+               {
+                  _refObject.StateProperties[_selectedStateIndex].PosX = value;
+
+                  OnPropertyChanged("PosX");
+                  OnPropertyChanged("BoundingBox");
+
+                  CompoundObjectViewModel p = Parent;
+
+                  while (p != null)
+                  {
+                     p.OnPropertyChanged("BoundingBox");
+                     p = p.Parent;
+                  }
+               }
             }
          }
       }
@@ -134,20 +164,34 @@ namespace LeapfrogEditor
       {
          get
          {
-            return _refObject.StateProperties[_selectedStateIndex].PosY;
+            if (_refObject != null)
+            {
+               if (_refObject.StateProperties.Count > 0)
+               {
+                  return _refObject.StateProperties[_selectedStateIndex].PosY;
+               }
+            }
+            return 0;
          }
          set
          {
-            _refObject.StateProperties[_selectedStateIndex].PosY = value;
-            OnPropertyChanged("PosY");
-            OnPropertyChanged("BoundingBox");
-
-            CompoundObjectViewModel p = Parent;
-
-            while (p != null)
+            if (_refObject != null)
             {
-               p.OnPropertyChanged("BoundingBox");
-               p = p.Parent;
+               if (_refObject.StateProperties.Count > 0)
+               {
+                  _refObject.StateProperties[_selectedStateIndex].PosY = value;
+
+                  OnPropertyChanged("PosY");
+                  OnPropertyChanged("BoundingBox");
+
+                  CompoundObjectViewModel p = Parent;
+
+                  while (p != null)
+                  {
+                     p.OnPropertyChanged("BoundingBox");
+                     p = p.Parent;
+                  }
+               }
             }
          }
       }
@@ -165,40 +209,92 @@ namespace LeapfrogEditor
 
       public ObservableCollection<string> States
       {
-         get { return _states; }
-         set { _states = value; }
+         get
+         {
+            ObservableCollection<string> s = new ObservableCollection<string>();
+
+            foreach (ObjectRefStateProperties sp in _refObject.StateProperties)
+            {
+               s.Add(sp.State);
+            }            
+
+            return s;
+         }
+         set { }
       }
 
-      public ObservableCollection<CompositeCollection> Shapes
+      public CompositeCollection Shapes
       {
-         get { return _shapes; }
-         set { _shapes = value; }
+         get
+         {
+            if (_shapes.Count > 0)
+            {
+               return _shapes[_selectedStateIndex];
+            }
+            return null;
+         }
+         set
+         {
+            if (_shapes.Count > 0)
+            {
+               _shapes[_selectedStateIndex] = value;
+            }
+         }
       }
 
-      public ObservableCollection<ObservableCollection<CompoundObjectViewModel>> ChildObjects
+      public ObservableCollection<CompoundObjectViewModel> ChildObjects
       {
-         get { return _childObjects; }
-         set { _childObjects = value; }
+         get
+         {
+            if (_childObjects.Count > 0)
+            {
+               return _childObjects[_selectedStateIndex];
+            }
+            return null;
+         }
+         set
+         {
+            if (_childObjects.Count > 0)
+            {
+               _childObjects[_selectedStateIndex] = value;
+            }
+         }
       }
 
       public Rect BoundingBox
       {
          get
          {
-            BoundingBoxRect bbr = new BoundingBoxRect();
-
-            foreach (IShapeInterface shape in Shapes[_selectedStateIndex])
+            if ((Shapes.Count == 0) && (ChildObjects.Count == 0))
             {
-               Rect cb = shape.BoundingBox;
-               cb.Offset(new Vector(shape.PosX, shape.PosY));
-               bbr.AddRect(cb);
+               return new Rect(0,0,0,0);
             }
 
-            foreach (CompoundObjectViewModel child in ChildObjects[_selectedStateIndex])
+            BoundingBoxRect bbr = new BoundingBoxRect();
+
+            if (Shapes.Count > 0)
             {
-               Rect cb = child.BoundingBox;
-               cb.Offset(new Vector(child.PosX, child.PosY));
-               bbr.AddRect(cb);
+               foreach (object o in Shapes)
+               {
+                  if (o is IShapeInterface)
+                  {
+                     IShapeInterface shape = (IShapeInterface)o;
+
+                     Rect cb = shape.BoundingBox;
+                     cb.Offset(new Vector(shape.PosX, shape.PosY));
+                     bbr.AddRect(cb);
+                  }
+               }
+            }
+
+            if (ChildObjects.Count > 0)
+            {
+               foreach (CompoundObjectViewModel child in ChildObjects)
+               {
+                  Rect cb = child.BoundingBox;
+                  cb.Offset(new Vector(child.PosX, child.PosY));
+                  bbr.AddRect(cb);
+               }
             }
 
             return bbr.BoundingBox;
@@ -234,68 +330,52 @@ namespace LeapfrogEditor
 
          foreach (StaticBox sb in co.StaticBoxes)
          {
-            StaticBoxViewModel shapevm = new StaticBoxViewModel();
-            shapevm.ModelObject = sb;
-            shapevm.Parent = this;
+            StaticBoxViewModel shapevm = new StaticBoxViewModel(MainVm, this, sb);
             shapes.Add(shapevm);
          }
 
          foreach (DynamicBox db in co.DynamicBoxes)
          {
-            DynamicBoxViewModel shapevm = new DynamicBoxViewModel();
-            shapevm.ModelObject = db;
-            shapevm.Parent = this;
+            DynamicBoxViewModel shapevm = new DynamicBoxViewModel(MainVm, this, db);
             shapes.Add(shapevm);
          }
 
          foreach (StaticPolygon sp in co.StaticPolygons)
          {
-            StaticPolygonViewModel shapevm = new StaticPolygonViewModel();
-            shapevm.ModelObject = sp;
+            StaticPolygonViewModel shapevm = new StaticPolygonViewModel(MainVm, this, sp);
 
             foreach (DragablePoint dragPoint in sp.Points)
             {
-               DragablePointViewModel dragPointVm = new DragablePointViewModel();
-               dragPointVm.Parent = shapevm;
-               dragPointVm.ModelObject = dragPoint;
+               DragablePointViewModel dragPointVm = new DragablePointViewModel(MainVm, shapevm, dragPoint);
                shapevm.PointVms.Add(dragPointVm);
             }
 
-            shapevm.Parent = this;
             shapes.Add(shapevm);
          }
 
          foreach (DynamicPolygon dp in co.DynamicPolygons)
          {
-            DynamicPolygonViewModel shapevm = new DynamicPolygonViewModel();
-            shapevm.ModelObject = dp;
+            DynamicPolygonViewModel shapevm = new DynamicPolygonViewModel(MainVm, this, dp);
 
             foreach (DragablePoint dragPoint in dp.Points)
             {
-               DragablePointViewModel dragPointVm = new DragablePointViewModel();
-               dragPointVm.Parent = shapevm;
-               dragPointVm.ModelObject = dragPoint;
+               DragablePointViewModel dragPointVm = new DragablePointViewModel(MainVm, shapevm, dragPoint);
                shapevm.PointVms.Add(dragPointVm);
             }
 
-            shapevm.Parent = this;
             shapes.Add(shapevm);
          }
 
          foreach (BoxedSpritePolygon bsp in co.BoxedSpritePolygons)
          {
-            BoxedSpritePolygonViewModel shapevm = new BoxedSpritePolygonViewModel();
-            shapevm.ModelObject = bsp;
+            BoxedSpritePolygonViewModel shapevm = new BoxedSpritePolygonViewModel(MainVm, this, bsp);
 
             foreach (DragablePoint dragPoint in bsp.Points)
             {
-               DragablePointViewModel dragPointVm = new DragablePointViewModel();
-               dragPointVm.Parent = shapevm;
-               dragPointVm.ModelObject = dragPoint;
+               DragablePointViewModel dragPointVm = new DragablePointViewModel(MainVm, shapevm, dragPoint);
                shapevm.PointVms.Add(dragPointVm);
             }
 
-            shapevm.Parent = this;
             shapes.Add(shapevm);
          }
 
@@ -309,9 +389,7 @@ namespace LeapfrogEditor
 
          foreach (CompoundObjectRef tco in co.ChildObjectRefs)
          {
-            CompoundObjectViewModel covm = new CompoundObjectViewModel();
-            covm.RefObject = tco;
-            covm.Parent = this;
+            CompoundObjectViewModel covm = new CompoundObjectViewModel(MainVm, this, tco);
             covm.BuildViewModel(tco);
             tempChildren.Add(covm);
          }
@@ -325,24 +403,30 @@ namespace LeapfrogEditor
 
       public void BuildViewModel(CompoundObjectRef cor)
       {
-         Shapes.Clear();
-         ChildObjects.Clear();
+         _shapes.Clear();
+         _childObjects.Clear();
 
          foreach (ObjectRefStateProperties sp in cor.StateProperties)
          {
-            Shapes.Add(SetShapes(sp.CompObj));
-            ChildObjects.Add(SetChildren(sp.CompObj));
+            _shapes.Add(SetShapes(sp.CompObj));
+            _childObjects.Add(SetChildren(sp.CompObj));
          }
       }
 
       public void DeselectAllChildren()
       {
-         foreach (IShapeInterface shape in Shapes[_selectedStateIndex])
+
+         foreach (object o in Shapes)
          {
-            shape.IsSelected = false;
+            if (o is IShapeInterface)
+            {
+               IShapeInterface shape = (IShapeInterface)o;
+
+               shape.IsSelected = false;
+            }
          }
 
-         foreach (CompoundObjectViewModel child in ChildObjects[_selectedStateIndex])
+         foreach (CompoundObjectViewModel child in ChildObjects)
          {
             child.DeselectAllChildren();
             child.IsSelected = false;

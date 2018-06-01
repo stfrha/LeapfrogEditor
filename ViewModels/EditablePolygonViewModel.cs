@@ -13,6 +13,7 @@ namespace LeapfrogEditor
    {
       #region Declarations
 
+      private MainViewModel _mainVm;
       private EditablePolygon _polygonObject;
       private CompoundObjectViewModel _parent;
       private ObservableCollection<DragablePointViewModel> _pointVms = new ObservableCollection<DragablePointViewModel>();
@@ -23,21 +24,22 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public EditablePolygonViewModel()
+      public EditablePolygonViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, EditablePolygon pointObject)
       {
-         Parent = null;
-         PolygonObject = new EditablePolygon();
-      }
-
-      public EditablePolygonViewModel(EditablePolygon pointObject)
-      {
-         Parent = null;
+         MainVm = mainVm;
+         Parent = parent;
          PolygonObject = pointObject;
       }
 
       #endregion
 
       #region Properties
+
+      public MainViewModel MainVm
+      {
+         get { return _mainVm; }
+         set { _mainVm = value; }
+      }
 
       public EditablePolygon PolygonObject
       {
@@ -227,7 +229,8 @@ namespace LeapfrogEditor
 
       public void AddPoint(Point point)
       {
-         DragablePointViewModel newPoint = new DragablePointViewModel(point.X, point.Y, this);
+         DragablePoint np = new DragablePoint(1, point.X, point.Y);
+         DragablePointViewModel newPoint = new DragablePointViewModel(MainVm, this, np);
          PointVms.Add(newPoint);
          PolygonObject.AddPoint(newPoint.ModelObject);
       }
@@ -240,7 +243,8 @@ namespace LeapfrogEditor
 
       public DragablePointViewModel InsertPoint(Point insertMe, DragablePointViewModel insertBeforeMe)
       {
-         DragablePointViewModel newPoint = new DragablePointViewModel(insertMe.X, insertMe.Y, this);
+         DragablePoint np = new DragablePoint(1, insertMe.X, insertMe.Y);
+         DragablePointViewModel newPoint = new DragablePointViewModel(MainVm, this, np);
 
          int index = PointVms.IndexOf(insertBeforeMe);
          if (index >= 0)

@@ -15,10 +15,6 @@ namespace LeapfrogEditor
 
       private double _posY;
       private double _posX;
-      private double _textureWidth;
-      private double _textureHeight;
-      private double _textureOffsetX;
-      private double _textureOffsetY;
 
       private ObservableCollection<DragablePoint> _points = new ObservableCollection<DragablePoint>();
       private ObservableCollection<Triangle> _triangles = new ObservableCollection<Triangle>();

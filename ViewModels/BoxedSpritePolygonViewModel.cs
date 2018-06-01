@@ -13,21 +13,30 @@ namespace LeapfrogEditor
    {
       #region Declarations
 
+      private MainViewModel _mainVm;
       private BoxedSpritePolygon _modelObject;
 
       #endregion
 
       #region Constructors
 
-      public BoxedSpritePolygonViewModel()
+      public BoxedSpritePolygonViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, BoxedSpritePolygon modelObject) :
+         base(mainVm, parent, modelObject)
       {
-         ModelObject = new BoxedSpritePolygon();
+         MainVm = mainVm;
+         ModelObject = modelObject;
          PolygonObject = (EditablePolygon)ModelObject;
       }
 
       #endregion
 
       #region Properties
+
+      public MainViewModel MainVm
+      {
+         get { return _mainVm; }
+         set { _mainVm = value; }
+      }
 
       public BoxedSpritePolygon ModelObject
       {
@@ -57,6 +66,16 @@ namespace LeapfrogEditor
          {
             _modelObject.Texture = value;
             OnPropertyChanged("Texture");
+         }
+      }
+
+      public double Angle
+      {
+         get { return _modelObject.Angle; }
+         set
+         {
+            _modelObject.Angle = value;
+            OnPropertyChanged("Angle");
          }
       }
 

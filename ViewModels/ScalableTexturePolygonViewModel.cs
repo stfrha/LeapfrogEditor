@@ -19,12 +19,8 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public ScalableTexturePolygonViewModel()
-      {
-         TexturePolygonObject = new ScalableTexturePolygon();
-      }
-
-      public ScalableTexturePolygonViewModel(ScalableTexturePolygon pointObject)
+      public ScalableTexturePolygonViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, ScalableTexturePolygon pointObject) :
+         base(mainVm, parent, pointObject)
       {
          TexturePolygonObject = pointObject;
       }

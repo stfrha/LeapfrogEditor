@@ -25,7 +25,9 @@
             Command="{Binding Reload}"/>
          <Button Content="Save" Width="75" Margin="2"
             Command="{Binding Save}"/>
-      </StackPanel>
+         <Button Content="ChangeState" Width="75" Margin="2"
+            Command="{Binding State}"/>
+        </StackPanel>
       <DockPanel Grid.Row="1">
          <ScrollViewer
 			x:Name="scroller"

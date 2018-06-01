@@ -20,11 +20,12 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public DynamicPolygonViewModel()
+      public DynamicPolygonViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, DynamicPolygon modelObject) :
+         base(mainVm, parent, modelObject)
       {
-         ModelObject = new DynamicPolygon();
-         PolygonObject = (EditablePolygon)ModelObject;
-         TexturePolygonObject = (ScalableTexturePolygon)ModelObject;
+         MainVm = mainVm;
+         Parent = parent;
+         ModelObject = modelObject;
       }
 
       #endregion

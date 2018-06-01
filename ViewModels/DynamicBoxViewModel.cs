@@ -13,6 +13,7 @@ namespace LeapfrogEditor
    {
       #region Declarations
 
+      private MainViewModel _mainVm;
       private DynamicBox _modelObject;
       private CompoundObjectViewModel _parent;
 
@@ -23,15 +24,22 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public DynamicBoxViewModel()
+      public DynamicBoxViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, DynamicBox modelObject)
       {
-         Parent = null;
-         ModelObject = new DynamicBox();
+         MainVm = mainVm;
+         Parent = parent;
+         ModelObject = modelObject;
       }
 
       #endregion
 
       #region Properties
+
+      public MainViewModel MainVm
+      {
+         get { return _mainVm; }
+         set { _mainVm = value; }
+      }
 
       public DynamicBox ModelObject
       {
@@ -116,7 +124,17 @@ namespace LeapfrogEditor
             }
          }
       }
-      
+
+      public double Angle
+      {
+         get { return _modelObject.Angle; }
+         set
+         {
+            _modelObject.Angle = value;
+            OnPropertyChanged("Angle");
+         }
+      }
+
       public double Width
       {
          get { return _modelObject.Width; }

@@ -20,11 +20,10 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public StaticPolygonViewModel()
+      public StaticPolygonViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, StaticPolygon modelObject) :
+         base(mainVm, parent, modelObject)
       {
-         ModelObject = new StaticPolygon();
-         PolygonObject = (EditablePolygon)ModelObject;
-         TexturePolygonObject = (ScalableTexturePolygon)ModelObject;
+         ModelObject = modelObject;
       }
 
       #endregion

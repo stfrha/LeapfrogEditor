@@ -13,6 +13,7 @@
       <local:TexturePathValueConverter x:Key="TexturePathValueConverter" />
       <local:TextureRectValueConverter x:Key="TextureRectValueConverter" />
       <local:BoolToVisibilityValueConverter x:Key="BoolToVisibilityValueConverter" />
+      <local:RadToDegValueConverter x:Key="RadToDegValueConverter" />
       <local:ZoomThicknessValueConverter x:Key="ZoomThicknessValueConverter" />
       <local:ZoomHandleSizeValueConverter x:Key="ZoomHandleSizeValueConverter" />
       <local:ZoomHandleTranslateValueConverter x:Key="ZoomHandleTranslateValueConverter" />
@@ -23,7 +24,7 @@
                x:Name="stpvm"
                StrokeThickness="0"
                Points="{Binding Points}"
-				   MouseUp="Shape_MouseUp"
+				   MouseUp="General_MouseUp"
                >
                <!--<Polygon.Style>
                   <Style TargetType="{x:Type Polygon}" >
@@ -65,7 +66,7 @@
                            Y2="{Binding PosY, RelativeSource={RelativeSource PreviousData}}"
                            StrokeThickness="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomThicknessValueConverter}}"
                            Stroke="DarkBlue"
-                           MouseUp="PolyLine_MouseUp"
+                           MouseUp="General_MouseUp"
                            >
                            <Line.Style>
                               <Style TargetType="{x:Type Line}">
@@ -108,9 +109,9 @@
 							      Fill="Gray"
                            StrokeThickness="2"
                            Cursor="Hand"                   
-                           MouseDown="DragableRect_MouseDown"
-					            MouseUp="DragableRect_MouseUp"
-					            MouseMove="DragableRect_MouseMove" >
+                           MouseDown="General_MouseDown"
+					            MouseUp="General_MouseUp"
+					            MouseMove="General_MouseMove" >
                            <Rectangle.Style>
                               <Style TargetType="{x:Type Rectangle}" >
                                  <Setter Property="Stroke" Value="Gray"/>
@@ -141,9 +142,9 @@
                StrokeThickness="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomThicknessValueConverter}}"
                Stroke="Gray"
                Cursor="Hand"
-               MouseDown="DragableRect_MouseDown"
-			      MouseUp="DragableRect_MouseUp"
-			      MouseMove="DragableRect_MouseMove">
+               MouseDown="General_MouseDown"
+			      MouseUp="General_MouseUp"
+			      MouseMove="General_MouseMove">
                <Rectangle.RenderTransform>
                   <TranslateTransform 
                      X="{Binding BoundingBox.Left}" 
@@ -161,13 +162,20 @@
                Width="{Binding Width}"
                Height="{Binding Height}"
                Source="{Binding Texture, Converter={StaticResource TexturePathValueConverter}}" 
-				   MouseUp="Shape_MouseUp"
+				   MouseUp="General_MouseUp"
                >
                <Image.RenderTransform>
-                  <TranslateTransform 
-                  X="{Binding Converter={StaticResource AnchorXValueConverter}}" 
-                  Y="{Binding Converter={StaticResource AnchorYValueConverter}}" 
-                  />
+                  <TransformGroup>
+                     <TranslateTransform x:Name="d2"
+                        X="{Binding Converter={StaticResource AnchorXValueConverter}}" 
+                        Y="{Binding Converter={StaticResource AnchorYValueConverter}}" 
+                     />
+                     <RotateTransform x:Name="d1"
+                        Angle="{Binding Angle, Converter={StaticResource RadToDegValueConverter}}"
+                        CenterX="{Binding AnchorX}"
+                        CenterY="{Binding AnchorY}"
+                     />
+                  </TransformGroup>
                </Image.RenderTransform>
             </Image>
             <!--<Polygon 
@@ -195,7 +203,7 @@
                            StrokeThickness="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomThicknessValueConverter}}"
                            Stroke="DarkBlue"
 							      Cursor="Hand"
-                           MouseUp="PolyLine_MouseUp"
+                           MouseUp="General_MouseUp"
                            >
                            <Line.Style>
                               <Style TargetType="{x:Type Line}">
@@ -238,9 +246,9 @@
 							      Fill="Gray"
                            StrokeThickness="2"
 							      Cursor="Hand"                   
-                           MouseDown="DragableRect_MouseDown"
-					            MouseUp="DragableRect_MouseUp"
-					            MouseMove="DragableRect_MouseMove" >
+                           MouseDown="General_MouseDown"
+					            MouseUp="General_MouseUp"
+					            MouseMove="General_MouseMove" >
                            <Rectangle.Style>
                               <Style TargetType="{x:Type Rectangle}" >
                                  <Setter Property="Stroke" Value="Gray"/>
@@ -252,7 +260,7 @@
                               </Style>
                            </Rectangle.Style>
                            <Rectangle.RenderTransform>
-                              <TranslateTransform 
+                              <TranslateTransform  
                                  X="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomHandleTranslateValueConverter}}"
                                  Y="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomHandleTranslateValueConverter}}"
                               />
@@ -271,11 +279,11 @@
                StrokeThickness="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomThicknessValueConverter}}"
                Stroke="Gray"
                Cursor="Hand"
-               MouseDown="DragableRect_MouseDown"
-			      MouseUp="DragableRect_MouseUp"
-			      MouseMove="DragableRect_MouseMove">
+               MouseDown="General_MouseDown"
+			      MouseUp="General_MouseUp"
+			      MouseMove="General_MouseMove">
                <Rectangle.RenderTransform>
-                  <TranslateTransform 
+                  <TranslateTransform  x:Name="d"
                      X="{Binding BoundingBox.Left}" 
                      Y="{Binding BoundingBox.Top}" 
                   />
@@ -291,7 +299,7 @@
                Width="{Binding Width}"
                Height="{Binding Height}"
                Source="{Binding Texture, Converter={StaticResource TexturePathValueConverter}}" 
-				   MouseUp="Shape_MouseUp"
+				   MouseUp="General_MouseUp"
                >
                <Image.RenderTransform>
                   <TranslateTransform 
@@ -309,9 +317,9 @@
                StrokeThickness="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomThicknessValueConverter}}"
                Stroke="Gray"
                Cursor="Hand"
-               MouseDown="DragableRect_MouseDown"
-			      MouseUp="DragableRect_MouseUp"
-			      MouseMove="DragableRect_MouseMove" >
+               MouseDown="General_MouseDown"
+			      MouseUp="General_MouseUp"
+			      MouseMove="General_MouseMove" >
                <Rectangle.RenderTransform>
                   <TranslateTransform 
                   X="{Binding Converter={StaticResource AnchorXValueConverter}}" 
@@ -329,7 +337,7 @@
                Width="{Binding Width}"
                Height="{Binding Height}"
                Source="{Binding Texture, Converter={StaticResource TexturePathValueConverter}}"
-               MouseUp="Shape_MouseUp"
+               MouseUp="General_MouseUp"
                >
                <Image.RenderTransform>
                   <TranslateTransform 
@@ -347,9 +355,9 @@
                StrokeThickness="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomThicknessValueConverter}}"
                Stroke="Gray"
                Cursor="Hand"
-               MouseDown="DragableRect_MouseDown"
-			      MouseUp="DragableRect_MouseUp"
-			      MouseMove="DragableRect_MouseMove">
+               MouseDown="General_MouseDown"
+			      MouseUp="General_MouseUp"
+			      MouseMove="General_MouseMove">
                <Rectangle.RenderTransform>
                   <TranslateTransform 
                   X="{Binding Converter={StaticResource AnchorXValueConverter}}" 
@@ -362,7 +370,7 @@
    </UserControl.Resources>
    <Canvas
       x:Name="content" >
-      <ItemsControl ItemsSource="{Binding Shapes[SelectedStateIndex]}">
+      <ItemsControl ItemsSource="{Binding Shapes}">
          <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
                <Canvas/>
@@ -375,7 +383,7 @@
             </Style>
          </ItemsControl.ItemContainerStyle>
       </ItemsControl>
-      <ItemsControl ItemsSource="{Binding ChildObjects[SelectedStateIndex]}">
+      <ItemsControl ItemsSource="{Binding ChildObjects}">
          <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
                <Canvas/>
@@ -396,9 +404,9 @@
          Height="{Binding BoundingBox.Height}"
          StrokeThickness="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomThicknessValueConverter}}"
          Stroke="DarkBlue"
-         MouseDown="Co_MouseDown"
-			MouseUp="Co_MouseUp"
-			MouseMove="Co_MouseMove" />
+         MouseDown="General_MouseDown"
+			MouseUp="General_MouseUp"
+			MouseMove="General_MouseMove" />
    </Canvas>
             
 </UserControl>

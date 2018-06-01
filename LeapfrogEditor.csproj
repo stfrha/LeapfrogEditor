@@ -69,6 +69,7 @@
     <Compile Include="MouseHandlingMode.cs" />
     <Compile Include="ScaleToPercentConverter.cs" />
     <Compile Include="Utilities\BoundingBoxRect.cs" />
+    <Compile Include="ValueConverters\RadToDegValueConverter.cs" />
     <Compile Include="ValueConverters\DebugDummyConverter.cs" />
     <Compile Include="ValueConverters\BoolToVisibilityValueConverter.cs" />
     <Compile Include="ValueConverters\ZoomHandleTranslateValueConverter.cs" />

@@ -15,9 +15,10 @@ namespace LeapfrogEditor
 
       private string _name;
       private string _texture;
+      private string _collisionEntity;
       private double _posY;
       private double _posX;
-      private string _collisionEntity;
+      private double _angle;
       private double _width;
       private double _height;
       private double _anchorX;
@@ -76,6 +77,13 @@ namespace LeapfrogEditor
       {
          get { return _posY; }
          set { _posY = value; }
+      }
+
+      [XmlAttribute("angle")]
+      public double Angle
+      {
+         get { return _angle; }
+         set { _angle = value; }
       }
 
       [XmlAttribute("width")]

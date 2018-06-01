@@ -13,6 +13,7 @@ namespace LeapfrogEditor
    {
       #region Declarations
 
+      private MainViewModel _mainVm;
       private StaticBox _modelObject;
       private CompoundObjectViewModel _parent;
 
@@ -23,15 +24,22 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public StaticBoxViewModel()
+      public StaticBoxViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, StaticBox modelObject )
       {
-         Parent = null;
-         ModelObject = new StaticBox();
+         MainVm = mainVm;
+         Parent = parent;
+         ModelObject = modelObject;
       }
 
       #endregion
 
       #region Properties
+
+      public MainViewModel MainVm
+      {
+         get { return _mainVm; }
+         set { _mainVm = value; }
+      }
 
       public StaticBox ModelObject
       {
@@ -115,6 +123,16 @@ namespace LeapfrogEditor
                p.OnPropertyChanged("BoundingBox");
                p = p.Parent;
             }
+         }
+      }
+
+      public double Angle
+      {
+         get { return _modelObject.Angle; }
+         set
+         {
+            _modelObject.Angle = value;
+            OnPropertyChanged("Angle");
          }
       }
 

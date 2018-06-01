@@ -18,7 +18,8 @@ namespace LeapfrogEditor
 
             // TODO: Change this to relative path, doesn't seem to work
             // just now.
-            return @"E:\git\leapfrog\data\images\" + texture + ".png";
+//            return @"E:\git\leapfrog\data\images\" + texture + ".png";
+            return @"c:\git\leapfrog\data\images\" + texture + ".png";
          }
 
 
