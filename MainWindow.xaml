@@ -6,7 +6,8 @@
         xmlns:ZoomAndPan="clr-namespace:ZoomAndPan;assembly=ZoomAndPan"
         xmlns:local="clr-namespace:LeapfrogEditor"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="1500">
+        Title="MainWindow" Height="800" Width="1200"
+        KeyDown="Window_KeyDown">
    <Window.DataContext>
       <local:MainViewModel x:Name="myMainViewModel"/>
    </Window.DataContext>

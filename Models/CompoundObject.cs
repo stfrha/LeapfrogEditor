@@ -139,6 +139,30 @@ namespace LeapfrogEditor
          //}
       }
 
+      public void RemoveShape(object shape)
+      {
+         if (shape is DynamicBox)
+         {
+            DynamicBoxes.Remove((DynamicBox)shape);
+         }
+         else if (shape is DynamicPolygon)
+         {
+            DynamicPolygons.Remove((DynamicPolygon)shape);
+         }
+         else if (shape is StaticBox)
+         {
+            StaticBoxes.Remove((StaticBox)shape);
+         }
+         else if (shape is StaticPolygon)
+         {
+            StaticPolygons.Remove((StaticPolygon)shape);
+         }
+         else if (shape is BoxedSpritePolygon)
+         {
+            BoxedSpritePolygons.Remove((BoxedSpritePolygon)shape);
+         }
+      }
+
       #endregion
    }
 }

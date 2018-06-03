@@ -86,6 +86,25 @@
                   </DataTemplate>
                </ItemsControl.ItemTemplate>
             </ItemsControl>
+            <Rectangle 
+               Visibility="{Binding IsSelected, Converter={StaticResource BoolToVisibilityValueConverter}}"
+               Canvas.Left="0"
+               Canvas.Top="0" 
+               Width="{Binding BoundingBox.Width}"
+               Height="{Binding BoundingBox.Height}"
+               StrokeThickness="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomThicknessValueConverter}}"
+               Stroke="Gray"
+               Cursor="Hand"
+               MouseDown="General_MouseDown"
+			      MouseUp="General_MouseUp"
+			      MouseMove="General_MouseMove">
+               <Rectangle.RenderTransform>
+                  <TranslateTransform 
+                     X="{Binding BoundingBox.Left}" 
+                     Y="{Binding BoundingBox.Top}" 
+                  />
+               </Rectangle.RenderTransform>
+            </Rectangle>
             <ItemsControl ItemsSource="{Binding PointVms}"
                Visibility="{Binding IsSelected, Converter={StaticResource BoolToVisibilityValueConverter}}"
                           >
@@ -133,25 +152,6 @@
                   </DataTemplate>
                </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <Rectangle 
-               Visibility="{Binding IsSelected, Converter={StaticResource BoolToVisibilityValueConverter}}"
-               Canvas.Left="0"
-               Canvas.Top="0" 
-               Width="{Binding BoundingBox.Width}"
-               Height="{Binding BoundingBox.Height}"
-               StrokeThickness="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomThicknessValueConverter}}"
-               Stroke="Gray"
-               Cursor="Hand"
-               MouseDown="General_MouseDown"
-			      MouseUp="General_MouseUp"
-			      MouseMove="General_MouseMove">
-               <Rectangle.RenderTransform>
-                  <TranslateTransform 
-                     X="{Binding BoundingBox.Left}" 
-                     Y="{Binding BoundingBox.Top}" 
-                  />
-               </Rectangle.RenderTransform>
-            </Rectangle>
          </Grid>
       </DataTemplate>
       <DataTemplate DataType="{x:Type local:BoxedSpritePolygonViewModel}">
@@ -223,6 +223,25 @@
                   </DataTemplate>
                </ItemsControl.ItemTemplate>
             </ItemsControl>
+            <Rectangle 
+               Visibility="{Binding IsSelected, Converter={StaticResource BoolToVisibilityValueConverter}}"
+               Canvas.Left="0"
+               Canvas.Top="0" 
+               Width="{Binding BoundingBox.Width}"
+               Height="{Binding BoundingBox.Height}"
+               StrokeThickness="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomThicknessValueConverter}}"
+               Stroke="Gray"
+               Cursor="Hand"
+               MouseDown="General_MouseDown"
+			      MouseUp="General_MouseUp"
+			      MouseMove="General_MouseMove">
+               <Rectangle.RenderTransform>
+                  <TranslateTransform  x:Name="d"
+                     X="{Binding BoundingBox.Left}" 
+                     Y="{Binding BoundingBox.Top}" 
+                  />
+               </Rectangle.RenderTransform>
+            </Rectangle>
             <ItemsControl ItemsSource="{Binding PointVms}"
                Visibility="{Binding IsSelected, Converter={StaticResource BoolToVisibilityValueConverter}}"
                >
@@ -270,25 +289,6 @@
                   </DataTemplate>
                </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <Rectangle 
-               Visibility="{Binding IsSelected, Converter={StaticResource BoolToVisibilityValueConverter}}"
-               Canvas.Left="0"
-               Canvas.Top="0" 
-               Width="{Binding BoundingBox.Width}"
-               Height="{Binding BoundingBox.Height}"
-               StrokeThickness="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomThicknessValueConverter}}"
-               Stroke="Gray"
-               Cursor="Hand"
-               MouseDown="General_MouseDown"
-			      MouseUp="General_MouseUp"
-			      MouseMove="General_MouseMove">
-               <Rectangle.RenderTransform>
-                  <TranslateTransform  x:Name="d"
-                     X="{Binding BoundingBox.Left}" 
-                     Y="{Binding BoundingBox.Top}" 
-                  />
-               </Rectangle.RenderTransform>
-            </Rectangle>
          </Grid>
       </DataTemplate>
       <DataTemplate DataType="{x:Type local:DynamicBoxViewModel}">

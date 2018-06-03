@@ -529,8 +529,25 @@ namespace LeapfrogEditor
 
       private void Canvas_MouseUp(object sender, MouseButtonEventArgs e)
       {
-         myMainViewModel.MyCpVm.DeselectAllChildren();
-         myMainViewModel.MyCpVm.IsSelected = false;
+         content.Focus();
+         Keyboard.Focus(content);
+
+         bool shift = ((Keyboard.Modifiers & ModifierKeys.Shift) != 0);
+         bool ctrl = ((Keyboard.Modifiers & ModifierKeys.Control) != 0);
+         bool alt = ((Keyboard.Modifiers & ModifierKeys.Alt) != 0);
+
+         if (myMainViewModel.BackgroundMouseUp(e.GetPosition(content), e.ChangedButton, shift, ctrl, alt))
+         {
+            e.Handled = true;
+         }
+      }
+
+      private void Window_KeyDown(object sender, KeyEventArgs e)
+      {
+         if (myMainViewModel.KeyDownHandler(e))
+         {
+            e.Handled = true;
+         }
       }
    }
 }

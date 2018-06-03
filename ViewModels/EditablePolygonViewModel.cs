@@ -239,6 +239,8 @@ namespace LeapfrogEditor
       {
          PointVms.Remove(point);
          PolygonObject.RemovePoint(point.ModelObject);
+         OnPropertyChanged("ClosedPointVms");
+         OnPropertyChanged("Points");
       }
 
       public DragablePointViewModel InsertPoint(Point insertMe, DragablePointViewModel insertBeforeMe)

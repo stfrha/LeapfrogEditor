@@ -25,9 +25,9 @@ namespace LeapfrogEditor
       private CompoundObject _myCP;
       private CompoundObjectViewModel _myCpVm;
 
-      private CompoundObjectViewModel _selectedCompoundObject;
-      private ObservableCollection<IShapeInterface> _selectedShapes;
-      private ObservableCollection<DragablePointViewModel> _selectedPoints;
+      private CompoundObjectViewModel _selectedCompoundObject = null;
+      private ObservableCollection<IShapeInterface> _selectedShapes = new ObservableCollection<IShapeInterface>();
+      private ObservableCollection<DragablePointViewModel> _selectedPoints = new ObservableCollection<DragablePointViewModel>();
 
       #endregion
 
@@ -156,24 +156,160 @@ namespace LeapfrogEditor
       // All mouse handling function return true if the the data was used for some action
       // (if original event was handled)
 
-      public bool MouseDown(FrameworkElement target, Point clickPoint, bool shift, bool ctrl, bool alt)
+      public bool MouseDown(FrameworkElement target, MouseButton button, Point clickPoint, bool shift, bool ctrl, bool alt)
+      {
+         if (button == MouseButton.Left)
+         {
+            // Decode target ViewModel and view oobject that was clicked
+            if (target.DataContext is CompoundObjectViewModel)
+            {
+               // Mouse down on rectangle around CompoundObject
+               CompoundObjectViewModel covm = (CompoundObjectViewModel)target.DataContext;
+
+               Debug.WriteLine("Clicked rectangle around CompoundObject");
+
+               return true;
+            }
+            else if ((target is Rectangle) && (target.DataContext is DragablePointViewModel))
+            {
+               // Mouse down on rectangle of DragablePoint
+               DragablePointViewModel dpvm = (DragablePointViewModel)target.DataContext;
+
+               if (dpvm.IsSelected)
+               {
+                  // Could be the beginning of dragging
+
+               }
+               else
+               {
+                  if (!ctrl)
+                  {
+                     foreach (DragablePointViewModel selpoint in _selectedPoints)
+                     {
+                        selpoint.IsSelected = false;
+                     }
+                     _selectedPoints.Clear();
+                  }
+
+                  _selectedPoints.Add(dpvm);
+                  dpvm.IsSelected = true;
+               }
+
+               Debug.WriteLine("Clicked rectangle of DragablePoint");
+
+               return true;
+            }
+            else if ((target is Line) && (target.DataContext is DragablePointViewModel))
+            {
+               // Mouse down on Line between DragablePoints 
+               DragablePointViewModel dpvm = (DragablePointViewModel)target.DataContext;
+
+               if (ctrl)
+               {
+                  DragablePointViewModel newPoint = dpvm.Parent.InsertPoint(clickPoint, dpvm);
+                  foreach (DragablePointViewModel selpoint in _selectedPoints)
+                  {
+                     selpoint.IsSelected = false;
+                  }
+                  _selectedPoints.Clear();
+
+                  _selectedPoints.Add(newPoint);
+                  newPoint.IsSelected = true;
+               }
+
+               Debug.WriteLine("Clicked line between DragablePoint");
+
+               return true;
+            }
+            else if (target.DataContext is IShapeInterface)
+            {
+               // Mouse down on Shape
+               IShapeInterface shvm = (IShapeInterface)target.DataContext;
+
+               Debug.WriteLine("Clicked on Shape");
+
+               if (shvm.Parent.IsSelected)
+               {
+                  if (shvm.IsSelected)
+                  {
+                     // Could be the start of dragging the selection
+
+                  }
+                  else
+                  {
+                     if (!ctrl)
+                     {
+                        foreach (IShapeInterface selshape in _selectedShapes)
+                        {
+                           selshape.IsSelected = false;
+                        }
+                        _selectedShapes.Clear();
+                     }
+
+                     _selectedShapes.Add(shvm);
+                     shvm.IsSelected = true;
+                  }
+
+               }
+               else
+               {
+                  if (_selectedCompoundObject != null)
+                  {
+                     _selectedCompoundObject.IsSelected = false;
+                  }
+                  _selectedCompoundObject = shvm.Parent;
+               }
+
+               if (!shvm.IsSelected)
+               {
+                  shvm.Parent.IsSelected = true;
+                  _selectedShapes.Add(shvm);
+                  _selectedCompoundObject = shvm.Parent;
+
+               }
+
+               return true;
+            }
+            else if ((target is Rectangle) && (target.DataContext is IPositionInterface))
+            {
+               // Mouse down on rectangle around Shape
+               IPositionInterface posvm = (IPositionInterface)target.DataContext;
+
+               Debug.WriteLine("Clicked rectangle around something that can be dragged");
+
+               return true;
+            }
+         }
+
+         return false;
+      }
+
+      public bool MouseMove(FrameworkElement target, Vector dragVector, bool shift, bool ctrl, bool alt)
       {
          // Decode target ViewModel and view oobject that was clicked
          if (target.DataContext is CompoundObjectViewModel)
          {
-            // Mouse down on rectangle around CompoundObject
+            // Mouse move on rectangle around CompoundObject
             CompoundObjectViewModel covm = (CompoundObjectViewModel)target.DataContext;
 
-            Debug.WriteLine("Clicked rectangle around CompoundObject");
+            covm.PosX += dragVector.X;
+            covm.PosY += dragVector.Y;
 
+            Debug.WriteLine("Movbed rectangle around CompoundObject");
             return true;
          }
-         else if((target is Rectangle) && (target.DataContext is DragablePointViewModel))
+         else if ((target is Rectangle) && (target.DataContext is DragablePointViewModel))
          {
             // Mouse down on rectangle of DragablePoint
             DragablePointViewModel dpvm = (DragablePointViewModel)target.DataContext;
 
-            Debug.WriteLine("Clicked rectangle of DragablePoint");
+            foreach (DragablePointViewModel point in _selectedPoints)
+            {
+               point.PosX += dragVector.X;
+               point.PosY += dragVector.Y;
+            }
+
+            Debug.WriteLine("Move rectangle of DragablePoint");
 
             return true;
          }
@@ -186,37 +322,76 @@ namespace LeapfrogEditor
 
             return true;
          }
-         else if (target.DataContext is IShapeInterface)
-         {
-            // Mouse down on rectangle around Shape
-            IShapeInterface shvm = (IShapeInterface)target.DataContext;
-
-            Debug.WriteLine("Clicked on Shape");
-
-            return true;
-         }
          else if ((target is Rectangle) && (target.DataContext is IPositionInterface))
          {
-            // Mouse down on rectangle around Shape
+            // Mouse move on rectangle around Shape
             IPositionInterface posvm = (IPositionInterface)target.DataContext;
 
-            Debug.WriteLine("Clicked rectangle around something that can be dragged");
+            foreach (IPositionInterface shape in _selectedShapes)
+            {
+               shape.PosX += dragVector.X;
+               shape.PosY += dragVector.Y;
+            }
+
+
+            Debug.WriteLine("Moved rectangle around something that can be dragged");
 
             return true;
          }
-
-         return false;
-      }
-
-      public bool MouseMove(FrameworkElement target, Vector dragVector, bool shift, bool ctrl, bool alt)
-      {
 
          return false;
       }
 
       // clickPoint will be in coordinates of the parent CompoundObject
-      public bool MouseUp(FrameworkElement targe, Point clickPoint, bool shift, bool ctrl, bool alt)
+      public bool MouseUp(FrameworkElement targe, MouseButton button, Point clickPoint, bool shift, bool ctrl, bool alt)
       {
+
+         return false;
+      }
+
+      public bool BackgroundMouseUp(Point clickPoint, MouseButton button, bool shift, bool ctrl, bool alt)
+      {
+         if (button == MouseButton.Left)
+         {
+            Debug.WriteLine("Clicked on background");
+
+            MyCpVm.DeselectAllChildren();
+            MyCpVm.IsSelected = false;
+
+            return true;
+         }
+
+         return false;
+      }
+
+      public bool KeyDownHandler(KeyEventArgs e)
+      {
+         if (e.Key == Key.Delete)
+         {
+            if (_selectedPoints.Count > 0)
+            {
+               foreach (DragablePointViewModel dp in _selectedPoints)
+               {
+                  EditablePolygonViewModel polyVm = dp.Parent;
+
+                  // Is this the last point to be removed? If so, remove the shape
+                  // first so there is no problem with updating something with zero
+                  // points.
+                  if (polyVm.PointVms.Count == 1)
+                  {
+                     // Polygon has no more points, delete the polygon Shape
+
+                     polyVm.Parent.ModelObject.RemoveShape(polyVm.PolygonObject);
+                     polyVm.Parent.Shapes.Remove(polyVm);
+                  }
+
+                  // Before we remove the point
+                  polyVm.RemovePoint(dp);
+
+               }
+               _selectedPoints.Clear();
+            }
+         }
 
          return false;
       }
