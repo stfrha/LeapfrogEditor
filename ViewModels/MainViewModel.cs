@@ -15,6 +15,17 @@ using System.Xml.Serialization;
 
 namespace LeapfrogEditor
 {
+   enum LeftClickState
+   {
+      none,
+      staticPolygon,
+      dynamicPolygon,
+      boxedSpritePolygon,
+      staticBox,
+      dynamicBox,
+      addPoint
+   }
+
    class MainViewModel : MicroMvvm.ViewModelBase
    {
 
@@ -28,6 +39,8 @@ namespace LeapfrogEditor
       private CompoundObjectViewModel _selectedCompoundObject = null;
       private ObservableCollection<IShapeInterface> _selectedShapes = new ObservableCollection<IShapeInterface>();
       private ObservableCollection<DragablePointViewModel> _selectedPoints = new ObservableCollection<DragablePointViewModel>();
+
+      private LeftClickState _LeftClickState = LeftClickState.none;
 
       #endregion
 
@@ -144,6 +157,34 @@ namespace LeapfrogEditor
       }
 
 
+      
+
+      void NewStaticPolygonExecute(Object parameter)
+      {
+         // Deselect all other shapes when generating a new polygon
+         foreach (IShapeInterface shape in _selectedShapes)
+         {
+            shape.IsSelected = false;
+         }
+
+         _selectedShapes.Clear();
+
+         _LeftClickState = LeftClickState.staticPolygon;
+      }
+
+      bool CanNewStaticPolygonExecute(Object parameter)
+      {
+         return (_selectedCompoundObject != null);
+      }
+
+      public ICommand NewStaticPolygon
+      {
+         get
+         {
+            return new MicroMvvm.RelayCommand<Object>(parameter => NewStaticPolygonExecute(parameter), parameter => CanNewStaticPolygonExecute(parameter));
+         }
+      }
+
       #endregion
 
       #region Public Methods
@@ -166,7 +207,7 @@ namespace LeapfrogEditor
                // Mouse down on rectangle around CompoundObject
                CompoundObjectViewModel covm = (CompoundObjectViewModel)target.DataContext;
 
-               Debug.WriteLine("Clicked rectangle around CompoundObject");
+               //Debug.WriteLine("Clicked rectangle around CompoundObject");
 
                return true;
             }
@@ -195,7 +236,7 @@ namespace LeapfrogEditor
                   dpvm.IsSelected = true;
                }
 
-               Debug.WriteLine("Clicked rectangle of DragablePoint");
+               //Debug.WriteLine("Clicked rectangle of DragablePoint");
 
                return true;
             }
@@ -217,7 +258,7 @@ namespace LeapfrogEditor
                   newPoint.IsSelected = true;
                }
 
-               Debug.WriteLine("Clicked line between DragablePoint");
+               //Debug.WriteLine("Clicked line between DragablePoint");
 
                return true;
             }
@@ -226,7 +267,7 @@ namespace LeapfrogEditor
                // Mouse down on Shape
                IShapeInterface shvm = (IShapeInterface)target.DataContext;
 
-               Debug.WriteLine("Clicked on Shape");
+               //Debug.WriteLine("Clicked on Shape");
 
                if (shvm.Parent.IsSelected)
                {
@@ -275,7 +316,7 @@ namespace LeapfrogEditor
                // Mouse down on rectangle around Shape
                IPositionInterface posvm = (IPositionInterface)target.DataContext;
 
-               Debug.WriteLine("Clicked rectangle around something that can be dragged");
+               //Debug.WriteLine("Clicked rectangle around something that can be dragged");
 
                return true;
             }
@@ -295,7 +336,7 @@ namespace LeapfrogEditor
             covm.PosX += dragVector.X;
             covm.PosY += dragVector.Y;
 
-            Debug.WriteLine("Movbed rectangle around CompoundObject");
+            //Debug.WriteLine("Movbed rectangle around CompoundObject");
             return true;
          }
          else if ((target is Rectangle) && (target.DataContext is DragablePointViewModel))
@@ -309,7 +350,7 @@ namespace LeapfrogEditor
                point.PosY += dragVector.Y;
             }
 
-            Debug.WriteLine("Move rectangle of DragablePoint");
+            //Debug.WriteLine("Move rectangle of DragablePoint");
 
             return true;
          }
@@ -318,7 +359,7 @@ namespace LeapfrogEditor
             // Mouse down on Line between DragablePoints 
             DragablePointViewModel dpvm = (DragablePointViewModel)target.DataContext;
 
-            Debug.WriteLine("Clicked line between DragablePoint");
+            //Debug.WriteLine("Clicked line between DragablePoint");
 
             return true;
          }
@@ -334,7 +375,7 @@ namespace LeapfrogEditor
             }
 
 
-            Debug.WriteLine("Moved rectangle around something that can be dragged");
+            //Debug.WriteLine("Moved rectangle around something that can be dragged");
 
             return true;
          }
@@ -353,13 +394,82 @@ namespace LeapfrogEditor
       {
          if (button == MouseButton.Left)
          {
-            Debug.WriteLine("Clicked on background");
+            //Debug.WriteLine("Clicked on background");
+            if (_LeftClickState == LeftClickState.none)
+            {
+               MyCpVm.DeselectAllChildren();
+               MyCpVm.IsSelected = false;
+            }
+            else if (_LeftClickState == LeftClickState.staticPolygon)
+            {
+               // The first point of this polygon will be the PosX and PosY of the 
+               // new shape, and thus, the first polygon vertex should be at 0,0.
+               Point parentOrigo = new Point(_selectedCompoundObject.PosX, _selectedCompoundObject.PosY);
+               Point localClickPoint = new Point();
+               localClickPoint = (Point)(clickPoint - parentOrigo);
 
-            MyCpVm.DeselectAllChildren();
-            MyCpVm.IsSelected = false;
+               StaticPolygon newPolygon = new StaticPolygon();
+               newPolygon.PosX = localClickPoint.X;
+               newPolygon.PosY = localClickPoint.Y;
+
+               _selectedCompoundObject.ModelObject.StaticPolygons.Add(newPolygon);
+
+               StaticPolygonViewModel newPolygonVm = new StaticPolygonViewModel(this, _selectedCompoundObject, newPolygon);
+               _selectedCompoundObject.Shapes.Add(newPolygonVm);
+
+               _selectedShapes.Add(newPolygonVm);
+               newPolygonVm.IsSelected = true;
+
+               // InsertPoint, perhaps wrongly, offset the point with PosX and PosY. 
+               // Therefore the origin point is used to define the first point.
+               // This should probably be changed so we insert point at 0,0 (local coordinate)
+               // here.
+               DragablePointViewModel newPoint = newPolygonVm.InsertPoint(localClickPoint, null);
+
+               foreach (DragablePointViewModel selpoint in _selectedPoints)
+               {
+                  selpoint.IsSelected = false;
+               }
+               _selectedPoints.Clear();
+
+               _selectedPoints.Add(newPoint);
+               newPoint.IsSelected = true;
+
+               _LeftClickState = LeftClickState.addPoint;
+
+            }
+            else if (_LeftClickState == LeftClickState.addPoint)
+            {
+               // When adding points to new polygon we require that the
+               // shape is the only one selected
+               if ((_selectedShapes.Count == 1) && (_selectedShapes[0] is EditablePolygonViewModel))
+               {
+                  EditablePolygonViewModel newPolygon = (EditablePolygonViewModel)_selectedShapes[0];
+                  Point parentOrigo = new Point(newPolygon.PosX, newPolygon.PosY);
+                  Point localClickPoint = new Point();
+                  localClickPoint = (Point)(clickPoint - parentOrigo);
+
+                  DragablePointViewModel newPoint = newPolygon.AddPoint(localClickPoint);
+                  foreach (DragablePointViewModel selpoint in _selectedPoints)
+                  {
+                     selpoint.IsSelected = false;
+                  }
+                  _selectedPoints.Clear();
+
+                  _selectedPoints.Add(newPoint);
+                  newPoint.IsSelected = true;
+               }
+
+            }
 
             return true;
          }
+         else if (button == MouseButton.Right)
+         {
+            _LeftClickState = LeftClickState.none;
+            return true;
+         }
+
 
          return false;
       }

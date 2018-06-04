@@ -227,12 +227,14 @@ namespace LeapfrogEditor
 
       #region public Methods
 
-      public void AddPoint(Point point)
+      public DragablePointViewModel AddPoint(Point point)
       {
          DragablePoint np = new DragablePoint(1, point.X, point.Y);
          DragablePointViewModel newPoint = new DragablePointViewModel(MainVm, this, np);
          PointVms.Add(newPoint);
          PolygonObject.AddPoint(newPoint.ModelObject);
+
+         return newPoint;
       }
 
       public void RemovePoint(DragablePointViewModel point)
@@ -245,16 +247,29 @@ namespace LeapfrogEditor
 
       public DragablePointViewModel InsertPoint(Point insertMe, DragablePointViewModel insertBeforeMe)
       {
-         DragablePoint np = new DragablePoint(1, insertMe.X, insertMe.Y);
+         DragablePoint np = new DragablePoint(1, insertMe.X - PosX, insertMe.Y - PosY);
          DragablePointViewModel newPoint = new DragablePointViewModel(MainVm, this, np);
 
-         int index = PointVms.IndexOf(insertBeforeMe);
+         int index = 0;
+
+         if (insertBeforeMe != null)
+         {
+            index = PointVms.IndexOf(insertBeforeMe);
+         }
+
          if (index >= 0)
          {
             PointVms.Insert(index, newPoint);
          }
 
-         PolygonObject.InsertPoint(newPoint.ModelObject, insertBeforeMe.ModelObject);
+         if (insertBeforeMe != null)
+         {
+            PolygonObject.InsertPoint(newPoint.ModelObject, insertBeforeMe.ModelObject);
+         }
+         else
+         {
+            PolygonObject.InsertPoint(newPoint.ModelObject, null);
+         }
 
          return newPoint;
       }

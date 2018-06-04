@@ -21,14 +21,34 @@
          <RowDefinition Height="25" />
          <RowDefinition Height="*" />
       </Grid.RowDefinitions>
-      <StackPanel Grid.Row="0" HorizontalAlignment="Left" Orientation="Horizontal">
+      <Menu Grid.Row="0" >
+         <MenuItem Header="File">
+            <MenuItem Header="Read" Command="{Binding Reload}" />
+            <MenuItem Header="Save" Command="{Binding Save}" />
+            <Separator/>
+            <MenuItem Header="Exit" />
+         </MenuItem>
+         <MenuItem Header="Edit">
+            <MenuItem Header="Add" >
+               <MenuItem Header="Static Polygon" Command="{Binding NewStaticPolygon}" />
+               <MenuItem Header="Dynamic Polygon" Command="{Binding NewDynamicPolygon}" />
+               <MenuItem Header="Boxed Sprite Dynamic Polygon" Command="{Binding NewBoxedSpritePolygon}" />
+               <Separator/>
+               <MenuItem Header="Delete" Command="{Binding Delete}" />
+            </MenuItem>
+         </MenuItem>
+         <MenuItem Header="View">
+            <MenuItem Header="Swap states" Command="{Binding State}" />
+         </MenuItem>
+      </Menu>
+      <!--<StackPanel Grid.Row="0" HorizontalAlignment="Left" Orientation="Horizontal">
          <Button Content="Read" Width="75" Margin="2" 
             Command="{Binding Reload}"/>
          <Button Content="Save" Width="75" Margin="2"
             Command="{Binding Save}"/>
          <Button Content="ChangeState" Width="75" Margin="2"
             Command="{Binding State}"/>
-        </StackPanel>
+      </StackPanel>-->
       <DockPanel Grid.Row="1">
          <ScrollViewer
 			x:Name="scroller"
@@ -61,9 +81,10 @@
             		This Canvas is the main part of the content that is displayed.
 					-->
                   <Canvas
-						x:Name="content"
-						Background="White"
-					   MouseUp="Canvas_MouseUp"
+						   x:Name="content"
+						   Background="White"
+					      MouseUp="Canvas_MouseUp"
+                     MouseDoubleClick="Canvas_DoubleClick"
                   >
                      <ContentControl 
                         DataContext="{Binding MyCpVm}"

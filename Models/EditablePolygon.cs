@@ -75,7 +75,13 @@ namespace LeapfrogEditor
 
       public void InsertPoint(DragablePoint insertMe, DragablePoint insertBeforeMe)
       {
-         int index = Points.IndexOf(insertBeforeMe);
+         int index = 0;
+
+         if (insertBeforeMe != null)
+         {
+            index = Points.IndexOf(insertBeforeMe);
+         }
+
          if (index >= 0)
          {
             Points.Insert(index, insertMe);

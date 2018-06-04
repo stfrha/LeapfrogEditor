@@ -27,7 +27,7 @@ namespace LeapfrogEditor
       public StaticPolygon()
       {
          _name = "noName";
-         _texture = "noTexture";
+         _texture = "default";
          _collisionEntity = "notApplicable";
          _zLevel = 0;
          _collisionCategory = 0;
