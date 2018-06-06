@@ -84,7 +84,7 @@
 						   x:Name="content"
 						   Background="White"
 					      MouseUp="Canvas_MouseUp"
-                     MouseDoubleClick="Canvas_DoubleClick"
+                     MouseDown="Canvas_MouseDown"
                   >
                      <ContentControl 
                         DataContext="{Binding MyCpVm}"

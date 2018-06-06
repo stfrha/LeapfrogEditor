@@ -549,5 +549,20 @@ namespace LeapfrogEditor
             e.Handled = true;
          }
       }
+
+      private void Canvas_MouseDown(object sender, MouseButtonEventArgs e)
+      {
+         content.Focus();
+         Keyboard.Focus(content);
+
+         bool shift = ((Keyboard.Modifiers & ModifierKeys.Shift) != 0);
+         bool ctrl = ((Keyboard.Modifiers & ModifierKeys.Control) != 0);
+         bool alt = ((Keyboard.Modifiers & ModifierKeys.Alt) != 0);
+
+         if (myMainViewModel.BackgroundMouseDown(e.GetPosition(content), e.ChangedButton, e.ClickCount, shift, ctrl, alt))
+         {
+            e.Handled = true;
+         }
+      }
    }
 }

@@ -464,12 +464,23 @@ namespace LeapfrogEditor
 
             return true;
          }
-         else if (button == MouseButton.Right)
-         {
-            _LeftClickState = LeftClickState.none;
-            return true;
-         }
 
+         return false;
+      }
+
+      public bool BackgroundMouseDown(Point clickPoint, MouseButton button, int clickCount, bool shift, bool ctrl, bool alt)
+      {
+         if (clickCount > 1)
+         {
+            if (button == MouseButton.Left)
+            {
+               if (_LeftClickState == LeftClickState.addPoint)
+               {
+                  _LeftClickState = LeftClickState.none;
+                  return true;
+               }
+            }
+         }
 
          return false;
       }
