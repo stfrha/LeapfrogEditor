@@ -24,7 +24,8 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public StaticPolygon()
+      public StaticPolygon() :
+         base(200, 200, 0, 0)
       {
          _name = "noName";
          _texture = "default";

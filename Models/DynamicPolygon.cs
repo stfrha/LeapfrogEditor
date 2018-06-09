@@ -24,10 +24,11 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public DynamicPolygon()
+      public DynamicPolygon() :
+         base(200, 200, 0, 0)
       {
          _name = "noName";
-         _texture = "noTexture";
+         _texture = "default";
          _collisionEntity = "notApplicable";
          _zLevel = 0;
          _collisionCategory = 0;

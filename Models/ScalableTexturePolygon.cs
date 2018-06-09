@@ -24,6 +24,18 @@ namespace LeapfrogEditor
 
       public ScalableTexturePolygon()
       {
+         _textureWidth = 10;
+         _textureHeight = 10;
+         _textureOffsetX = 0;
+         _textureOffsetY = 0;
+      }
+
+      public ScalableTexturePolygon(int width, int height, int x, int y )
+      {
+         _textureWidth = width;
+         _textureHeight = height;
+         _textureOffsetX = x;
+         _textureOffsetY = y;
       }
 
       #endregion

@@ -234,6 +234,9 @@ namespace LeapfrogEditor
          PointVms.Add(newPoint);
          PolygonObject.AddPoint(newPoint.ModelObject);
 
+         OnPropertyChanged("");
+         Parent.OnPropertyChanged("");
+
          return newPoint;
       }
 
@@ -243,6 +246,8 @@ namespace LeapfrogEditor
          PolygonObject.RemovePoint(point.ModelObject);
          OnPropertyChanged("ClosedPointVms");
          OnPropertyChanged("Points");
+         OnPropertyChanged("");
+         Parent.OnPropertyChanged("");
       }
 
       public DragablePointViewModel InsertPoint(Point insertMe, DragablePointViewModel insertBeforeMe)
@@ -270,6 +275,9 @@ namespace LeapfrogEditor
          {
             PolygonObject.InsertPoint(newPoint.ModelObject, null);
          }
+
+         OnPropertyChanged("");
+         Parent.OnPropertyChanged("");
 
          return newPoint;
       }

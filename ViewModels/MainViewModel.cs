@@ -185,6 +185,32 @@ namespace LeapfrogEditor
          }
       }
 
+      void NewDynamicPolygonExecute(Object parameter)
+      {
+         // Deselect all other shapes when generating a new polygon
+         foreach (IShapeInterface shape in _selectedShapes)
+         {
+            shape.IsSelected = false;
+         }
+
+         _selectedShapes.Clear();
+
+         _LeftClickState = LeftClickState.dynamicPolygon;
+      }
+
+      bool CanNewDynamicPolygonExecute(Object parameter)
+      {
+         return (_selectedCompoundObject != null);
+      }
+
+      public ICommand NewDynamicPolygon
+      {
+         get
+         {
+            return new MicroMvvm.RelayCommand<Object>(parameter => NewDynamicPolygonExecute(parameter), parameter => CanNewDynamicPolygonExecute(parameter));
+         }
+      }
+
       #endregion
 
       #region Public Methods
@@ -400,7 +426,7 @@ namespace LeapfrogEditor
                MyCpVm.DeselectAllChildren();
                MyCpVm.IsSelected = false;
             }
-            else if (_LeftClickState == LeftClickState.staticPolygon)
+            else if ((_LeftClickState == LeftClickState.staticPolygon) || (_LeftClickState == LeftClickState.dynamicPolygon))
             {
                // The first point of this polygon will be the PosX and PosY of the 
                // new shape, and thus, the first polygon vertex should be at 0,0.
@@ -408,13 +434,26 @@ namespace LeapfrogEditor
                Point localClickPoint = new Point();
                localClickPoint = (Point)(clickPoint - parentOrigo);
 
-               StaticPolygon newPolygon = new StaticPolygon();
+               ScalableTexturePolygon newPolygon;
+               ScalableTexturePolygonViewModel newPolygonVm;
+
+               if (_LeftClickState == LeftClickState.staticPolygon)
+               {
+                  newPolygon = new StaticPolygon();
+                  newPolygonVm = new StaticPolygonViewModel(this, _selectedCompoundObject, (StaticPolygon)newPolygon);
+                  _selectedCompoundObject.ModelObject.StaticPolygons.Add((StaticPolygon)newPolygon);
+               }
+               else
+               {
+                  newPolygon = new DynamicPolygon();
+                  newPolygonVm = new DynamicPolygonViewModel(this, _selectedCompoundObject, (DynamicPolygon)newPolygon);
+                  _selectedCompoundObject.ModelObject.DynamicPolygons.Add((DynamicPolygon)newPolygon);
+               }
+
                newPolygon.PosX = localClickPoint.X;
                newPolygon.PosY = localClickPoint.Y;
 
-               _selectedCompoundObject.ModelObject.StaticPolygons.Add(newPolygon);
 
-               StaticPolygonViewModel newPolygonVm = new StaticPolygonViewModel(this, _selectedCompoundObject, newPolygon);
                _selectedCompoundObject.Shapes.Add(newPolygonVm);
 
                _selectedShapes.Add(newPolygonVm);
@@ -445,9 +484,11 @@ namespace LeapfrogEditor
                if ((_selectedShapes.Count == 1) && (_selectedShapes[0] is EditablePolygonViewModel))
                {
                   EditablePolygonViewModel newPolygon = (EditablePolygonViewModel)_selectedShapes[0];
-                  Point parentOrigo = new Point(newPolygon.PosX, newPolygon.PosY);
+                  Point parentObjectOrigo = new Point(newPolygon.Parent.PosX, newPolygon.Parent.PosY);
+                  Point shapeOrigo = new Point(newPolygon.PosX, newPolygon.PosY);
+                  shapeOrigo.Offset(parentObjectOrigo.X, parentObjectOrigo.Y);
                   Point localClickPoint = new Point();
-                  localClickPoint = (Point)(clickPoint - parentOrigo);
+                  localClickPoint = (Point)(clickPoint - shapeOrigo);
 
                   DragablePointViewModel newPoint = newPolygon.AddPoint(localClickPoint);
                   foreach (DragablePointViewModel selpoint in _selectedPoints)
