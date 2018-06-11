@@ -10,7 +10,7 @@ using System.Windows.Media;
 
 namespace LeapfrogEditor
 {
-   class CompoundObjectViewModel : MicroMvvm.ViewModelBase, IPositionInterface
+   class CompoundObjectViewModel : MicroMvvm.ViewModelBase
    {
       #region Declarations
 
@@ -20,19 +20,9 @@ namespace LeapfrogEditor
 
       private int _selectedStateIndex = 0;
 
-      // Shapes and children collections are two dimensional to accomondate for all 
-      // State properties
       private ObservableCollection<CompositeCollection> _shapes = new ObservableCollection<CompositeCollection>();
 
-      //private CompositeCollection _shapes = new CompositeCollection()
-      //{
-      //   new CollectionContainer { Collection = new ObservableCollection<StaticBoxViewModel>() },
-      //   new CollectionContainer { Collection = new ObservableCollection<DynamicBoxViewModel>() },
-      //   new CollectionContainer { Collection = new ObservableCollection<StaticPolygonViewModel>() },
-      //   new CollectionContainer { Collection = new ObservableCollection<DynamicPolygonViewModel>() },
-      //   new CollectionContainer { Collection = new ObservableCollection<BoxedSpritePolygonViewModel>() }
-      //};
-
+      // Children collection is two dimensional to accomondate for all State properties
       private ObservableCollection<ObservableCollection<CompoundObjectViewModel>> _childObjects = new ObservableCollection<ObservableCollection<CompoundObjectViewModel>>();
 
       private bool _isSelected;
@@ -321,28 +311,33 @@ namespace LeapfrogEditor
       {
          CompositeCollection shapes = new CompositeCollection()
          {
-            new CollectionContainer { Collection = new ObservableCollection<StaticBoxViewModel>() },
-            new CollectionContainer { Collection = new ObservableCollection<DynamicBoxViewModel>() },
-            new CollectionContainer { Collection = new ObservableCollection<StaticPolygonViewModel>() },
-            new CollectionContainer { Collection = new ObservableCollection<DynamicPolygonViewModel>() },
-            new CollectionContainer { Collection = new ObservableCollection<BoxedSpritePolygonViewModel>() }
+            new CollectionContainer { Collection = new ObservableCollection<LfSpriteBoxViewModel>() },
+            new CollectionContainer { Collection = new ObservableCollection<LfSpritePolygonViewModel>() },
+            new CollectionContainer { Collection = new ObservableCollection<LfStaticBoxViewModel>() },
+            new CollectionContainer { Collection = new ObservableCollection<LfStaticCircleViewModel>() },
+            new CollectionContainer { Collection = new ObservableCollection<LfStaticPolygonViewModel>() },
+            new CollectionContainer { Collection = new ObservableCollection<LfStaticBoxedSpritePolygonViewModel>() },
+            new CollectionContainer { Collection = new ObservableCollection<LfDynamicBoxViewModel>() },
+            new CollectionContainer { Collection = new ObservableCollection<LfDynamicCircleViewModel>() },
+            new CollectionContainer { Collection = new ObservableCollection<LfDynamicPolygonViewModel>() },
+            new CollectionContainer { Collection = new ObservableCollection<LfDynamicBoxedSpritePolygonViewModel>() },
          };
 
-         foreach (StaticBox sb in co.StaticBoxes)
+         foreach (LfStaticBox sb in co.StaticBoxes)
          {
-            StaticBoxViewModel shapevm = new StaticBoxViewModel(MainVm, this, sb);
+            LfStaticBoxViewModel shapevm = new LfStaticBoxViewModel(MainVm, this, sb);
             shapes.Add(shapevm);
          }
 
-         foreach (DynamicBox db in co.DynamicBoxes)
+         foreach (LfStaticCircle sb in co.StaticCircles)
          {
-            DynamicBoxViewModel shapevm = new DynamicBoxViewModel(MainVm, this, db);
+            LfStaticCircleViewModel shapevm = new LfStaticCircleViewModel(MainVm, this, sb);
             shapes.Add(shapevm);
          }
 
-         foreach (StaticPolygon sp in co.StaticPolygons)
+         foreach (LfStaticPolygon sp in co.StaticPolygons)
          {
-            StaticPolygonViewModel shapevm = new StaticPolygonViewModel(MainVm, this, sp);
+            LfStaticPolygonViewModel shapevm = new LfStaticPolygonViewModel(MainVm, this, sp);
 
             foreach (DragablePoint dragPoint in sp.Points)
             {
@@ -353,9 +348,21 @@ namespace LeapfrogEditor
             shapes.Add(shapevm);
          }
 
-         foreach (DynamicPolygon dp in co.DynamicPolygons)
+         foreach (LfDynamicBox db in co.DynamicBoxes)
          {
-            DynamicPolygonViewModel shapevm = new DynamicPolygonViewModel(MainVm, this, dp);
+            LfDynamicBoxViewModel shapevm = new LfDynamicBoxViewModel(MainVm, this, db);
+            shapes.Add(shapevm);
+         }
+
+         foreach (LfDynamicCircle db in co.DynamicCircles)
+         {
+            LfDynamicCircleViewModel shapevm = new LfDynamicCircleViewModel(MainVm, this, db);
+            shapes.Add(shapevm);
+         }
+
+         foreach (LfDynamicPolygon dp in co.DynamicPolygons)
+         {
+            LfDynamicPolygonViewModel shapevm = new LfDynamicPolygonViewModel(MainVm, this, dp);
 
             foreach (DragablePoint dragPoint in dp.Points)
             {
@@ -366,9 +373,9 @@ namespace LeapfrogEditor
             shapes.Add(shapevm);
          }
 
-         foreach (BoxedSpritePolygon bsp in co.BoxedSpritePolygons)
+         foreach (LfStaticBoxedSpritePolygon bsp in co.StaticBoxedSpritePolygons)
          {
-            BoxedSpritePolygonViewModel shapevm = new BoxedSpritePolygonViewModel(MainVm, this, bsp);
+            LfStaticBoxedSpritePolygonViewModel shapevm = new LfStaticBoxedSpritePolygonViewModel(MainVm, this, bsp);
 
             foreach (DragablePoint dragPoint in bsp.Points)
             {
@@ -378,6 +385,20 @@ namespace LeapfrogEditor
 
             shapes.Add(shapevm);
          }
+
+         foreach (LfDynamicBoxedSpritePolygon bsp in co.DynamicBoxedSpritePolygons)
+         {
+            LfDynamicBoxedSpritePolygonViewModel shapevm = new LfDynamicBoxedSpritePolygonViewModel(MainVm, this, bsp);
+
+            foreach (DragablePoint dragPoint in bsp.Points)
+            {
+               DragablePointViewModel dragPointVm = new DragablePointViewModel(MainVm, shapevm, dragPoint);
+               shapevm.PointVms.Add(dragPointVm);
+            }
+
+            shapes.Add(shapevm);
+         }
+
 
          return shapes;
 
@@ -418,9 +439,9 @@ namespace LeapfrogEditor
 
          foreach (object o in Shapes)
          {
-            if (o is IShapeInterface)
+            if (o is LfShapeViewModel)
             {
-               IShapeInterface shape = (IShapeInterface)o;
+               LfShapeViewModel shape = (LfShapeViewModel)o;
 
                shape.IsSelected = false;
             }

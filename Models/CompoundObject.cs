@@ -19,11 +19,16 @@ namespace LeapfrogEditor
 
       private string _type;
 
-      private ObservableCollection<StaticBox> _staticBoxes = new ObservableCollection<StaticBox>();
-      private ObservableCollection<DynamicBox> _dynamicBoxes = new ObservableCollection<DynamicBox>();
-      private ObservableCollection<StaticPolygon> _staticPolygons = new ObservableCollection<StaticPolygon>();
-      private ObservableCollection<DynamicPolygon> _dynamicPolygons = new ObservableCollection<DynamicPolygon>();
-      private ObservableCollection<BoxedSpritePolygon> _boxedSpritePolygons = new ObservableCollection<BoxedSpritePolygon>();
+      private ObservableCollection<LfSpriteBox> _spriteBoxes = new ObservableCollection<LfSpriteBox>();
+      private ObservableCollection<LfSpritePolygon> _spritePolygons = new ObservableCollection<LfSpritePolygon>();
+      private ObservableCollection<LfStaticCircle> _staticCircles = new ObservableCollection<LfStaticCircle>();
+      private ObservableCollection<LfStaticBox> _staticBoxes = new ObservableCollection<LfStaticBox>();
+      private ObservableCollection<LfStaticPolygon> _staticPolygons = new ObservableCollection<LfStaticPolygon>();
+      private ObservableCollection<LfDynamicBox> _dynamicBoxes = new ObservableCollection<LfDynamicBox>();
+      private ObservableCollection<LfDynamicCircle> _dynamicCircles = new ObservableCollection<LfDynamicCircle>();
+      private ObservableCollection<LfDynamicPolygon> _dynamicPolygons = new ObservableCollection<LfDynamicPolygon>();
+      private ObservableCollection<LfStaticBoxedSpritePolygon> _staticBoxedSpritePolygons = new ObservableCollection<LfStaticBoxedSpritePolygon>();
+      private ObservableCollection<LfDynamicBoxedSpritePolygon> _dynamicBoxedSpritePolygons = new ObservableCollection<LfDynamicBoxedSpritePolygon>();
 
       private ObservableCollection<CompoundObjectRef> _childObjectRefs = new ObservableCollection<CompoundObjectRef>();
 
@@ -46,39 +51,74 @@ namespace LeapfrogEditor
          set { _type = value; }
       }
 
+      [XmlElement("spriteBox")]
+      public ObservableCollection<LfSpriteBox> SpriteBoxes
+      {
+         get { return _spriteBoxes; }
+         set { _spriteBoxes = value; }
+      }
+
+      [XmlElement("spritePolygon")]
+      public ObservableCollection<LfSpritePolygon> SpritePolygons
+      {
+         get { return _spritePolygons; }
+         set { _spritePolygons = value; }
+      }
+
       [XmlElement("staticBox")]
-      public ObservableCollection<StaticBox> StaticBoxes
+      public ObservableCollection<LfStaticBox> StaticBoxes
       {
          get { return _staticBoxes; }
          set { _staticBoxes = value; }
       }
 
-      [XmlElement("dynamicBox")]
-      public ObservableCollection<DynamicBox> DynamicBoxes
+      [XmlElement("staticCircle")]
+      public ObservableCollection<LfStaticCircle> StaticCircles
       {
-         get { return _dynamicBoxes; }
-         set { _dynamicBoxes = value; }
+         get { return _staticCircles; }
+         set { _staticCircles = value; }
       }
 
       [XmlElement("staticPolygon")]
-      public ObservableCollection<StaticPolygon> StaticPolygons
+      public ObservableCollection<LfStaticPolygon> StaticPolygons
       {
          get { return _staticPolygons; }
          set { _staticPolygons = value; }
       }
 
+      [XmlElement("dynamicBox")]
+      public ObservableCollection<LfDynamicBox> DynamicBoxes
+      {
+         get { return _dynamicBoxes; }
+         set { _dynamicBoxes = value; }
+      }
+
+      [XmlElement("dynamicCircle")]
+      public ObservableCollection<LfDynamicCircle> DynamicCircles
+      {
+         get { return _dynamicCircles; }
+         set { _dynamicCircles = value; }
+      }
+
       [XmlElement("dynamicPolygon")]
-      public ObservableCollection<DynamicPolygon> DynamicPolygons
+      public ObservableCollection<LfDynamicPolygon> DynamicPolygons
       {
          get { return _dynamicPolygons; }
          set { _dynamicPolygons = value; }
       }
 
-      [XmlElement("boxedSpritePolygonBody")]
-      public ObservableCollection<BoxedSpritePolygon> BoxedSpritePolygons
+      [XmlElement("staticBoxedSpritePolygonBody")]
+      public ObservableCollection<LfStaticBoxedSpritePolygon> StaticBoxedSpritePolygons
       {
-         get { return _boxedSpritePolygons; }
-         set { _boxedSpritePolygons = value; }
+         get { return _staticBoxedSpritePolygons; }
+         set { _staticBoxedSpritePolygons = value; }
+      }
+
+      [XmlElement("dynamiceBoxedSpritePolygonBody")]
+      public ObservableCollection<LfDynamicBoxedSpritePolygon> DynamicBoxedSpritePolygons
+      {
+         get { return _dynamicBoxedSpritePolygons; }
+         set { _dynamicBoxedSpritePolygons = value; }
       }
 
       // At serialisation of a parent CompoundObject this collection
@@ -141,25 +181,45 @@ namespace LeapfrogEditor
 
       public void RemoveShape(object shape)
       {
-         if (shape is DynamicBox)
+         if (shape is LfSpriteBox)
          {
-            DynamicBoxes.Remove((DynamicBox)shape);
+            SpriteBoxes.Remove((LfSpriteBox)shape);
          }
-         else if (shape is DynamicPolygon)
+         else if (shape is LfSpritePolygon)
          {
-            DynamicPolygons.Remove((DynamicPolygon)shape);
+            SpritePolygons.Remove((LfSpritePolygon)shape);
          }
-         else if (shape is StaticBox)
+         else if (shape is LfStaticBox)
          {
-            StaticBoxes.Remove((StaticBox)shape);
+            StaticBoxes.Remove((LfStaticBox)shape);
          }
-         else if (shape is StaticPolygon)
+         else if (shape is LfStaticCircle)
          {
-            StaticPolygons.Remove((StaticPolygon)shape);
+            StaticCircles.Remove((LfStaticCircle)shape);
          }
-         else if (shape is BoxedSpritePolygon)
+         else if (shape is LfStaticPolygon)
          {
-            BoxedSpritePolygons.Remove((BoxedSpritePolygon)shape);
+            StaticPolygons.Remove((LfStaticPolygon)shape);
+         }
+         else if (shape is LfDynamicBox)
+         {
+            DynamicBoxes.Remove((LfDynamicBox)shape);
+         }
+         else if (shape is LfDynamicCircle)
+         {
+            DynamicCircles.Remove((LfDynamicCircle)shape);
+         }
+         else if (shape is LfDynamicPolygon)
+         {
+            DynamicPolygons.Remove((LfDynamicPolygon)shape);
+         }
+         else if (shape is LfStaticBoxedSpritePolygon)
+         {
+            StaticBoxedSpritePolygons.Remove((LfStaticBoxedSpritePolygon)shape);
+         }
+         else if (shape is LfDynamicBoxedSpritePolygon)
+         {
+            DynamicBoxedSpritePolygons.Remove((LfDynamicBoxedSpritePolygon)shape);
          }
       }
 
