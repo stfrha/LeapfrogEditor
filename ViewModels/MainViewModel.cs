@@ -37,8 +37,8 @@ namespace LeapfrogEditor
       private CompoundObjectViewModel _myCpVm;
 
       private CompoundObjectViewModel _selectedCompoundObject = null;
-      private ObservableCollection<IShapeInterface> _selectedShapes = new ObservableCollection<IShapeInterface>();
-      private ObservableCollection<DragablePointViewModel> _selectedPoints = new ObservableCollection<DragablePointViewModel>();
+      private ObservableCollection<LfShapeViewModel> _selectedShapes = new ObservableCollection<LfShapeViewModel>();
+      private ObservableCollection<LfDragablePointViewModel> _selectedPoints = new ObservableCollection<LfDragablePointViewModel>();
 
       private LeftClickState _LeftClickState = LeftClickState.none;
 
@@ -162,7 +162,7 @@ namespace LeapfrogEditor
       void NewStaticPolygonExecute(Object parameter)
       {
          // Deselect all other shapes when generating a new polygon
-         foreach (IShapeInterface shape in _selectedShapes)
+         foreach (LfShapeViewModel shape in _selectedShapes)
          {
             shape.IsSelected = false;
          }
@@ -188,7 +188,7 @@ namespace LeapfrogEditor
       void NewDynamicPolygonExecute(Object parameter)
       {
          // Deselect all other shapes when generating a new polygon
-         foreach (IShapeInterface shape in _selectedShapes)
+         foreach (LfShapeViewModel shape in _selectedShapes)
          {
             shape.IsSelected = false;
          }
@@ -237,10 +237,10 @@ namespace LeapfrogEditor
 
                return true;
             }
-            else if ((target is Rectangle) && (target.DataContext is DragablePointViewModel))
+            else if ((target is Rectangle) && (target.DataContext is LfDragablePointViewModel))
             {
                // Mouse down on rectangle of DragablePoint
-               DragablePointViewModel dpvm = (DragablePointViewModel)target.DataContext;
+               LfDragablePointViewModel dpvm = (LfDragablePointViewModel)target.DataContext;
 
                if (dpvm.IsSelected)
                {
@@ -251,7 +251,7 @@ namespace LeapfrogEditor
                {
                   if (!ctrl)
                   {
-                     foreach (DragablePointViewModel selpoint in _selectedPoints)
+                     foreach (LfDragablePointViewModel selpoint in _selectedPoints)
                      {
                         selpoint.IsSelected = false;
                      }
@@ -266,15 +266,15 @@ namespace LeapfrogEditor
 
                return true;
             }
-            else if ((target is Line) && (target.DataContext is DragablePointViewModel))
+            else if ((target is Line) && (target.DataContext is LfDragablePointViewModel))
             {
                // Mouse down on Line between DragablePoints 
-               DragablePointViewModel dpvm = (DragablePointViewModel)target.DataContext;
+               LfDragablePointViewModel dpvm = (LfDragablePointViewModel)target.DataContext;
 
                if (ctrl)
                {
-                  DragablePointViewModel newPoint = dpvm.Parent.InsertPoint(clickPoint, dpvm);
-                  foreach (DragablePointViewModel selpoint in _selectedPoints)
+                  LfDragablePointViewModel newPoint = dpvm.Parent.InsertPoint(clickPoint, dpvm);
+                  foreach (LfDragablePointViewModel selpoint in _selectedPoints)
                   {
                      selpoint.IsSelected = false;
                   }
@@ -288,10 +288,10 @@ namespace LeapfrogEditor
 
                return true;
             }
-            else if (target.DataContext is IShapeInterface)
+            else if (target.DataContext is LfShapeViewModel)
             {
                // Mouse down on Shape
-               IShapeInterface shvm = (IShapeInterface)target.DataContext;
+               LfShapeViewModel shvm = (LfShapeViewModel)target.DataContext;
 
                //Debug.WriteLine("Clicked on Shape");
 
@@ -306,7 +306,7 @@ namespace LeapfrogEditor
                   {
                      if (!ctrl)
                      {
-                        foreach (IShapeInterface selshape in _selectedShapes)
+                        foreach (LfShapeViewModel selshape in _selectedShapes)
                         {
                            selshape.IsSelected = false;
                         }
@@ -365,12 +365,12 @@ namespace LeapfrogEditor
             //Debug.WriteLine("Movbed rectangle around CompoundObject");
             return true;
          }
-         else if ((target is Rectangle) && (target.DataContext is DragablePointViewModel))
+         else if ((target is Rectangle) && (target.DataContext is LfDragablePointViewModel))
          {
             // Mouse down on rectangle of DragablePoint
-            DragablePointViewModel dpvm = (DragablePointViewModel)target.DataContext;
+            LfDragablePointViewModel dpvm = (LfDragablePointViewModel)target.DataContext;
 
-            foreach (DragablePointViewModel point in _selectedPoints)
+            foreach (LfDragablePointViewModel point in _selectedPoints)
             {
                point.PosX += dragVector.X;
                point.PosY += dragVector.Y;
@@ -380,10 +380,10 @@ namespace LeapfrogEditor
 
             return true;
          }
-         else if ((target is Line) && (target.DataContext is DragablePointViewModel))
+         else if ((target is Line) && (target.DataContext is LfDragablePointViewModel))
          {
             // Mouse down on Line between DragablePoints 
-            DragablePointViewModel dpvm = (DragablePointViewModel)target.DataContext;
+            LfDragablePointViewModel dpvm = (LfDragablePointViewModel)target.DataContext;
 
             //Debug.WriteLine("Clicked line between DragablePoint");
 
@@ -434,20 +434,20 @@ namespace LeapfrogEditor
                Point localClickPoint = new Point();
                localClickPoint = (Point)(clickPoint - parentOrigo);
 
-               ScalableTexturePolygon newPolygon;
-               ScalableTexturePolygonViewModel newPolygonVm;
+               LfScalableTexturePolygon newPolygon;
+               LfScalableTexturePolygonViewModel newPolygonVm;
 
                if (_LeftClickState == LeftClickState.staticPolygon)
                {
-                  newPolygon = new StaticPolygon();
-                  newPolygonVm = new StaticPolygonViewModel(this, _selectedCompoundObject, (StaticPolygon)newPolygon);
-                  _selectedCompoundObject.ModelObject.StaticPolygons.Add((StaticPolygon)newPolygon);
+                  newPolygon = new LfStaticPolygon();
+                  newPolygonVm = new LfStaticPolygonViewModel(this, _selectedCompoundObject, (LfStaticPolygon)newPolygon);
+                  _selectedCompoundObject.ModelObject.StaticPolygons.Add((LfStaticPolygon)newPolygon);
                }
                else
                {
-                  newPolygon = new DynamicPolygon();
-                  newPolygonVm = new DynamicPolygonViewModel(this, _selectedCompoundObject, (DynamicPolygon)newPolygon);
-                  _selectedCompoundObject.ModelObject.DynamicPolygons.Add((DynamicPolygon)newPolygon);
+                  newPolygon = new LfDynamicPolygon();
+                  newPolygonVm = new LfDynamicPolygonViewModel(this, _selectedCompoundObject, (LfDynamicPolygon)newPolygon);
+                  _selectedCompoundObject.ModelObject.DynamicPolygons.Add((LfDynamicPolygon)newPolygon);
                }
 
                newPolygon.PosX = localClickPoint.X;
@@ -463,9 +463,9 @@ namespace LeapfrogEditor
                // Therefore the origin point is used to define the first point.
                // This should probably be changed so we insert point at 0,0 (local coordinate)
                // here.
-               DragablePointViewModel newPoint = newPolygonVm.InsertPoint(localClickPoint, null);
+               LfDragablePointViewModel newPoint = newPolygonVm.InsertPoint(localClickPoint, null);
 
-               foreach (DragablePointViewModel selpoint in _selectedPoints)
+               foreach (LfDragablePointViewModel selpoint in _selectedPoints)
                {
                   selpoint.IsSelected = false;
                }
@@ -481,17 +481,17 @@ namespace LeapfrogEditor
             {
                // When adding points to new polygon we require that the
                // shape is the only one selected
-               if ((_selectedShapes.Count == 1) && (_selectedShapes[0] is EditablePolygonViewModel))
+               if ((_selectedShapes.Count == 1) && (_selectedShapes[0] is LfPolygonViewModel))
                {
-                  EditablePolygonViewModel newPolygon = (EditablePolygonViewModel)_selectedShapes[0];
+                  LfPolygonViewModel newPolygon = (LfPolygonViewModel)_selectedShapes[0];
                   Point parentObjectOrigo = new Point(newPolygon.Parent.PosX, newPolygon.Parent.PosY);
                   Point shapeOrigo = new Point(newPolygon.PosX, newPolygon.PosY);
                   shapeOrigo.Offset(parentObjectOrigo.X, parentObjectOrigo.Y);
                   Point localClickPoint = new Point();
                   localClickPoint = (Point)(clickPoint - shapeOrigo);
 
-                  DragablePointViewModel newPoint = newPolygon.AddPoint(localClickPoint);
-                  foreach (DragablePointViewModel selpoint in _selectedPoints)
+                  LfDragablePointViewModel newPoint = newPolygon.AddPoint(localClickPoint);
+                  foreach (LfDragablePointViewModel selpoint in _selectedPoints)
                   {
                      selpoint.IsSelected = false;
                   }
@@ -532,9 +532,9 @@ namespace LeapfrogEditor
          {
             if (_selectedPoints.Count > 0)
             {
-               foreach (DragablePointViewModel dp in _selectedPoints)
+               foreach (LfDragablePointViewModel dp in _selectedPoints)
                {
-                  EditablePolygonViewModel polyVm = dp.Parent;
+                  LfPolygonViewModel polyVm = dp.Parent;
 
                   // Is this the last point to be removed? If so, remove the shape
                   // first so there is no problem with updating something with zero
@@ -543,7 +543,7 @@ namespace LeapfrogEditor
                   {
                      // Polygon has no more points, delete the polygon Shape
 
-                     polyVm.Parent.ModelObject.RemoveShape(polyVm.PolygonObject);
+                     polyVm.Parent.ModelObject.RemoveShape(polyVm.ModelObject);
                      polyVm.Parent.Shapes.Remove(polyVm);
                   }
 

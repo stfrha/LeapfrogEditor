@@ -9,7 +9,7 @@ using System.Windows.Media;
 
 namespace LeapfrogEditor
 {
-   class LfStaticCircleViewModel : LfShapeViewModel
+   class LfStaticCircleViewModel : LfShapeViewModel, ICircleInterface
    {
       #region Declarations
 
@@ -64,8 +64,8 @@ namespace LeapfrogEditor
 
       protected override Rect GetBoundingBox()
       {
-         Rect r = new Rect(0, 0, Width, Height);
-         r.Offset(new Vector(-AnchorX * Width, -AnchorY * Height));
+         Rect r = new Rect(0, 0, Radius*2, Radius*2);
+         r.Offset(new Vector(-Radius, -Radius));
          return r;
       }
 

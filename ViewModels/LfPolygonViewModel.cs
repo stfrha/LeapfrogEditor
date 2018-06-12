@@ -13,7 +13,7 @@ namespace LeapfrogEditor
    {
       #region Declarations
 
-      private ObservableCollection<DragablePointViewModel> _pointVms = new ObservableCollection<DragablePointViewModel>();
+      private ObservableCollection<LfDragablePointViewModel> _pointVms = new ObservableCollection<LfDragablePointViewModel>();
       // TODO: What about triangles?
 
       #endregion
@@ -40,7 +40,7 @@ namespace LeapfrogEditor
          {
             PointCollection p = new PointCollection();
 
-            foreach (DragablePointViewModel dp in PointVms)
+            foreach (LfDragablePointViewModel dp in PointVms)
             {
                p.Add(new Point(dp.PosX, dp.PosY));
             }
@@ -52,18 +52,18 @@ namespace LeapfrogEditor
 
       }
 
-      public ObservableCollection<DragablePointViewModel> PointVms
+      public ObservableCollection<LfDragablePointViewModel> PointVms
       {
          get { return _pointVms; }
          set { _pointVms = value; }
       }
 
-      public ObservableCollection<DragablePointViewModel> ClosedPointVms
+      public ObservableCollection<LfDragablePointViewModel> ClosedPointVms
       {
          get
          {
             // Copy points collection
-            ObservableCollection<DragablePointViewModel> tc = new ObservableCollection<DragablePointViewModel>(_pointVms);
+            ObservableCollection<LfDragablePointViewModel> tc = new ObservableCollection<LfDragablePointViewModel>(_pointVms);
 
             // Add first item to end to get a closed path
             tc.Add(tc[0]);
@@ -77,12 +77,12 @@ namespace LeapfrogEditor
 
       #region public Methods
 
-      public DragablePointViewModel AddPoint(Point point)
+      public LfDragablePointViewModel AddPoint(Point point)
       {
          if (LocalModelObject == null) return null;
 
-         DragablePoint np = new DragablePoint(1, point.X, point.Y);
-         DragablePointViewModel newPoint = new DragablePointViewModel(MainVm, this, np);
+         LfDragablePoint np = new LfDragablePoint(1, point.X, point.Y);
+         LfDragablePointViewModel newPoint = new LfDragablePointViewModel(MainVm, this, np);
          PointVms.Add(newPoint);
          LocalModelObject.AddPoint(newPoint.ModelObject);
 
@@ -92,7 +92,7 @@ namespace LeapfrogEditor
          return newPoint;
       }
 
-      public void RemovePoint(DragablePointViewModel point)
+      public void RemovePoint(LfDragablePointViewModel point)
       {
          if (LocalModelObject == null) return;
 
@@ -104,12 +104,12 @@ namespace LeapfrogEditor
          Parent.OnPropertyChanged("");
       }
 
-      public DragablePointViewModel InsertPoint(Point insertMe, DragablePointViewModel insertBeforeMe)
+      public LfDragablePointViewModel InsertPoint(Point insertMe, LfDragablePointViewModel insertBeforeMe)
       {
          if (LocalModelObject == null) return null;
 
-         DragablePoint np = new DragablePoint(1, insertMe.X - PosX, insertMe.Y - PosY);
-         DragablePointViewModel newPoint = new DragablePointViewModel(MainVm, this, np);
+         LfDragablePoint np = new LfDragablePoint(1, insertMe.X - PosX, insertMe.Y - PosY);
+         LfDragablePointViewModel newPoint = new LfDragablePointViewModel(MainVm, this, np);
 
          int index = 0;
 
@@ -140,7 +140,7 @@ namespace LeapfrogEditor
 
       public void DeselectAllPoints()
       {
-         foreach (DragablePointViewModel dp in PointVms)
+         foreach (LfDragablePointViewModel dp in PointVms)
          {
             dp.IsSelected = false;
          }
@@ -157,8 +157,11 @@ namespace LeapfrogEditor
          double t = double.MaxValue;
          double b = double.MinValue;
 
-         foreach (DragablePointViewModel dp in _pointVms)
+         foreach (LfDragablePointViewModel dp in _pointVms)
          {
+            // Convert point according to angle
+            
+
             if (dp.PosX < l)
             {
                l = dp.PosX;

@@ -9,7 +9,7 @@ using System.Windows.Media;
 
 namespace LeapfrogEditor
 {
-   class LfStaticBoxedSpritePolygonViewModel : LfPolygonViewModel
+   class LfStaticBoxedSpritePolygonViewModel : LfPolygonViewModel, IWidthHeightInterface
    {
       #region Declarations
 

@@ -8,8 +8,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="1000">
    <UserControl.Resources>
-      <local:AnchorXValueConverter x:Key="AnchorXValueConverter" />
-      <local:AnchorYValueConverter x:Key="AnchorYValueConverter" />
+      <local:TextureOffsetXValueConverter x:Key="TextureOffsetXValueConverter" />
+      <local:TextureOffsetYValueConverter x:Key="TextureOffsetYValueConverter" />
+      <local:TextureCircleValueConverter x:Key="TextureCircleValueConverter" />
       <local:TexturePathValueConverter x:Key="TexturePathValueConverter" />
       <local:TextureRectValueConverter x:Key="TextureRectValueConverter" />
       <local:BoolToVisibilityValueConverter x:Key="BoolToVisibilityValueConverter" />
@@ -18,7 +19,7 @@
       <local:ZoomHandleSizeValueConverter x:Key="ZoomHandleSizeValueConverter" />
       <local:ZoomHandleTranslateValueConverter x:Key="ZoomHandleTranslateValueConverter" />
       <local:DebugDummyConverter x:Key="DebugDummyConverter" />
-      <DataTemplate DataType="{x:Type local:ScalableTexturePolygonViewModel}">
+      <DataTemplate DataType="{x:Type local:LfScalableTexturePolygonViewModel}">
          <Grid>
             <Polygon 
                x:Name="stpvm"
@@ -154,7 +155,7 @@
             </ItemsControl>
          </Grid>
       </DataTemplate>
-      <DataTemplate DataType="{x:Type local:BoxedSpritePolygonViewModel}">
+      <DataTemplate DataType="{x:Type local:LfStaticBoxedSpritePolygonViewModel}">
          <Grid>
             <Image
                Canvas.Left="{Binding PosX}"
@@ -167,8 +168,8 @@
                <Image.RenderTransform>
                   <TransformGroup>
                      <TranslateTransform x:Name="d2"
-                        X="{Binding Converter={StaticResource AnchorXValueConverter}}" 
-                        Y="{Binding Converter={StaticResource AnchorYValueConverter}}" 
+                        X="{Binding Converter={StaticResource TextureOffsetXValueConverter}}" 
+                        Y="{Binding Converter={StaticResource TextureOffsetYValueConverter}}" 
                      />
                      <RotateTransform x:Name="d1"
                         Angle="{Binding Angle, Converter={StaticResource RadToDegValueConverter}}"
@@ -291,45 +292,7 @@
             </ItemsControl>
          </Grid>
       </DataTemplate>
-      <DataTemplate DataType="{x:Type local:DynamicBoxViewModel}">
-         <Grid>
-            <Image
-               Canvas.Left="{Binding PosX}"
-               Canvas.Top="{Binding PosY}"
-               Width="{Binding Width}"
-               Height="{Binding Height}"
-               Source="{Binding Texture, Converter={StaticResource TexturePathValueConverter}}" 
-				   MouseUp="General_MouseUp"
-               >
-               <Image.RenderTransform>
-                  <TranslateTransform 
-                  X="{Binding Converter={StaticResource AnchorXValueConverter}}" 
-                  Y="{Binding Converter={StaticResource AnchorYValueConverter}}" 
-                  />
-               </Image.RenderTransform>
-            </Image>
-            <Rectangle 
-               Visibility="{Binding IsSelected, Converter={StaticResource BoolToVisibilityValueConverter}}"
-               Canvas.Left="{Binding BoundingBox.Left}"
-               Canvas.Top="{Binding BoundingBox.Top}" 
-               Width="{Binding BoundingBox.Width}"
-               Height="{Binding BoundingBox.Height}"
-               StrokeThickness="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomThicknessValueConverter}}"
-               Stroke="Gray"
-               Cursor="Hand"
-               MouseDown="General_MouseDown"
-			      MouseUp="General_MouseUp"
-			      MouseMove="General_MouseMove" >
-               <Rectangle.RenderTransform>
-                  <TranslateTransform 
-                  X="{Binding Converter={StaticResource AnchorXValueConverter}}" 
-                  Y="{Binding Converter={StaticResource AnchorYValueConverter}}" 
-                  />
-               </Rectangle.RenderTransform>
-            </Rectangle>
-         </Grid>
-      </DataTemplate>
-      <DataTemplate DataType="{x:Type local:StaticBoxViewModel}">
+      <DataTemplate DataType="{x:Type local:LfStaticBoxViewModel}">
          <Grid>
             <Image
                Canvas.Left="{Binding PosX}"
@@ -341,8 +304,8 @@
                >
                <Image.RenderTransform>
                   <TranslateTransform 
-                  X="{Binding Converter={StaticResource AnchorXValueConverter}}" 
-                  Y="{Binding Converter={StaticResource AnchorYValueConverter}}" 
+                  X="{Binding Converter={StaticResource TextureOffsetXValueConverter}}" 
+                  Y="{Binding Converter={StaticResource TextureOffsetYValueConverter}}" 
                   />
                </Image.RenderTransform>
             </Image>
@@ -360,8 +323,8 @@
 			      MouseMove="General_MouseMove">
                <Rectangle.RenderTransform>
                   <TranslateTransform 
-                  X="{Binding Converter={StaticResource AnchorXValueConverter}}" 
-                  Y="{Binding Converter={StaticResource AnchorYValueConverter}}" 
+                  X="{Binding Converter={StaticResource TextureOffsetXValueConverter}}" 
+                  Y="{Binding Converter={StaticResource TextureOffsetYValueConverter}}" 
                   />
                </Rectangle.RenderTransform>
             </Rectangle>

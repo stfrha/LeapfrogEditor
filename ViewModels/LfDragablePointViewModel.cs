@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace LeapfrogEditor
 {
-    class DragablePointViewModel : MicroMvvm.ViewModelBase, IPositionInterface
+    class LfDragablePointViewModel : MicroMvvm.ViewModelBase, IPositionInterface
    {
       #region Declarations
 
       private MainViewModel _mainVm;
-      private DragablePoint _modelObject;
-      private EditablePolygonViewModel _parent;
+      private LfDragablePoint _modelObject;
+      private LfPolygonViewModel _parent;
 
       private bool _isSelected;
 
@@ -21,7 +21,7 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public DragablePointViewModel(MainViewModel mainVm, EditablePolygonViewModel parent, DragablePoint modelObject)
+      public LfDragablePointViewModel(MainViewModel mainVm, LfPolygonViewModel parent, LfDragablePoint modelObject)
       {
          MainVm = mainVm;
          Parent = parent;
@@ -39,7 +39,7 @@ namespace LeapfrogEditor
          set { _mainVm = value; }
       }
 
-      public DragablePoint ModelObject
+      public LfDragablePoint ModelObject
       {
          get { return _modelObject; }
          set
@@ -49,7 +49,7 @@ namespace LeapfrogEditor
          }
       }
 
-      public EditablePolygonViewModel Parent
+      public LfPolygonViewModel Parent
       {
          get { return _parent; }
          set
@@ -63,11 +63,15 @@ namespace LeapfrogEditor
       {
          get
          {
-            return _modelObject.PosX;
+            if (ModelObject == null) return 0;
+
+            return ModelObject.PosX;
          }
          set
          {
-            _modelObject.PosX = value;
+            if (ModelObject == null) return;
+
+            ModelObject.PosX = value;
 
             if (Parent != null)
             {
@@ -93,11 +97,15 @@ namespace LeapfrogEditor
       {
          get
          {
-            return _modelObject.PosY;
+            if (ModelObject == null) return 0;
+
+            return ModelObject.PosY;
          }
          set
          {
-            _modelObject.PosY = value;
+            if (ModelObject == null) return;
+
+            ModelObject.PosY = value;
 
             if (Parent != null)
             {

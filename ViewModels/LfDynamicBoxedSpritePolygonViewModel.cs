@@ -20,7 +20,7 @@ namespace LeapfrogEditor
       public LfDynamicBoxedSpritePolygonViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, LfDynamicBoxedSpritePolygon modelObject) :
          base(mainVm, parent, modelObject)
       {
-         DynamicPolygonObject = modelObject;
+         ModelObject = modelObject;
       }
 
       #endregion

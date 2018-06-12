@@ -10,7 +10,7 @@ using System.Windows.Media;
 
 namespace LeapfrogEditor
 {
-   class CompoundObjectViewModel : MicroMvvm.ViewModelBase
+   class CompoundObjectViewModel : MicroMvvm.ViewModelBase, IPositionInterface
    {
       #region Declarations
 
@@ -266,9 +266,9 @@ namespace LeapfrogEditor
             {
                foreach (object o in Shapes)
                {
-                  if (o is IShapeInterface)
+                  if (o is LfShapeViewModel)
                   {
-                     IShapeInterface shape = (IShapeInterface)o;
+                     LfShapeViewModel shape = (LfShapeViewModel)o;
 
                      Rect cb = shape.BoundingBox;
                      cb.Offset(new Vector(shape.PosX, shape.PosY));
@@ -339,9 +339,9 @@ namespace LeapfrogEditor
          {
             LfStaticPolygonViewModel shapevm = new LfStaticPolygonViewModel(MainVm, this, sp);
 
-            foreach (DragablePoint dragPoint in sp.Points)
+            foreach (LfDragablePoint dragPoint in sp.Points)
             {
-               DragablePointViewModel dragPointVm = new DragablePointViewModel(MainVm, shapevm, dragPoint);
+               LfDragablePointViewModel dragPointVm = new LfDragablePointViewModel(MainVm, shapevm, dragPoint);
                shapevm.PointVms.Add(dragPointVm);
             }
 
@@ -364,9 +364,9 @@ namespace LeapfrogEditor
          {
             LfDynamicPolygonViewModel shapevm = new LfDynamicPolygonViewModel(MainVm, this, dp);
 
-            foreach (DragablePoint dragPoint in dp.Points)
+            foreach (LfDragablePoint dragPoint in dp.Points)
             {
-               DragablePointViewModel dragPointVm = new DragablePointViewModel(MainVm, shapevm, dragPoint);
+               LfDragablePointViewModel dragPointVm = new LfDragablePointViewModel(MainVm, shapevm, dragPoint);
                shapevm.PointVms.Add(dragPointVm);
             }
 
@@ -377,9 +377,9 @@ namespace LeapfrogEditor
          {
             LfStaticBoxedSpritePolygonViewModel shapevm = new LfStaticBoxedSpritePolygonViewModel(MainVm, this, bsp);
 
-            foreach (DragablePoint dragPoint in bsp.Points)
+            foreach (LfDragablePoint dragPoint in bsp.Points)
             {
-               DragablePointViewModel dragPointVm = new DragablePointViewModel(MainVm, shapevm, dragPoint);
+               LfDragablePointViewModel dragPointVm = new LfDragablePointViewModel(MainVm, shapevm, dragPoint);
                shapevm.PointVms.Add(dragPointVm);
             }
 
@@ -390,9 +390,9 @@ namespace LeapfrogEditor
          {
             LfDynamicBoxedSpritePolygonViewModel shapevm = new LfDynamicBoxedSpritePolygonViewModel(MainVm, this, bsp);
 
-            foreach (DragablePoint dragPoint in bsp.Points)
+            foreach (LfDragablePoint dragPoint in bsp.Points)
             {
-               DragablePointViewModel dragPointVm = new DragablePointViewModel(MainVm, shapevm, dragPoint);
+               LfDragablePointViewModel dragPointVm = new LfDragablePointViewModel(MainVm, shapevm, dragPoint);
                shapevm.PointVms.Add(dragPointVm);
             }
 

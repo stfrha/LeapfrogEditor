@@ -9,7 +9,7 @@ using System.Windows.Media;
 
 namespace LeapfrogEditor
 {
-   class LfSpriteBoxViewModel : LfShapeViewModel
+   class LfSpriteBoxViewModel : LfShapeViewModel, IWidthHeightInterface
    {
       #region Declarations
 
@@ -92,7 +92,7 @@ namespace LeapfrogEditor
       protected override Rect GetBoundingBox()
       {
          Rect r = new Rect(0, 0, Width, Height);
-         r.Offset(new Vector(-AnchorX * Width, -AnchorY * Height));
+         r.Offset(new Vector(-Width / 2,  -Height / 2));
          return r;
       }
 

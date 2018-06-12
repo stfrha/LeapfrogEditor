@@ -8,19 +8,17 @@ using System.Windows.Data;
 
 namespace LeapfrogEditor
 {
-   class TextureRectValueConverter : IValueConverter
+   class RadToDegValueConverter : IValueConverter
    {
       public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
       {
-         if (value is LfScalableTexturePolygonViewModel)
+         if (value is double)
          {
-            LfScalableTexturePolygonViewModel stpvm = (LfScalableTexturePolygonViewModel)value;
+            double v = (double)value;
 
-            Rect r = new Rect(stpvm.TextureOffsetX, stpvm.TextureOffsetY, stpvm.TextureWidth, stpvm.TextureHeight);
+            return v / 3.14159265 * 180.0;
 
-            return r;
          }
-
 
          return null;
 

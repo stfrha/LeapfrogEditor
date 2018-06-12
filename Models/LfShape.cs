@@ -18,8 +18,8 @@ namespace LeapfrogEditor
       private double _posY;
       private double _posX;
       private double _angle;
-      private double _anchorX;
-      private double _anchorY;
+      //private double _anchorX;
+      //private double _anchorY;
       private uint _zLevel;
       private string _collisionEntity;
       private uint _collisionCategory;
@@ -36,8 +36,8 @@ namespace LeapfrogEditor
          _posX = 0;
          _posY = 0;
          _angle = 0;
-         _anchorX = 0;
-         _anchorY = 0;
+         //_anchorX = 0;
+         //_anchorY = 0;
          _zLevel = 0;
          _collisionEntity = "notApplicable";
          _collisionCategory = 0;
@@ -83,19 +83,19 @@ namespace LeapfrogEditor
          set { _angle = value; }
       }
 
-      [XmlAttribute("anchorX")]
-      public double AnchorX
-      {
-         get { return _anchorX; }
-         set { _anchorX = value; }
-      }
+      //[XmlAttribute("anchorX")]
+      //public double AnchorX
+      //{
+      //   get { return _anchorX; }
+      //   set { _anchorX = value; }
+      //}
 
-      [XmlAttribute("anchorY")]
-      public double AnchorY
-      {
-         get { return _anchorY; }
-         set { _anchorY = value; }
-      }
+      //[XmlAttribute("anchorY")]
+      //public double AnchorY
+      //{
+      //   get { return _anchorY; }
+      //   set { _anchorY = value; }
+      //}
 
       [XmlAttribute("zLevel")]
       public uint ZLevel

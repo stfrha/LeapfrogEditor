@@ -54,12 +54,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Models\BoxedSpritePolygon.cs" />
     <Compile Include="Models\CompoundObject.cs" />
     <Compile Include="Models\CompoundObjectRef.cs" />
-    <Compile Include="Models\DragablePoint.cs" />
-    <Compile Include="Models\DynamicBox.cs" />
-    <Compile Include="Models\DynamicPolygon.cs" />
+    <Compile Include="Models\LfDragablePoint.cs" />
     <Compile Include="Models\LfDynamicCircle.cs" />
     <Compile Include="Models\LfDynamicBoxedSpritePolygon.cs" />
     <Compile Include="Models\LfDynamicPolygon.cs" />
@@ -71,17 +68,17 @@
     <Compile Include="Models\LfSpritePolygon.cs" />
     <Compile Include="Models\ObjectRefStateProperties.cs" />
     <Compile Include="Models\LfScalableTexturePolygon.cs" />
-    <Compile Include="Models\ScalableTexturePolygon.cs" />
-    <Compile Include="Models\EditablePolygon.cs" />
     <Compile Include="Models\LfShape.cs" />
     <Compile Include="Models\LfStaticBox.cs" />
-    <Compile Include="Models\StaticBox.cs" />
     <Compile Include="Models\LfStaticPolygon.cs" />
-    <Compile Include="Models\StaticPolygon.cs" />
     <Compile Include="Models\Triangle.cs" />
     <Compile Include="MouseHandlingMode.cs" />
     <Compile Include="ScaleToPercentConverter.cs" />
     <Compile Include="Utilities\BoundingBoxRect.cs" />
+    <Compile Include="Utilities\ShapePoint.cs" />
+    <Compile Include="Utilities\CoPoint.cs" />
+    <Compile Include="Utilities\ScenePoint.cs" />
+    <Compile Include="ValueConverters\TextureOffsetValueConverters.cs" />
     <Compile Include="ValueConverters\RadToDegValueConverter.cs" />
     <Compile Include="ValueConverters\DebugDummyConverter.cs" />
     <Compile Include="ValueConverters\BoolToVisibilityValueConverter.cs" />
@@ -90,34 +87,25 @@
     <Compile Include="ValueConverters\ZoomThicknessValueConverter.cs" />
     <Compile Include="ValueConverters\TextureRectValueConverter.cs" />
     <Compile Include="ValueConverters\TexturePathValueConverter.cs" />
-    <Compile Include="ValueConverters\AnchorValueConverters.cs" />
-    <Compile Include="ViewModels\BoxedSpritePolygonViewModel.cs" />
     <Compile Include="ViewModels\CompoundObjectViewModel.cs" />
-    <Compile Include="ViewModels\DragablePointViewModel.cs" />
-    <Compile Include="ViewModels\DynamicBoxViewModel.cs" />
-    <Compile Include="ViewModels\DynamicPolygonViewModel.cs" />
+    <Compile Include="ViewModels\Interfaces\ICircleInterface.cs" />
+    <Compile Include="ViewModels\Interfaces\IWidthHeightInterface.cs" />
+    <Compile Include="ViewModels\LfDragablePointViewModel.cs" />
     <Compile Include="ViewModels\LfDynamicBoxedSpritePolygonViewModel.cs" />
     <Compile Include="ViewModels\LfDynamicCircleViewModel.cs" />
     <Compile Include="ViewModels\LfDynamicPolygonViewModel.cs" />
     <Compile Include="ViewModels\LfPolygonViewModel.cs" />
-    <Compile Include="ViewModels\Interfaces\IBoundingBoxInterface.cs" />
-    <Compile Include="ViewModels\Interfaces\IShapeInterface.cs" />
     <Compile Include="ViewModels\LfDynamicBoxViewModel.cs" />
     <Compile Include="ViewModels\LfScalableTexturePolygonViewModel.cs" />
     <Compile Include="ViewModels\LfStaticBoxedSpritePolygonViewModel.cs" />
     <Compile Include="ViewModels\LfSpriteBoxViewModel.cs" />
     <Compile Include="ViewModels\LfStaticCircleViewModel.cs" />
     <Compile Include="ViewModels\LfSpritePolygonViewModel.cs" />
-    <Compile Include="ViewModels\ScalableTexturePolygonViewModel.cs" />
-    <Compile Include="ViewModels\EditablePolygonViewModel.cs" />
-    <Compile Include="ViewModels\Interfaces\IAnchorableInterface.cs" />
     <Compile Include="ViewModels\Interfaces\IPositionInterface.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\LfShapeViewModel.cs" />
-    <Compile Include="ViewModels\StaticBoxViewModel.cs" />
     <Compile Include="ViewModels\LfStaticBoxViewModel.cs" />
     <Compile Include="ViewModels\LfStaticPolygonViewModel.cs" />
-    <Compile Include="ViewModels\StaticPolygonViewModel.cs" />
     <Compile Include="ViewModels\TriangleViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\CompoundObjectUserControl.xaml.cs">
@@ -141,7 +129,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\BoxObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

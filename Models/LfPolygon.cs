@@ -13,7 +13,7 @@ namespace LeapfrogEditor
     {
       #region Declarations
 
-      private ObservableCollection<DragablePoint> _points = new ObservableCollection<DragablePoint>();
+      private ObservableCollection<LfDragablePoint> _points = new ObservableCollection<LfDragablePoint>();
       private ObservableCollection<Triangle> _triangles = new ObservableCollection<Triangle>();
 
       #endregion
@@ -29,7 +29,7 @@ namespace LeapfrogEditor
       #region Properties
 
       [XmlArray("vertices"), XmlArrayItem("vertex")]
-      public ObservableCollection<DragablePoint> Points
+      public ObservableCollection<LfDragablePoint> Points
       {
          get { return _points; }
          set { _points = value; }
@@ -46,17 +46,17 @@ namespace LeapfrogEditor
 
       #region public Methods
 
-      public void AddPoint(DragablePoint point)
+      public void AddPoint(LfDragablePoint point)
       {
          Points.Add(point);
       }
 
-      public void RemovePoint(DragablePoint point)
+      public void RemovePoint(LfDragablePoint point)
       {
          Points.Remove(point);
       }
 
-      public void InsertPoint(DragablePoint insertMe, DragablePoint insertBeforeMe)
+      public void InsertPoint(LfDragablePoint insertMe, LfDragablePoint insertBeforeMe)
       {
          int index = 0;
 

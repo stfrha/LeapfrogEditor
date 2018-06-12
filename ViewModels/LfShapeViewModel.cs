@@ -9,7 +9,7 @@ using System.Windows.Media;
 
 namespace LeapfrogEditor
 {
-   class LfShapeViewModel : MicroMvvm.ViewModelBase
+   class LfShapeViewModel : MicroMvvm.ViewModelBase, IPositionInterface
    {
       #region Declarations
 
@@ -205,57 +205,57 @@ namespace LeapfrogEditor
       //   }
       //}
 
-      public double AnchorX
-      {
-         get
-         {
-            if (_modelObject == null) return 0;
+      //public double AnchorX
+      //{
+      //   get
+      //   {
+      //      if (_modelObject == null) return 0;
 
-            return _modelObject.AnchorX;
-         }
-         set
-         {
-            if (_modelObject == null) return;
+      //      return _modelObject.AnchorX;
+      //   }
+      //   set
+      //   {
+      //      if (_modelObject == null) return;
 
-            _modelObject.AnchorX = value;
-            OnPropertyChanged("AnchorX");
-            OnPropertyChanged("BoundingBox");
+      //      _modelObject.AnchorX = value;
+      //      OnPropertyChanged("AnchorX");
+      //      OnPropertyChanged("BoundingBox");
 
-            CompoundObjectViewModel p = Parent;
+      //      CompoundObjectViewModel p = Parent;
 
-            while (p != null)
-            {
-               p.OnPropertyChanged("BoundingBox");
-               p = p.Parent;
-            }
-         }
-      }
+      //      while (p != null)
+      //      {
+      //         p.OnPropertyChanged("BoundingBox");
+      //         p = p.Parent;
+      //      }
+      //   }
+      //}
 
-      public double AnchorY
-      {
-         get
-         {
-            if (_modelObject == null) return 0;
+      //public double AnchorY
+      //{
+      //   get
+      //   {
+      //      if (_modelObject == null) return 0;
 
-            return _modelObject.AnchorY;
-         }
-         set
-         {
-            if (_modelObject == null) return;
+      //      return _modelObject.AnchorY;
+      //   }
+      //   set
+      //   {
+      //      if (_modelObject == null) return;
 
-            _modelObject.AnchorY = value;
-            OnPropertyChanged("AnchorY");
-            OnPropertyChanged("BoundingBox");
+      //      _modelObject.AnchorY = value;
+      //      OnPropertyChanged("AnchorY");
+      //      OnPropertyChanged("BoundingBox");
 
-            CompoundObjectViewModel p = Parent;
+      //      CompoundObjectViewModel p = Parent;
 
-            while (p != null)
-            {
-               p.OnPropertyChanged("BoundingBox");
-               p = p.Parent;
-            }
-         }
-      }
+      //      while (p != null)
+      //      {
+      //         p.OnPropertyChanged("BoundingBox");
+      //         p = p.Parent;
+      //      }
+      //   }
+      //}
 
       public uint ZLevel
       {

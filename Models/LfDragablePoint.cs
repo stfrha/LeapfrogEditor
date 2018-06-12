@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 namespace LeapfrogEditor
 {
    [Serializable]
-   public class DragablePoint
+   public class LfDragablePoint
     {
       #region Declarations
 
@@ -20,14 +20,14 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public DragablePoint()
+      public LfDragablePoint()
       {
          _id = 0;
          _posX = 0;
          _posY = 0;
       }
 
-      public DragablePoint(uint id, double posX, double posY)
+      public LfDragablePoint(uint id, double posX, double posY)
       {
          _id = id;
          _posX = posX;

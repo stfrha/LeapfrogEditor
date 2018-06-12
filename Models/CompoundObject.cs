@@ -114,7 +114,7 @@ namespace LeapfrogEditor
          set { _staticBoxedSpritePolygons = value; }
       }
 
-      [XmlElement("dynamiceBoxedSpritePolygonBody")]
+      [XmlElement("dynamicBoxedSpritePolygonBody")]
       public ObservableCollection<LfDynamicBoxedSpritePolygon> DynamicBoxedSpritePolygons
       {
          get { return _dynamicBoxedSpritePolygons; }
