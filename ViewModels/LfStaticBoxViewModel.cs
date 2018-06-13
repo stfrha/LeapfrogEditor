@@ -91,9 +91,47 @@ namespace LeapfrogEditor
 
       protected override Rect GetBoundingBox()
       {
-         Rect r = new Rect(0, 0, Width, Height);
-         r.Offset(new Vector(-Width / 2, -Height / 2));
-         return r;
+         double l = double.MaxValue;
+         double r = double.MinValue;
+         double t = double.MaxValue;
+         double b = double.MinValue;
+
+         // Build point collection
+         List<Point> pl = new List<Point>();
+
+         pl.Add(new Point(-Width / 2, -Height / 2));
+         pl.Add(new Point(Width / 2, -Height / 2));
+         pl.Add(new Point(Width / 2, Height / 2));
+         pl.Add(new Point(-Width / 2, Height / 2));
+
+         foreach (Point p in pl)
+         {
+            // Convert point according to angle
+            Point rtp = RotatedPointFromLocal(p);
+
+            if (rtp.X < l)
+            {
+               l = rtp.X;
+            }
+
+            if (rtp.X > r)
+            {
+               r = rtp.X;
+            }
+
+            if (rtp.Y < t)
+            {
+               t = rtp.Y;
+            }
+
+            if (rtp.Y > b)
+            {
+               b = rtp.Y;
+            }
+         }
+         Rect tr = new Rect(new Point(l, t), new Point(r, b));
+
+         return tr;
       }
 
       #endregion

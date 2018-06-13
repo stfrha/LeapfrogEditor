@@ -41,23 +41,10 @@ namespace LeapfrogEditor
          {
             Point p2 = new Point();
 
-            p2.X = _p.X * Math.Cos(_shape.Angle) 
-
+            p2.X = _p.X * Math.Cos(_shape.Angle) - Math.Sin(_shape.Angle) * -_p.Y;
+            p2.Y = -(_p.X * Math.Sin(_shape.Angle) + Math.Cos(_shape.Angle) * -_p.Y);
 
             return p2;            
-         }
-      }
-
-      public ShapePoint ShapeP
-      {
-         get
-         {
-
-
-         }
-         set
-         {
-
          }
       }
 
@@ -97,12 +84,13 @@ namespace LeapfrogEditor
 
       private CoPoint GetCoPoint()
       {
-         CoPoint cop = new CoPoint(_shape.Parent);
          // Transform Shape point to CoPoint using PosX, PosY and angle
+         Point p = RotatedPoint;
 
+         p.Offset(_shape.PosX, _shape.PosY);
 
+         CoPoint cop = new CoPoint(p, _shape.Parent);
 
-         cop.P.Offset(_shape.PosX, _shape.PosY);
          return cop;
       }
 

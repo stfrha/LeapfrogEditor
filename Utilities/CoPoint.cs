@@ -18,8 +18,9 @@ namespace LeapfrogEditor
 
       #region Constructor
 
-      public CoPoint(CompoundObjectViewModel co)
+      public CoPoint(Point p, CompoundObjectViewModel co)
       {
+         _p = p;
          _co = co;
       }
 
@@ -33,7 +34,7 @@ namespace LeapfrogEditor
          set { _p = value; }
       }
 
-      public ScenePoint ScenP
+      public ScenePoint SceneP
       {
          get
          {

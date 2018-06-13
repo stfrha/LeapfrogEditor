@@ -167,14 +167,14 @@
                >
                <Image.RenderTransform>
                   <TransformGroup>
+                     <RotateTransform x:Name="d1"
+                        Angle="{Binding Angle, Converter={StaticResource RadToDegValueConverter}}"
+                        CenterX="{Binding Converter={StaticResource TextureOffsetXValueConverter}}"
+                        CenterY="{Binding Converter={StaticResource TextureOffsetYValueConverter}}"
+                     />
                      <TranslateTransform x:Name="d2"
                         X="{Binding Converter={StaticResource TextureOffsetXValueConverter}}" 
                         Y="{Binding Converter={StaticResource TextureOffsetYValueConverter}}" 
-                     />
-                     <RotateTransform x:Name="d1"
-                        Angle="{Binding Angle, Converter={StaticResource RadToDegValueConverter}}"
-                        CenterX="{Binding AnchorX}"
-                        CenterY="{Binding AnchorY}"
                      />
                   </TransformGroup>
                </Image.RenderTransform>

@@ -454,6 +454,92 @@ namespace LeapfrogEditor
          }
       }
 
+      // This method returns with the point of the shape's coordinate system
+      // in this CompoundObject's coordinate system. 
+      // The position of the shape is added to the shape point. The shape point
+      // can be either rotated or not.
+      public Point ShapePointInCo(Point shapePoint, LfShapeViewModel shape)
+      {
+         if (shape == null) return new Point(0, 0);
+
+         Point coPoint = shapePoint;
+
+         coPoint.Offset(shape.PosX, shape.PosY);
+
+         return coPoint;
+      }
+
+      // This method returns with the point of the CO's coordinate system
+      // in this Shape's coordinate system. 
+      // The position of the shape is subtracted from the CO point. 
+      public Point CoPointInShape(Point coPoint, LfShapeViewModel shape)
+      {
+         if (shape == null) return new Point(0, 0);
+
+         Point shapePoint = coPoint;
+
+         shapePoint.Offset(-shape.PosX, -shape.PosY);
+
+         return shapePoint;
+      }
+
+      // This method returns with the supplied point (expressed in this CompoundObject's
+      // coordinate system) converted to the parent CompoundObjects coordinate system.
+      // This is done by adding the Position of this CompoundObject.
+      public Point ParentCoPoint(Point coPoint)
+      {
+         Point parentPoint = coPoint;
+
+         parentPoint.Offset(PosX, PosY);
+
+         return parentPoint;
+      }
+
+      // This method returns with the supplied point (expressed in the parent of this 
+      // CompoundObject's coordinate system) converted to this CompoundObjects coordinate system.
+      // This is done by subtracting the parentPoint with the position of this CompoundObject.
+      public Point CoPointFromParent(Point parentPoint)
+      {
+         Point coPoint = parentPoint;
+
+         coPoint.Offset(-PosX, -PosY);
+
+         return coPoint;
+      }
+
+      // This method returns with the supplied point in the scene's coordinate system
+      // (Equal to the top level CompoundObject's coordinate system). 
+      // The point is converted to the parent's coordinate system and the method is then
+      // recursively called for the parent until the parent is null. In this case we are 
+      // at the top level CompoundObject which is the scene. Then we returns the point
+      public Point GetScenePointFromCoPoint(Point coPoint)
+      {
+         if (Parent != null)
+         {
+            Point parentPoint = ParentCoPoint(coPoint);
+            return GetScenePointFromCoPoint(parentPoint);
+         }
+         else
+         {
+            return coPoint;
+         }
+      }
+
+      public Point GetCoPointFromScenePoint(Point scenePoint)
+      {
+         if (Parent != null)
+         {
+            Point parentPoint = CoPointFromParent(scenePoint);
+            return GetCoPointFromScenePoint(parentPoint);
+         }
+         else
+         {
+            return scenePoint;
+         }
+      }
+
+
+
       #endregion
 
    }

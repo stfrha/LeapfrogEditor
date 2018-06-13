@@ -160,26 +160,27 @@ namespace LeapfrogEditor
          foreach (LfDragablePointViewModel dp in _pointVms)
          {
             // Convert point according to angle
+            Point rtp = RotatedPointFromLocal(new Point(dp.PosX, dp.PosY));
             
 
-            if (dp.PosX < l)
+            if (rtp.X < l)
             {
-               l = dp.PosX;
+               l = rtp.X;
             }
 
-            if (dp.PosX > r)
+            if (rtp.X > r)
             {
-               r = dp.PosX;
+               r = rtp.X;
             }
 
-            if (dp.PosY < t)
+            if (rtp.Y < t)
             {
-               t = dp.PosY;
+               t = rtp.Y;
             }
 
-            if (dp.PosY > b)
+            if (rtp.Y > b)
             {
-               b = dp.PosY;
+               b = rtp.Y;
             }
          }
          Rect tr = new Rect(new Point(l, t), new Point(r, b));
