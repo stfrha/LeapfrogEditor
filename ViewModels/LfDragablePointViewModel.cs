@@ -76,8 +76,23 @@ namespace LeapfrogEditor
             if (Parent != null)
             {
                Parent.OnPropertyChanged("Points");
-               Parent.OnPropertyChanged("ClosedPointVms");
                Parent.OnPropertyChanged("BoundingBox");
+
+               // We must also make sure that the previous point in the collection
+               // is updated since the line between them must be redrawn
+               int i = Parent.PointVms.IndexOf(this);
+
+               if (i != -1)
+               {
+                  if (i < Parent.PointVms.Count() - 1)
+                  {
+                     Parent.PointVms[i + 1].OnPropertyChanged("PosX");
+                  }
+                  else
+                  {
+                     Parent.PointVms[0].OnPropertyChanged("PosX");
+                  }
+               }
 
                CompoundObjectViewModel p = Parent.Parent;
 
@@ -110,8 +125,23 @@ namespace LeapfrogEditor
             if (Parent != null)
             {
                Parent.OnPropertyChanged("Points");
-               Parent.OnPropertyChanged("ClosedPointVms");
                Parent.OnPropertyChanged("BoundingBox");
+
+               // We must also make sure that the previous point in the collection
+               // is updated since the line between them must be redrawn
+               int i = Parent.PointVms.IndexOf(this);
+
+               if (i != -1)
+               {
+                  if (i < Parent.PointVms.Count() - 1)
+                  {
+                     Parent.PointVms[i + 1].OnPropertyChanged("PosY");
+                  }
+                  else
+                  {
+                     Parent.PointVms[0].OnPropertyChanged("PosY");
+                  }
+               }
 
                CompoundObjectViewModel p = Parent.Parent;
 

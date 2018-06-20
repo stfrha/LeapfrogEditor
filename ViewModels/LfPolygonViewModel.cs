@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Media;
 
 namespace LeapfrogEditor
@@ -58,20 +59,34 @@ namespace LeapfrogEditor
          set { _pointVms = value; }
       }
 
-      public ObservableCollection<LfDragablePointViewModel> ClosedPointVms
-      {
-         get
-         {
-            // Copy points collection
-            ObservableCollection<LfDragablePointViewModel> tc = new ObservableCollection<LfDragablePointViewModel>(_pointVms);
+      //public ObservableCollection<LfDragablePointViewModel> PointVms
+      //{
+      //   get
+      //   {
+      //      CollectionViewSource.GetDefaultView(_pointVms).Refresh();
+      //      return _pointVms;
+      //   }
+      //   set
+      //   {
+      //      _pointVms = value;
+      //      OnPropertyChanged("PointVms");
+      //   }
+      //}
 
-            // Add first item to end to get a closed path
-            tc.Add(tc[0]);
+      //public ObservableCollection<LfDragablePointViewModel> ClosedPointVms
+      //{
+      //   get
+      //   {
+      //      // Copy points collection
+      //      ObservableCollection<LfDragablePointViewModel> tc = new ObservableCollection<LfDragablePointViewModel>(_pointVms);
 
-            return tc;
-         }
-         set {}
-      }
+      //      // Add first item to end to get a closed path
+      //      tc.Add(tc[0]);
+
+      //      return tc;
+      //   }
+      //   set {}
+      //}
 
       #endregion
 
@@ -108,7 +123,7 @@ namespace LeapfrogEditor
       {
          if (LocalModelObject == null) return null;
 
-         LfDragablePoint np = new LfDragablePoint(1, insertMe.X - PosX, insertMe.Y - PosY);
+         LfDragablePoint np = new LfDragablePoint(1, insertMe.X, insertMe.Y);
          LfDragablePointViewModel newPoint = new LfDragablePointViewModel(MainVm, this, np);
 
          int index = 0;

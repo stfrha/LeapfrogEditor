@@ -73,7 +73,7 @@ namespace LeapfrogEditor
             if (fwe.DataContext is IPositionInterface)
             {
                IPositionInterface obj = (IPositionInterface)fwe.DataContext;
-               if (obj.MainVm.MouseDown(fwe, e.ChangedButton, e.GetPosition(content), shift, ctrl, alt))
+               if (obj.MainVm.MouseDown(fwe, e.ChangedButton, e.GetPosition(content), e.ClickCount, shift, ctrl, alt))
                {
                   e.Handled = true;
                }
@@ -115,7 +115,7 @@ namespace LeapfrogEditor
             {
                IPositionInterface obj = (IPositionInterface)fwe.DataContext;
 
-               if (obj.MainVm.MouseDown(fwe, e.ChangedButton, e.GetPosition(content), shift, ctrl, alt))
+               if (obj.MainVm.MouseDown(fwe, e.ChangedButton, e.GetPosition(content), e.ClickCount, shift, ctrl, alt))
                {
                   e.Handled = true;
                }

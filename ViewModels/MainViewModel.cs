@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Media;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -223,15 +224,32 @@ namespace LeapfrogEditor
       // All mouse handling function return true if the the data was used for some action
       // (if original event was handled)
 
-      public bool MouseDown(FrameworkElement target, MouseButton button, Point clickPoint, bool shift, bool ctrl, bool alt)
+      public bool MouseDown(FrameworkElement target, MouseButton button, Point clickPoint, int clickCount, bool shift, bool ctrl, bool alt)
       {
          if (button == MouseButton.Left)
          {
+
+            if (clickCount > 1)
+            {
+               if (_LeftClickState == LeftClickState.addPoint)
+               {
+                  TerminatePointAdding();
+                  return true;
+               }
+            }
+
+
+
             // Decode target ViewModel and view oobject that was clicked
             if (target.DataContext is CompoundObjectViewModel)
             {
                // Mouse down on rectangle around CompoundObject
                CompoundObjectViewModel covm = (CompoundObjectViewModel)target.DataContext;
+
+               if (_LeftClickState == LeftClickState.addPoint)
+               {
+                  TerminatePointAdding();
+               }
 
                //Debug.WriteLine("Clicked rectangle around CompoundObject");
 
@@ -240,8 +258,14 @@ namespace LeapfrogEditor
             else if ((target is Rectangle) && (target.DataContext is LfDragablePointViewModel))
             {
                // Mouse down on rectangle of DragablePoint
-               LfDragablePointViewModel dpvm = (LfDragablePointViewModel)target.DataContext;
 
+               if (_LeftClickState == LeftClickState.addPoint)
+               {
+                  TerminatePointAdding();
+               }
+
+               LfDragablePointViewModel dpvm = (LfDragablePointViewModel)target.DataContext;
+               
                if (dpvm.IsSelected)
                {
                   // Could be the beginning of dragging
@@ -269,11 +293,28 @@ namespace LeapfrogEditor
             else if ((target is Line) && (target.DataContext is LfDragablePointViewModel))
             {
                // Mouse down on Line between DragablePoints 
+
+               if (_LeftClickState == LeftClickState.addPoint)
+               {
+                  TerminatePointAdding();
+               }
+
                LfDragablePointViewModel dpvm = (LfDragablePointViewModel)target.DataContext;
 
                if (ctrl)
                {
-                  LfDragablePointViewModel newPoint = dpvm.Parent.InsertPoint(clickPoint, dpvm);
+                  // What is the click-point in this case?
+                  // It is said to be the closesed parenting canvas which
+                  // should be in CompoundObject coordinates. Lets try to convert
+                  // this into the rotated shape coordinates. 
+
+                  Point coPoint = clickPoint;
+
+                  Point unrotatedShapePoint = dpvm.Parent.Parent.CoPointInShape(clickPoint, dpvm.Parent);
+
+                  Point rotShapePoint = dpvm.Parent.LocalPointFromRotated(unrotatedShapePoint);
+
+                  LfDragablePointViewModel newPoint = dpvm.Parent.InsertPoint(rotShapePoint, dpvm);
                   foreach (LfDragablePointViewModel selpoint in _selectedPoints)
                   {
                      selpoint.IsSelected = false;
@@ -291,6 +332,12 @@ namespace LeapfrogEditor
             else if (target.DataContext is LfShapeViewModel)
             {
                // Mouse down on Shape
+
+               if (_LeftClickState == LeftClickState.addPoint)
+               {
+                  TerminatePointAdding();
+               }
+
                LfShapeViewModel shvm = (LfShapeViewModel)target.DataContext;
 
                //Debug.WriteLine("Clicked on Shape");
@@ -340,6 +387,12 @@ namespace LeapfrogEditor
             else if ((target is Rectangle) && (target.DataContext is IPositionInterface))
             {
                // Mouse down on rectangle around Shape
+
+               if (_LeftClickState == LeftClickState.addPoint)
+               {
+                  TerminatePointAdding();
+               }
+
                IPositionInterface posvm = (IPositionInterface)target.DataContext;
 
                //Debug.WriteLine("Clicked rectangle around something that can be dragged");
@@ -367,13 +420,19 @@ namespace LeapfrogEditor
          }
          else if ((target is Rectangle) && (target.DataContext is LfDragablePointViewModel))
          {
-            // Mouse down on rectangle of DragablePoint
+            // Mouse move on rectangle of DragablePoint
             LfDragablePointViewModel dpvm = (LfDragablePointViewModel)target.DataContext;
+
+            // Before moving all vertices, we rotate the vector to match the shape rotation.
+            Point vectPoint = new Point(dragVector.X, dragVector.Y);
+            Point rotPoint = dpvm.Parent.LocalPointFromRotated(vectPoint);
+            Vector rotatedDragVector = new Vector(rotPoint.X, rotPoint.Y);
+
 
             foreach (LfDragablePointViewModel point in _selectedPoints)
             {
-               point.PosX += dragVector.X;
-               point.PosY += dragVector.Y;
+               point.PosX += rotatedDragVector.X;
+               point.PosY += rotatedDragVector.Y;
             }
 
             //Debug.WriteLine("Move rectangle of DragablePoint");
@@ -382,7 +441,7 @@ namespace LeapfrogEditor
          }
          else if ((target is Line) && (target.DataContext is LfDragablePointViewModel))
          {
-            // Mouse down on Line between DragablePoints 
+            // Mouse move on Line between DragablePoints 
             LfDragablePointViewModel dpvm = (LfDragablePointViewModel)target.DataContext;
 
             //Debug.WriteLine("Clicked line between DragablePoint");
@@ -459,11 +518,7 @@ namespace LeapfrogEditor
                _selectedShapes.Add(newPolygonVm);
                newPolygonVm.IsSelected = true;
 
-               // InsertPoint, perhaps wrongly, offset the point with PosX and PosY. 
-               // Therefore the origin point is used to define the first point.
-               // This should probably be changed so we insert point at 0,0 (local coordinate)
-               // here.
-               LfDragablePointViewModel newPoint = newPolygonVm.InsertPoint(localClickPoint, null);
+               LfDragablePointViewModel newPoint = newPolygonVm.InsertPoint(new Point(0,0), null);
 
                foreach (LfDragablePointViewModel selpoint in _selectedPoints)
                {
@@ -513,6 +568,7 @@ namespace LeapfrogEditor
       {
          if (clickCount > 1)
          {
+
             if (button == MouseButton.Left)
             {
                if (_LeftClickState == LeftClickState.addPoint)
@@ -556,6 +612,29 @@ namespace LeapfrogEditor
          }
 
          return false;
+      }
+
+      #endregion
+
+      #region private Methods
+
+      private void TerminatePointAdding()
+      {
+         SystemSounds.Beep.Play();
+
+         _LeftClickState = LeftClickState.none;
+
+         // Lets do a brute force invalidate of all points of the polygon
+         if ((_selectedShapes.Count() == 1) && (_selectedShapes[0] is LfPolygonViewModel))
+         {
+            LfPolygonViewModel pvm = (LfPolygonViewModel)_selectedShapes[0];
+
+            foreach (LfDragablePointViewModel dpvm in pvm.PointVms)
+            {
+               dpvm.OnPropertyChanged("");
+            }
+         }
+
       }
 
       #endregion

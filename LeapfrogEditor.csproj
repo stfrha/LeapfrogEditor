@@ -75,6 +75,8 @@
     <Compile Include="MouseHandlingMode.cs" />
     <Compile Include="ScaleToPercentConverter.cs" />
     <Compile Include="Utilities\BoundingBoxRect.cs" />
+    <Compile Include="ValueConverters\PointCollectionValueConverters.cs" />
+    <Compile Include="ValueConverters\RotatedVertexValueConverters.cs" />
     <Compile Include="ValueConverters\TextureOffsetValueConverters.cs" />
     <Compile Include="ValueConverters\RadToDegValueConverter.cs" />
     <Compile Include="ValueConverters\DebugDummyConverter.cs" />
