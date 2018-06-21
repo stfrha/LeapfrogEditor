@@ -30,6 +30,7 @@
                StrokeThickness="0"
                Points="{Binding Points}"
 				   MouseUp="General_MouseUp"
+               MouseWheel="Shape_Rotate"
                >
                <Polygon.Fill>
                   <ImageBrush
@@ -203,6 +204,7 @@
                Height="{Binding Height}"
                Source="{Binding Texture, Converter={StaticResource TexturePathValueConverter}}" 
 				   MouseUp="General_MouseUp"
+               MouseWheel="Shape_Rotate"
                >
                <Image.RenderTransform>
                   <TransformGroup>
@@ -211,7 +213,7 @@
                         Y="{Binding Converter={StaticResource TextureOffsetYValueConverter}}" 
                      />
                      <RotateTransform x:Name="d1"
-                        Angle="{Binding Angle, Converter={StaticResource RadToDegValueConverter}}"
+                        Angle="{Binding Angle, Converter={StaticResource NegRadToDegValueConverter}}"
                         CenterX="0"
                         CenterY="0"
                      />

@@ -491,5 +491,25 @@ namespace LeapfrogEditor
          else
             return FindParent<T>(parentObject);
       }
+
+      private void Shape_Rotate(object sender, MouseWheelEventArgs e)
+      {
+         if (sender is FrameworkElement)
+         {
+            FrameworkElement fwe = (FrameworkElement)sender;
+
+            if (fwe.DataContext is LfShapeViewModel)
+            {
+               LfShapeViewModel svm = (LfShapeViewModel)fwe.DataContext;
+
+               if (svm.IsSelected)
+               {
+                  svm.Angle += (double)e.Delta / 120 * 5 / 180 * Math.PI;
+                  svm.InvalidateAll();
+                  e.Handled = true;
+               }
+            }
+         }
+      }
    }
 }

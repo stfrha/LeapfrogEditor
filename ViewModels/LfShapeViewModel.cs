@@ -362,13 +362,18 @@ namespace LeapfrogEditor
 
       #region public Methods
 
+      public virtual void InvalidateAll()
+      {
+         OnPropertyChanged("");
+      }
+
       // Let's try to define some points here:
       // A shape point is a point expressed in the coordinate system
       // of the shape.
       // There are two types of shape points: local points and rotated points.
       // The local point is the point of the shape without it being rotated.
       // The rotated is the local points rotated to the Angle property.
-      
+
       // A rotated point is expressed in the shape's coordinate system
       // i.e. using the shape PosX,PosY as origo but it is rotated
       // according to the Angle property

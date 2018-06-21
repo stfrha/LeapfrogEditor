@@ -92,6 +92,16 @@ namespace LeapfrogEditor
 
       #region public Methods
 
+      public override void InvalidateAll()
+      {
+         OnPropertyChanged("");
+
+         foreach (LfDragablePointViewModel dp in PointVms)
+         {
+            dp.OnPropertyChanged("");
+         }
+      }
+
       public LfDragablePointViewModel AddPoint(Point point)
       {
          if (LocalModelObject == null) return null;
@@ -202,7 +212,6 @@ namespace LeapfrogEditor
 
          return tr;
       }
-
 
       #endregion
 
