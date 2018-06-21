@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:LeapfrogEditor"
              xmlns:ZoomAndPan="clr-namespace:ZoomAndPan;assembly=ZoomAndPan"
              mc:Ignorable="d" 
-             d:DesignHeight="500" d:DesignWidth="1000">
+             d:DesignHeight="1000" d:DesignWidth="1000">
    <UserControl.Resources>
       <local:TextureOffsetXValueConverter x:Key="TextureOffsetXValueConverter" />
       <local:TextureOffsetYValueConverter x:Key="TextureOffsetYValueConverter" />
@@ -205,8 +205,9 @@
                Source="{Binding Texture, Converter={StaticResource TexturePathValueConverter}}" 
 				   MouseUp="General_MouseUp"
                MouseWheel="Shape_Rotate"
+               RenderTransformOrigin="0, 0"
                >
-               <Image.RenderTransform>
+               <Image.RenderTransform >
                   <TransformGroup>
                      <TranslateTransform x:Name="d2"
                         X="{Binding Converter={StaticResource TextureOffsetXValueConverter}}" 
@@ -214,8 +215,6 @@
                      />
                      <RotateTransform x:Name="d1"
                         Angle="{Binding Angle, Converter={StaticResource NegRadToDegValueConverter}}"
-                        CenterX="0"
-                        CenterY="0"
                      />
                   </TransformGroup>
                </Image.RenderTransform>
