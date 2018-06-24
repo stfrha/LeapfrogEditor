@@ -89,6 +89,7 @@
     <Compile Include="ViewModels\CompoundObjectViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\ICircleInterface.cs" />
     <Compile Include="ViewModels\Interfaces\IWidthHeightInterface.cs" />
+    <Compile Include="ViewModels\LfPointViewModel.cs" />
     <Compile Include="ViewModels\LfDragablePointViewModel.cs" />
     <Compile Include="ViewModels\LfDynamicBoxedSpritePolygonViewModel.cs" />
     <Compile Include="ViewModels\LfDynamicCircleViewModel.cs" />

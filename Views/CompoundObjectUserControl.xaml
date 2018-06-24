@@ -12,6 +12,8 @@
       <local:TextureOffsetYValueConverter x:Key="TextureOffsetYValueConverter" />
       <local:MultiRotatedVertexValueConverter x:Key="MultiRotatedVertexValueConverter" />
       <local:PreviousMultiRotatedVertexValueConverter x:Key="PreviousMultiRotatedVertexValueConverter" />
+      <local:MultiRotatedPointValueConverter x:Key="MultiRotatedPointValueConverter" />
+      <local:PreviousMultiRotatedPointValueConverter x:Key="PreviousMultiRotatedPointValueConverter" />
       <local:TextureCircleValueConverter x:Key="TextureCircleValueConverter" />
       <local:TexturePathValueConverter x:Key="TexturePathValueConverter" />
       <local:TextureRectValueConverter x:Key="TextureRectValueConverter" />
@@ -29,6 +31,7 @@
                x:Name="stpvm"
                StrokeThickness="0"
                Points="{Binding Points}"
+				   MouseDown="General_MouseDown"
 				   MouseUp="General_MouseUp"
                MouseWheel="Shape_Rotate"
                >
@@ -52,6 +55,8 @@
                   </TransformGroup>
                </Polygon.RenderTransform>
             </Polygon>
+            <!-- Below is the lines between the vertices of the polygon. The lines are
+            drawn between the vertices of the polygon and they are rotated acc to the angle-->
             <ItemsControl 
                Visibility="{Binding IsSelected, Converter={StaticResource BoolToVisibilityValueConverter}}"
                ItemsSource="{Binding PointVms}" >
@@ -66,7 +71,9 @@
                         <Line
                            StrokeThickness="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomThicknessValueConverter}}"
                            Stroke="DarkBlue"
-                           MouseUp="General_MouseUp"
+                           MouseDown="General_MouseDown"
+			                  MouseUp="General_MouseUp"
+			                  MouseMove="General_MouseMove"
                            >
                            <Line.X1>
                               <MultiBinding Converter="{StaticResource MultiRotatedVertexValueConverter}" ConverterParameter="x">
@@ -110,7 +117,11 @@
                   </DataTemplate>
                </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <Rectangle 
+            <!-- Below is the selection bounding box that can be used to move the shape. The 
+            Bounding box is resized to the outer bounds of the rotated shape and therefore
+            this rectangle is always aligned with the screen. The render transform is required
+            since the objects cant be placed in negative positions of the canvas (apparently) -->
+            <!--<Rectangle 
                Visibility="{Binding IsSelected, Converter={StaticResource BoolToVisibilityValueConverter}}"
                Canvas.Left="0"
                Canvas.Top="0" 
@@ -128,7 +139,10 @@
                      Y="{Binding BoundingBox.Top}" 
                   />
                </Rectangle.RenderTransform>
-            </Rectangle>
+            </Rectangle>-->
+            <!-- Below square handles of each vertex of the polygon. They should be placed
+            with rotating vertices (using a ValueConverter) and when dragged the dragging vector
+            should be re-rotated to local coordinates. -->
             <ItemsControl ItemsSource="{Binding PointVms}"
                Visibility="{Binding IsSelected, Converter={StaticResource BoolToVisibilityValueConverter}}"
                           >
@@ -194,7 +208,7 @@
       </DataTemplate>
       <DataTemplate DataType="{x:Type local:LfStaticBoxedSpritePolygonViewModel}">
          <Grid>
-            <!-- The Image is the Box texture of shape.l This is translated so
+            <!-- The Image is the Box texture of shape. This is translated so
             the center of the image is placed at the position of the shape. It
             is rotated (render transform) according to the angle of the shape. -->
             <Image
@@ -203,6 +217,7 @@
                Width="{Binding Width}"
                Height="{Binding Height}"
                Source="{Binding Texture, Converter={StaticResource TexturePathValueConverter}}" 
+				   MouseDown="General_MouseDown"
 				   MouseUp="General_MouseUp"
                MouseWheel="Shape_Rotate"
                RenderTransformOrigin="0, 0"
@@ -237,7 +252,9 @@
                            StrokeThickness="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomThicknessValueConverter}}"
                            Stroke="DarkBlue"
 							      Cursor="Hand"
-                           MouseUp="General_MouseUp"
+                           MouseDown="General_MouseDown"
+			                  MouseUp="General_MouseUp"
+			                  MouseMove="General_MouseMove"
                            >
                            <Line.X1>
                               <MultiBinding Converter="{StaticResource MultiRotatedVertexValueConverter}" ConverterParameter="x">
@@ -285,7 +302,7 @@
             Bounding box is resized to the outer bounds of the rotated shape and therefore
             this rectangle is always aligned with the screen. The render transform is required
             since the objects cant be placed in negative positions of the canvas (apparently) -->
-            <Rectangle 
+            <!--<Rectangle 
                Visibility="{Binding IsSelected, Converter={StaticResource BoolToVisibilityValueConverter}}"
                Canvas.Left="0"
                Canvas.Top="0" 
@@ -297,13 +314,13 @@
                MouseDown="General_MouseDown"
 			      MouseUp="General_MouseUp"
 			      MouseMove="General_MouseMove">
-               <Rectangle.RenderTransform>
+               <Rectangle.LayoutTransform>
                   <TranslateTransform  x:Name="d"
-                     X="{Binding BoundingBox.Left}" 
-                     Y="{Binding BoundingBox.Top}" 
+                     X="{Binding Converter={StaticResource TextureOffsetXValueConverter}}" 
+                     Y="{Binding Converter={StaticResource TextureOffsetYValueConverter}}" 
                   />
-               </Rectangle.RenderTransform>
-            </Rectangle>
+               </Rectangle.LayoutTransform>
+            </Rectangle>-->
             <!-- Below square handles of each vertex of the polygon. They should be placed
             with rotating vertices (using a ValueConverter) and when dragged the dragging vector
             should be re-rotated to local coordinates. -->
@@ -378,16 +395,75 @@
                Width="{Binding Width}"
                Height="{Binding Height}"
                Source="{Binding Texture, Converter={StaticResource TexturePathValueConverter}}"
-               MouseUp="General_MouseUp"
+				   MouseDown="General_MouseDown"
+				   MouseUp="General_MouseUp"
+               MouseWheel="Shape_Rotate"
                >
-               <Image.RenderTransform>
-                  <TranslateTransform 
-                  X="{Binding Converter={StaticResource TextureOffsetXValueConverter}}" 
-                  Y="{Binding Converter={StaticResource TextureOffsetYValueConverter}}" 
-                  />
+               <Image.RenderTransform >
+                  <TransformGroup>
+                     <TranslateTransform x:Name="d2"
+                        X="{Binding Converter={StaticResource TextureOffsetXValueConverter}}" 
+                        Y="{Binding Converter={StaticResource TextureOffsetYValueConverter}}" 
+                     />
+                     <RotateTransform x:Name="d1"
+                        Angle="{Binding Angle, Converter={StaticResource NegRadToDegValueConverter}}"
+                     />
+                  </TransformGroup>
                </Image.RenderTransform>
             </Image>
-            <Rectangle 
+            <!-- Below is the lines between the vertices of the polygon. The lines are
+            drawn between the vertices of the polygon and they are rotated acc to the angle-->
+            <ItemsControl 
+               Visibility="{Binding IsSelected, Converter={StaticResource BoolToVisibilityValueConverter}}"
+               ItemsSource="{Binding PointVms}" 
+               >
+               <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                     <Canvas/>
+                  </ItemsPanelTemplate>
+               </ItemsControl.ItemsPanel>
+               <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                     <Grid>
+                        <Line
+                           StrokeThickness="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomThicknessValueConverter}}"
+                           Stroke="DarkBlue"
+							      Cursor="Hand"
+                           MouseDown="General_MouseDown"
+			                  MouseUp="General_MouseUp"
+			                  MouseMove="General_MouseMove"
+                           >
+                           <Line.X1>
+                              <MultiBinding Converter="{StaticResource MultiRotatedPointValueConverter}" ConverterParameter="x">
+                                 <Binding Path="PosX" />
+                                 <Binding />
+                              </MultiBinding>
+                           </Line.X1>
+                           <Line.Y1>
+                              <MultiBinding Converter="{StaticResource MultiRotatedPointValueConverter}" ConverterParameter="y">
+                                 <Binding Path="PosY" />
+                                 <Binding />
+                              </MultiBinding>
+                           </Line.Y1>
+                           <Line.X2>
+                              <MultiBinding Converter="{StaticResource PreviousMultiRotatedPointValueConverter}" ConverterParameter="x">
+                                 <Binding Path="PosX" />
+                                 <Binding />
+                              </MultiBinding>
+                           </Line.X2>
+                           <Line.Y2>
+                              <MultiBinding Converter="{StaticResource PreviousMultiRotatedPointValueConverter}" ConverterParameter="y">
+                                 <Binding Path="PosY" />
+                                 <Binding />
+                              </MultiBinding>
+                           </Line.Y2>
+                        </Line>
+                     </Grid>
+                  </DataTemplate>
+               </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!--<Rectangle 
                Visibility="{Binding IsSelected, Converter={StaticResource BoolToVisibilityValueConverter}}"
                Canvas.Left="{Binding BoundingBox.Left}"
                Canvas.Top="{Binding BoundingBox.Top}" 
@@ -405,7 +481,7 @@
                   Y="{Binding Converter={StaticResource TextureOffsetYValueConverter}}" 
                   />
                </Rectangle.RenderTransform>
-            </Rectangle>
+            </Rectangle>-->
          </Grid>
       </DataTemplate>
    </UserControl.Resources>

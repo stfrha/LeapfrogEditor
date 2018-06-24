@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -115,7 +116,7 @@ namespace LeapfrogEditor
             {
                IPositionInterface obj = (IPositionInterface)fwe.DataContext;
 
-               if (obj.MainVm.MouseDown(fwe, e.ChangedButton, e.GetPosition(content), e.ClickCount, shift, ctrl, alt))
+               if (obj.MainVm.MouseUp(fwe, e.ChangedButton, e.GetPosition(content), e.ClickCount, shift, ctrl, alt))
                {
                   e.Handled = true;
                }

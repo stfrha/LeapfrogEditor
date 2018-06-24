@@ -98,6 +98,96 @@ namespace LeapfrogEditor
       }
    }
 
+   class PreviousMultiRotatedPointValueConverter : IMultiValueConverter
+   {
+      public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+      {
+         if (values.Count() == 2)
+         {
+            if ((values[0] is double) && (values[1] is LfPointViewModel))
+            {
+               LfPointViewModel origVertex = (LfPointViewModel)values[1];
+               LfStaticBoxViewModel boxVm = origVertex.Parent;
+
+               int i = boxVm.PointVms.IndexOf(origVertex);
+
+               if (i == -1)
+               {
+                  return null;
+               }
+
+               LfPointViewModel vertex;
+
+               if (i > 0)
+               {
+                  vertex = boxVm.PointVms[i - 1];
+               }
+               else
+               {
+                  vertex = boxVm.PointVms[boxVm.PointVms.Count() - 1];
+               }
+
+               Point p = new Point(vertex.PosX, vertex.PosY);
+               Point rp = boxVm.RotatedPointFromLocal(p);
+
+               if (parameter as string == "x")
+               {
+                  return rp.X;
+               }
+               else
+               {
+                  return rp.Y;
+               }
+            }
+         }
+
+         return null;
+      }
+
+      public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+      {
+         throw new NotImplementedException();
+      }
+   }
+
+   class MultiRotatedPointValueConverter : IMultiValueConverter
+   {
+      public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+      {
+         if (values.Count() == 2)
+         {
+            if ((values[0] is double) && (values[1] is LfPointViewModel))
+            {
+               double pos = (double)values[0];
+               LfPointViewModel vertex = (LfPointViewModel)values[1];
+               LfStaticBoxViewModel boxVm = vertex.Parent;
+
+               Point p;
+
+               if (parameter as string == "x")
+               {
+                  p = new Point(pos, vertex.PosY);
+                  Point rp = boxVm.RotatedPointFromLocal(p);
+                  return rp.X;
+               }
+               else
+               {
+                  p = new Point(vertex.PosX, pos);
+                  Point rp = boxVm.RotatedPointFromLocal(p);
+                  return rp.Y;
+               }
+            }
+         }
+
+         return null;
+      }
+
+      public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+      {
+         throw new NotImplementedException();
+      }
+   }
+
    class RotatedVertexXValueConverter : IValueConverter
    {
       public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

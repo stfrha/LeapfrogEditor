@@ -84,6 +84,21 @@ namespace LeapfrogEditor
          }
       }
 
+      public List<LfPointViewModel> PointVms
+      {
+         get
+         {
+            // Create collection of points representing the corners of the Box
+            List<LfPointViewModel> pl = new List<LfPointViewModel>();
+
+            pl.Add(new LfPointViewModel(MainVm, this, RotatedPointFromLocal(new Point(-Width / 2, -Height / 2))));
+            pl.Add(new LfPointViewModel(MainVm, this, RotatedPointFromLocal(new Point(Width / 2, -Height / 2))));
+            pl.Add(new LfPointViewModel(MainVm, this, RotatedPointFromLocal(new Point(Width / 2, Height / 2))));
+            pl.Add(new LfPointViewModel(MainVm, this, RotatedPointFromLocal(new Point(-Width / 2, Height / 2))));
+            
+            return pl;
+         }
+      }
 
       #endregion
 
@@ -96,37 +111,26 @@ namespace LeapfrogEditor
          double t = double.MaxValue;
          double b = double.MinValue;
 
-         // Build point collection
-         List<Point> pl = new List<Point>();
-
-         pl.Add(new Point(-Width / 2, -Height / 2));
-         pl.Add(new Point(Width / 2, -Height / 2));
-         pl.Add(new Point(Width / 2, Height / 2));
-         pl.Add(new Point(-Width / 2, Height / 2));
-
-         foreach (Point p in pl)
+         foreach (LfPointViewModel p in PointVms)
          {
-            // Convert point according to angle
-            Point rtp = RotatedPointFromLocal(p);
-
-            if (rtp.X < l)
+            if (p.PosX < l)
             {
-               l = rtp.X;
+               l = p.PosX;
             }
 
-            if (rtp.X > r)
+            if (p.PosX > r)
             {
-               r = rtp.X;
+               r = p.PosX;
             }
 
-            if (rtp.Y < t)
+            if (p.PosY < t)
             {
-               t = rtp.Y;
+               t = p.PosY;
             }
 
-            if (rtp.Y > b)
+            if (p.PosY > b)
             {
-               b = rtp.Y;
+               b = p.PosY;
             }
          }
          Rect tr = new Rect(new Point(l, t), new Point(r, b));
