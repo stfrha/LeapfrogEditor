@@ -14,6 +14,7 @@
       <local:PreviousMultiRotatedVertexValueConverter x:Key="PreviousMultiRotatedVertexValueConverter" />
       <local:MultiRotatedPointValueConverter x:Key="MultiRotatedPointValueConverter" />
       <local:PreviousMultiRotatedPointValueConverter x:Key="PreviousMultiRotatedPointValueConverter" />
+      <local:EllipseCenterValueConverter x:Key="EllipseCenterValueConverter" />
       <local:TextureCircleValueConverter x:Key="TextureCircleValueConverter" />
       <local:TexturePathValueConverter x:Key="TexturePathValueConverter" />
       <local:TextureRectValueConverter x:Key="TextureRectValueConverter" />
@@ -24,6 +25,7 @@
       <local:ZoomHandleSizeValueConverter x:Key="ZoomHandleSizeValueConverter" />
       <local:ZoomHandleTranslateValueConverter x:Key="ZoomHandleTranslateValueConverter" />
       <local:PointCollectionValueConverter x:Key="PointCollectionValueConverter" />
+      <local:TwiceDoubleValueConverter x:Key="TwiceDoubleValueConverter" />
       <local:DebugDummyConverter x:Key="DebugDummyConverter" />
       <DataTemplate DataType="{x:Type local:LfScalableTexturePolygonViewModel}">
          <Grid>
@@ -388,7 +390,7 @@
          </Grid>
       </DataTemplate>
       <DataTemplate DataType="{x:Type local:LfStaticBoxViewModel}">
-         <Grid>
+         <Canvas>
             <Image
                Canvas.Left="{Binding PosX}"
                Canvas.Top="{Binding PosY}"
@@ -462,27 +464,58 @@
                   </DataTemplate>
                </ItemsControl.ItemTemplate>
             </ItemsControl>
-
-            <!--<Rectangle 
+         </Canvas>
+      </DataTemplate>
+      <DataTemplate DataType="{x:Type local:LfStaticCircleViewModel}">
+         <Canvas>
+            <Image
+               Canvas.Left="{Binding PosX}"
+               Canvas.Top="{Binding PosY}"
+               Width="{Binding Radius, Converter={StaticResource TwiceDoubleValueConverter}}"
+               Height="{Binding Radius, Converter={StaticResource TwiceDoubleValueConverter}}"
+               Source="{Binding Texture, Converter={StaticResource TexturePathValueConverter}}"
+				   MouseDown="General_MouseDown"
+				   MouseUp="General_MouseUp"
+               MouseWheel="Shape_Rotate"
+               RenderTransformOrigin="0, 0"
+               >
+               <Image.RenderTransform >
+                  <TransformGroup>
+                     <TranslateTransform x:Name="d2"
+                        X="{Binding Converter={StaticResource TextureOffsetXValueConverter}}" 
+                        Y="{Binding Converter={StaticResource TextureOffsetYValueConverter}}" 
+                     />
+                     <RotateTransform x:Name="d1"
+                        Angle="{Binding Angle, Converter={StaticResource NegRadToDegValueConverter}}"
+                     />
+                  </TransformGroup>
+               </Image.RenderTransform>
+            </Image>
+            <Ellipse
                Visibility="{Binding IsSelected, Converter={StaticResource BoolToVisibilityValueConverter}}"
-               Canvas.Left="{Binding BoundingBox.Left}"
-               Canvas.Top="{Binding BoundingBox.Top}" 
-               Width="{Binding BoundingBox.Width}"
-               Height="{Binding BoundingBox.Height}"
+               Width="{Binding Radius, Converter={StaticResource TwiceDoubleValueConverter}}"
+               Height="{Binding Radius, Converter={StaticResource TwiceDoubleValueConverter}}"
                StrokeThickness="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomThicknessValueConverter}}"
-               Stroke="Gray"
-               Cursor="Hand"
+               Stroke="DarkBlue"
+				   Cursor="Hand"
                MouseDown="General_MouseDown"
 			      MouseUp="General_MouseUp"
-			      MouseMove="General_MouseMove">
-               <Rectangle.RenderTransform>
-                  <TranslateTransform 
-                  X="{Binding Converter={StaticResource TextureOffsetXValueConverter}}" 
-                  Y="{Binding Converter={StaticResource TextureOffsetYValueConverter}}" 
-                  />
-               </Rectangle.RenderTransform>
-            </Rectangle>-->
-         </Grid>
+			      MouseMove="General_MouseMove"
+               >
+               <Canvas.Left>
+                  <MultiBinding Converter="{StaticResource EllipseCenterValueConverter}">
+                     <Binding Path="PosX" />
+                     <Binding Path="Radius"/>
+                  </MultiBinding>
+               </Canvas.Left>
+               <Canvas.Top>
+                  <MultiBinding Converter="{StaticResource EllipseCenterValueConverter}">
+                     <Binding Path="PosY" />
+                     <Binding Path="Radius"/>
+                  </MultiBinding>
+               </Canvas.Top>
+            </Ellipse>
+         </Canvas>
       </DataTemplate>
    </UserControl.Resources>
    <Canvas

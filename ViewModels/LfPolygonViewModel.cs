@@ -59,35 +59,6 @@ namespace LeapfrogEditor
          set { _pointVms = value; }
       }
 
-      //public ObservableCollection<LfDragablePointViewModel> PointVms
-      //{
-      //   get
-      //   {
-      //      CollectionViewSource.GetDefaultView(_pointVms).Refresh();
-      //      return _pointVms;
-      //   }
-      //   set
-      //   {
-      //      _pointVms = value;
-      //      OnPropertyChanged("PointVms");
-      //   }
-      //}
-
-      //public ObservableCollection<LfDragablePointViewModel> ClosedPointVms
-      //{
-      //   get
-      //   {
-      //      // Copy points collection
-      //      ObservableCollection<LfDragablePointViewModel> tc = new ObservableCollection<LfDragablePointViewModel>(_pointVms);
-
-      //      // Add first item to end to get a closed path
-      //      tc.Add(tc[0]);
-
-      //      return tc;
-      //   }
-      //   set {}
-      //}
-
       #endregion
 
       #region public Methods

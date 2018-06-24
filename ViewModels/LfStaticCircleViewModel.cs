@@ -64,12 +64,13 @@ namespace LeapfrogEditor
 
       protected override Rect GetBoundingBox()
       {
-         Rect r = new Rect(0, 0, Radius*2, Radius*2);
-         r.Offset(new Vector(-Radius, -Radius));
+         Rect r = new Rect(-Radius, -Radius, Radius * 2, Radius * 2);
+         //r.Offset(new Vector(-Radius, -Radius));
          return r;
       }
 
       #endregion
+
 
    }
 }

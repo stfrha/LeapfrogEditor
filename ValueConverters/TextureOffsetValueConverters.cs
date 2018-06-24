@@ -18,7 +18,12 @@ namespace LeapfrogEditor
 
             return -ao.Width / 2;
          }
+         else if (value is LfStaticCircleViewModel)
+         {
+            LfStaticCircleViewModel ao = (LfStaticCircleViewModel)value;
 
+            return -ao.Radius;
+         }
 
          return null;
 
@@ -40,7 +45,12 @@ namespace LeapfrogEditor
 
             return -ao.Height / 2;
          }
+         else if (value is LfStaticCircleViewModel)
+         {
+            LfStaticCircleViewModel ao = (LfStaticCircleViewModel)value;
 
+            return -ao.Radius;
+         }
 
          return null;
 

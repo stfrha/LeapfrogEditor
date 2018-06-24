@@ -255,6 +255,10 @@ namespace LeapfrogEditor
       {
          get
          {
+            if (Shapes.Count == 11)
+            {
+               int a = 10;
+            }
             if ((Shapes.Count == 0) && (ChildObjects.Count == 0))
             {
                return new Rect(0,0,0,0);

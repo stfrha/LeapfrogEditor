@@ -372,7 +372,7 @@ namespace LeapfrogEditor
 
             return true;
          }
-         else if ((target is Line) && (target.DataContext is LfDragablePointViewModel))
+         else if (((target is Line) || (target is Ellipse)) && (target.DataContext is IPositionInterface))
          {
             // Mouse move on Line between DragablePoints 
 //            LfDragablePointViewModel dpvm = (LfDragablePointViewModel)target.DataContext;

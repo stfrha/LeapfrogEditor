@@ -164,98 +164,17 @@ namespace LeapfrogEditor
 
             _modelObject.Angle = value;
             OnPropertyChanged("Angle");
+            OnPropertyChanged("BoundingBox");
+
+            CompoundObjectViewModel p = Parent;
+
+            while (p != null)
+            {
+               p.OnPropertyChanged("BoundingBox");
+               p = p.Parent;
+            }
          }
       }
-
-      //public double Width
-      //{
-      //   get { return _modelObject.Width; }
-      //   set
-      //   {
-      //      _modelObject.Width = value;
-      //      OnPropertyChanged("Width");
-      //      OnPropertyChanged("BoundingBox");
-
-      //      CompoundObjectViewModel p = Parent;
-
-      //      while (p != null)
-      //      {
-      //         p.OnPropertyChanged("BoundingBox");
-      //         p = p.Parent;
-      //      }
-      //   }
-      //}
-      
-      //public double Height
-      //{
-      //   get { return _modelObject.Height; }
-      //   set
-      //   {
-      //      _modelObject.Height = value;
-      //      OnPropertyChanged("Height");
-      //      OnPropertyChanged("BoundingBox");
-
-      //      CompoundObjectViewModel p = Parent;
-
-      //      while (p != null)
-      //      {
-      //         p.OnPropertyChanged("BoundingBox");
-      //         p = p.Parent;
-      //      }
-      //   }
-      //}
-
-      //public double AnchorX
-      //{
-      //   get
-      //   {
-      //      if (_modelObject == null) return 0;
-
-      //      return _modelObject.AnchorX;
-      //   }
-      //   set
-      //   {
-      //      if (_modelObject == null) return;
-
-      //      _modelObject.AnchorX = value;
-      //      OnPropertyChanged("AnchorX");
-      //      OnPropertyChanged("BoundingBox");
-
-      //      CompoundObjectViewModel p = Parent;
-
-      //      while (p != null)
-      //      {
-      //         p.OnPropertyChanged("BoundingBox");
-      //         p = p.Parent;
-      //      }
-      //   }
-      //}
-
-      //public double AnchorY
-      //{
-      //   get
-      //   {
-      //      if (_modelObject == null) return 0;
-
-      //      return _modelObject.AnchorY;
-      //   }
-      //   set
-      //   {
-      //      if (_modelObject == null) return;
-
-      //      _modelObject.AnchorY = value;
-      //      OnPropertyChanged("AnchorY");
-      //      OnPropertyChanged("BoundingBox");
-
-      //      CompoundObjectViewModel p = Parent;
-
-      //      while (p != null)
-      //      {
-      //         p.OnPropertyChanged("BoundingBox");
-      //         p = p.Parent;
-      //      }
-      //   }
-      //}
 
       public uint ZLevel
       {
