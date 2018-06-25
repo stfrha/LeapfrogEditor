@@ -19,11 +19,16 @@ namespace LeapfrogEditor
    enum LeftClickState
    {
       none,
-      staticPolygon,
-      dynamicPolygon,
-      boxedSpritePolygon,
+      spriteBox,
+      spritePolygon,
       staticBox,
+      staticCircle,
+      staticPolygon,
+      staticBoxedSpritePolygon,
       dynamicBox,
+      dynamicCircle,
+      dynamicPolygon,
+      dynamicBoxedSpritePolygon,
       addPoint
    }
 
@@ -212,7 +217,56 @@ namespace LeapfrogEditor
          }
       }
 
+
+      void NewShapeExecute(Object parameter)
+      {
+         // Deselect all other shapes when generating a new polygon
+         foreach (LfShapeViewModel shape in _selectedShapes)
+         {
+            shape.IsSelected = false;
+         }
+
+         _selectedShapes.Clear();
+
+         string param = parameter as string;
+
+         if (!Enum.TryParse<LeftClickState>(param,  out _LeftClickState))
+         {
+            _LeftClickState = LeftClickState.none;
+         }
+      }
+
+      bool CanNewShapeExecute(Object parameter)
+      {
+         return ((_selectedCompoundObject != null) && (parameter is string));
+      }
+
+      public ICommand NewShape
+      {
+         get
+         {
+            return new MicroMvvm.RelayCommand<Object>(parameter => NewShapeExecute(parameter), parameter => CanNewShapeExecute(parameter));
+         }
+      }
+
+
+
+      //<MenuItem Header = "Sprite Box" Command="{Binding NewSpriteBox}" />
+      //<MenuItem Header = "Sprite Polygon" Command="{Binding NewSpritePolygon}" />
+      //<MenuItem Header = "Static Circle" Command="{Binding NewStaticCircle}" />
+      //<MenuItem Header = "Dynamic Circle" Command="{Binding NewDynamicCircle}" />
+      //<MenuItem Header = "Static Box" Command="{Binding NewStaticBox}" />
+      //<MenuItem Header = "Dynamic Box" Command="{Binding NewDynamicBox}" />
+      //<MenuItem Header = "Static Polygon" Command="{Binding NewStaticPolygon}" />
+      //<MenuItem Header = "Dynamic Polygon" Command="{Binding NewDynamicPolygon}" />
+      //<MenuItem Header = "Static Boxed Sprite Polygon" Command="{Binding NewStaticBoxedSpritePolygon}" />
+      //<MenuItem Header = "Dynamic Boxed Sprite Polygon" Command="{Binding NewDynamicBoxedSpritePolygon}" />
+
+
+
       #endregion
+
+
 
       #region Public Methods
 
@@ -238,7 +292,15 @@ namespace LeapfrogEditor
                }
             }
 
-
+            // If we are creating shapes or adding points to a polygon
+            // we want to be able to click anywhere (even in an existing shape).
+            // Therefore, we return false for any of those cases and hopefully
+            // the mouse event will bubble up to the background canvas
+            // and thus be handeled in that mouse handler.
+            if (_LeftClickState != LeftClickState.none)
+            {
+               return false;
+            }
 
             // Decode target ViewModel and view object that was clicked
             if (target.DataContext is CompoundObjectViewModel)
@@ -339,6 +401,16 @@ namespace LeapfrogEditor
 
       public bool MouseMove(FrameworkElement target, Vector dragVector, bool shift, bool ctrl, bool alt)
       {
+         // If we are creating shapes or adding points to a polygon
+         // we want to be able to click anywhere (even in an existing shape).
+         // Therefore, we return false for any of those cases and hopefully
+         // the mouse event will bubble up to the background canvas
+         // and thus be handeled in that mouse handler.
+         if (_LeftClickState != LeftClickState.none)
+         {
+            return false;
+         }
+
          // Decode target ViewModel and view oobject that was clicked
          if (target.DataContext is CompoundObjectViewModel)
          {
@@ -414,6 +486,16 @@ namespace LeapfrogEditor
       {
          if (button == MouseButton.Left)
          {
+            // If we are creating shapes or adding points to a polygon
+            // we want to be able to click anywhere (even in an existing shape).
+            // Therefore, we return false for any of those cases and hopefully
+            // the mouse event will bubble up to the background canvas
+            // and thus be handeled in that mouse handler.
+            if (_LeftClickState != LeftClickState.none)
+            {
+               return false;
+            }
+
             // Decode target ViewModel and view oobject that was clicked
             if (target.DataContext is CompoundObjectViewModel)
             {
@@ -526,8 +608,78 @@ namespace LeapfrogEditor
             {
                MyCpVm.DeselectAllChildren();
                MyCpVm.IsSelected = false;
+               _selectedCompoundObject = null;
+               _selectedShapes.Clear();
             }
-            else if ((_LeftClickState == LeftClickState.staticPolygon) || (_LeftClickState == LeftClickState.dynamicPolygon))
+            else if ((_LeftClickState == LeftClickState.staticBox) ||
+               (_LeftClickState == LeftClickState.dynamicBox) ||
+               (_LeftClickState == LeftClickState.dynamicCircle) ||
+               (_LeftClickState == LeftClickState.staticCircle) ||
+               (_LeftClickState == LeftClickState.spriteBox))
+            {
+               // The first point of this polygon will be the PosX and PosY of the 
+               // new shape, and thus, the first polygon vertex should be at 0,0.
+               Point parentOrigo = new Point(_selectedCompoundObject.PosX, _selectedCompoundObject.PosY);
+               Point localClickPoint = new Point();
+               localClickPoint = (Point)(clickPoint - parentOrigo);
+
+               LfShape newShape = null;
+               LfShapeViewModel newShapeVm = null;
+
+               if (_LeftClickState == LeftClickState.staticBox)
+               {
+                  newShape = new LfStaticBox();
+                  newShapeVm = new LfStaticBoxViewModel(this, _selectedCompoundObject, (LfStaticBox)newShape);
+                  _selectedCompoundObject.ModelObject.StaticBoxes.Add((LfStaticBox)newShape);
+               }
+               else if (_LeftClickState == LeftClickState.staticBox)
+               {
+                  newShape = new LfDynamicBox();
+                  newShapeVm = new LfDynamicBoxViewModel(this, _selectedCompoundObject, (LfDynamicBox)newShape);
+                  _selectedCompoundObject.ModelObject.DynamicBoxes.Add((LfDynamicBox)newShape);
+               }
+               else if (_LeftClickState == LeftClickState.staticCircle)
+               {
+                  newShape = new LfStaticCircle();
+                  newShapeVm = new LfStaticCircleViewModel(this, _selectedCompoundObject, (LfStaticCircle)newShape);
+                  _selectedCompoundObject.ModelObject.StaticCircles.Add((LfStaticCircle)newShape);
+               }
+               else if (_LeftClickState == LeftClickState.dynamicCircle)
+               {
+                  newShape = new LfDynamicCircle();
+                  newShapeVm = new LfDynamicCircleViewModel(this, _selectedCompoundObject, (LfDynamicCircle)newShape);
+                  _selectedCompoundObject.ModelObject.DynamicCircles.Add((LfDynamicCircle)newShape);
+               }
+               else if (_LeftClickState == LeftClickState.spriteBox)
+               {
+                  newShape = new LfSpriteBox();
+                  newShapeVm = new LfSpriteBoxViewModel(this, _selectedCompoundObject, (LfSpriteBox)newShape);
+                  _selectedCompoundObject.ModelObject.SpriteBoxes.Add((LfSpriteBox)newShape);
+               }
+
+               if ((newShape != null) && (newShapeVm != null))
+               {
+                  newShape.PosX = localClickPoint.X;
+                  newShape.PosY = localClickPoint.Y;
+
+                  _selectedCompoundObject.Shapes.Add(newShapeVm);
+
+                  _selectedShapes.Add(newShapeVm);
+                  newShapeVm.IsSelected = true;
+
+                  foreach (LfDragablePointViewModel selpoint in _selectedPoints)
+                  {
+                     selpoint.IsSelected = false;
+                  }
+                  _selectedPoints.Clear();
+               }
+
+               _LeftClickState = LeftClickState.none;
+
+            }
+            else if ((_LeftClickState == LeftClickState.staticPolygon) || 
+               (_LeftClickState == LeftClickState.dynamicPolygon) ||
+               (_LeftClickState == LeftClickState.spritePolygon))
             {
                // The first point of this polygon will be the PosX and PosY of the 
                // new shape, and thus, the first polygon vertex should be at 0,0.
@@ -544,16 +696,21 @@ namespace LeapfrogEditor
                   newPolygonVm = new LfStaticPolygonViewModel(this, _selectedCompoundObject, (LfStaticPolygon)newPolygon);
                   _selectedCompoundObject.ModelObject.StaticPolygons.Add((LfStaticPolygon)newPolygon);
                }
-               else
+               else if(_LeftClickState == LeftClickState.dynamicPolygon)
                {
                   newPolygon = new LfDynamicPolygon();
                   newPolygonVm = new LfDynamicPolygonViewModel(this, _selectedCompoundObject, (LfDynamicPolygon)newPolygon);
                   _selectedCompoundObject.ModelObject.DynamicPolygons.Add((LfDynamicPolygon)newPolygon);
                }
+               else
+               {
+                  newPolygon = new LfSpritePolygon();
+                  newPolygonVm = new LfSpritePolygonViewModel(this, _selectedCompoundObject, (LfSpritePolygon)newPolygon);
+                  _selectedCompoundObject.ModelObject.SpritePolygons.Add((LfSpritePolygon)newPolygon);
+               }
 
                newPolygon.PosX = localClickPoint.X;
                newPolygon.PosY = localClickPoint.Y;
-
 
                _selectedCompoundObject.Shapes.Add(newPolygonVm);
 
@@ -561,6 +718,53 @@ namespace LeapfrogEditor
                newPolygonVm.IsSelected = true;
 
                LfDragablePointViewModel newPoint = newPolygonVm.InsertPoint(new Point(0,0), null);
+
+               foreach (LfDragablePointViewModel selpoint in _selectedPoints)
+               {
+                  selpoint.IsSelected = false;
+               }
+               _selectedPoints.Clear();
+
+               _selectedPoints.Add(newPoint);
+               newPoint.IsSelected = true;
+
+               _LeftClickState = LeftClickState.addPoint;
+
+            }
+            else if ((_LeftClickState == LeftClickState.staticBoxedSpritePolygon) || 
+               (_LeftClickState == LeftClickState.dynamicBoxedSpritePolygon))
+            {
+               // The first point of this polygon will be the PosX and PosY of the 
+               // new shape, and thus, the first polygon vertex should be at 0,0.
+               Point parentOrigo = new Point(_selectedCompoundObject.PosX, _selectedCompoundObject.PosY);
+               Point localClickPoint = new Point();
+               localClickPoint = (Point)(clickPoint - parentOrigo);
+
+               LfStaticBoxedSpritePolygon newPolygon = null;
+               LfStaticBoxedSpritePolygonViewModel newPolygonVm = null;
+
+               if (_LeftClickState == LeftClickState.staticBoxedSpritePolygon)
+               {
+                  newPolygon = new LfStaticBoxedSpritePolygon();
+                  newPolygonVm = new LfStaticBoxedSpritePolygonViewModel(this, _selectedCompoundObject, (LfStaticBoxedSpritePolygon)newPolygon);
+                  _selectedCompoundObject.ModelObject.StaticBoxedSpritePolygons.Add((LfStaticBoxedSpritePolygon)newPolygon);
+               }
+               else
+               {
+                  newPolygon = new LfDynamicBoxedSpritePolygon();
+                  newPolygonVm = new LfDynamicBoxedSpritePolygonViewModel(this, _selectedCompoundObject, (LfDynamicBoxedSpritePolygon)newPolygon);
+                  _selectedCompoundObject.ModelObject.DynamicBoxedSpritePolygons.Add((LfDynamicBoxedSpritePolygon)newPolygon);
+               }
+               
+               newPolygon.PosX = localClickPoint.X;
+               newPolygon.PosY = localClickPoint.Y;
+               
+               _selectedCompoundObject.Shapes.Add(newPolygonVm);
+
+               _selectedShapes.Add(newPolygonVm);
+               newPolygonVm.IsSelected = true;
+
+               LfDragablePointViewModel newPoint = newPolygonVm.InsertPoint(new Point(0, 0), null);
 
                foreach (LfDragablePointViewModel selpoint in _selectedPoints)
                {

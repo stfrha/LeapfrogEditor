@@ -9,9 +9,11 @@ using System.Windows.Media;
 
 namespace LeapfrogEditor
 {
-   class LfSpriteBoxViewModel : LfShapeViewModel, IWidthHeightInterface
+   class LfSpriteBoxViewModel : LfShapeViewModel, IWidthHeightInterface, IBoxPointsInterface
    {
       #region Declarations
+
+      private ObservableCollection<LfPointViewModel> _points = new ObservableCollection<LfPointViewModel>();
 
       #endregion
 
@@ -21,6 +23,7 @@ namespace LeapfrogEditor
          base(mainVm, parent)
       {
          ModelObject = modelObject;
+         UpdateCornerPoints();
       }
 
       #endregion
@@ -45,6 +48,7 @@ namespace LeapfrogEditor
             if (LocalModelObject == null) return;
 
             LocalModelObject.Width = value;
+            UpdateCornerPoints();
             OnPropertyChanged("Width");
             OnPropertyChanged("BoundingBox");
 
@@ -71,6 +75,7 @@ namespace LeapfrogEditor
             if (LocalModelObject == null) return;
 
             LocalModelObject.Height = value;
+            UpdateCornerPoints();
             OnPropertyChanged("Height");
             OnPropertyChanged("BoundingBox");
 
@@ -84,6 +89,28 @@ namespace LeapfrogEditor
          }
       }
 
+      public ObservableCollection<LfPointViewModel> PointVms
+      {
+         get { return _points; }
+         set { _points = value; ; }
+      }
+
+
+      #endregion
+
+      #region private Methods
+
+      private void UpdateCornerPoints()
+      {
+         _points.Clear();
+
+         _points.Add(new LfPointViewModel(MainVm, this, new Point(-Width / 2, -Height / 2)));
+         _points.Add(new LfPointViewModel(MainVm, this, new Point(Width / 2, -Height / 2)));
+         _points.Add(new LfPointViewModel(MainVm, this, new Point(Width / 2, Height / 2)));
+         _points.Add(new LfPointViewModel(MainVm, this, new Point(-Width / 2, Height / 2)));
+
+         OnPropertyChanged("PointVms");
+      }
 
       #endregion
 
@@ -91,12 +118,55 @@ namespace LeapfrogEditor
 
       protected override Rect GetBoundingBox()
       {
-         Rect r = new Rect(0, 0, Width, Height);
-         r.Offset(new Vector(-Width / 2,  -Height / 2));
-         return r;
+         double l = double.MaxValue;
+         double r = double.MinValue;
+         double t = double.MaxValue;
+         double b = double.MinValue;
+
+         foreach (LfPointViewModel p in PointVms)
+         {
+            // Convert point according to angle
+            Point rtp = RotatedPointFromLocal(new Point(p.PosX, p.PosY));
+
+
+            if (rtp.X < l)
+            {
+               l = rtp.X;
+            }
+
+            if (rtp.X > r)
+            {
+               r = rtp.X;
+            }
+
+            if (rtp.Y < t)
+            {
+               t = rtp.Y;
+            }
+
+            if (rtp.Y > b)
+            {
+               b = rtp.Y;
+            }
+         }
+         Rect tr = new Rect(new Point(l, t), new Point(r, b));
+
+         return tr;
+      }
+      
+      #endregion
+
+      #region public Methods
+
+      public override void InvalidateAll()
+      {
+         UpdateCornerPoints();
+         OnPropertyChanged("");
+
       }
 
       #endregion
+
 
    }
 }

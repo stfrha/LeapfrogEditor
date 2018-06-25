@@ -15,7 +15,7 @@ namespace LeapfrogEditor
       private double _posY;
 
       private MainViewModel _mainVm;
-      private LfStaticBoxViewModel _parent;
+      private IBoxPointsInterface _parent;
 
       private bool _isSelected;
 
@@ -24,7 +24,7 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public LfPointViewModel(MainViewModel mainVm, LfStaticBoxViewModel parent, Point p)
+      public LfPointViewModel(MainViewModel mainVm, IBoxPointsInterface parent, Point p)
       {
          PosX = p.X;
          PosY = p.Y;
@@ -43,7 +43,7 @@ namespace LeapfrogEditor
          set { _mainVm = value; }
       }
 
-      public LfStaticBoxViewModel Parent
+      public IBoxPointsInterface Parent
       {
          get { return _parent; }
          set

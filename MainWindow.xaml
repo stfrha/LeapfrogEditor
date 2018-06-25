@@ -30,12 +30,19 @@
          </MenuItem>
          <MenuItem Header="Edit">
             <MenuItem Header="Add" >
-               <MenuItem Header="Static Polygon" Command="{Binding NewStaticPolygon}" />
-               <MenuItem Header="Dynamic Polygon" Command="{Binding NewDynamicPolygon}" />
-               <MenuItem Header="Boxed Sprite Dynamic Polygon" Command="{Binding NewBoxedSpritePolygon}" />
-               <Separator/>
-               <MenuItem Header="Delete" Command="{Binding Delete}" />
+               <MenuItem Header="Sprite Box" Command="{Binding NewShape}" CommandParameter="spriteBox" />
+               <MenuItem Header="Sprite Polygon" Command="{Binding NewShape}" CommandParameter="spritePolygon"  />
+               <MenuItem Header="Static Circle" Command="{Binding NewShape}" CommandParameter="staticCircle"  />
+               <MenuItem Header="Dynamic Circle" Command="{Binding NewShape}" CommandParameter="dynamicCircle"  />
+               <MenuItem Header="Static Box" Command="{Binding NewShape}" CommandParameter="staticBox"  />
+               <MenuItem Header="Dynamic Box" Command="{Binding NewShape}" CommandParameter="dynamicBox"  />
+               <MenuItem Header="Static Polygon" Command="{Binding NewShape}" CommandParameter="staticPolygon"  />
+               <MenuItem Header="Dynamic Polygon" Command="{Binding NewShape}" CommandParameter="dynamicPolygon"  />
+               <MenuItem Header="Static Boxed Sprite Polygon" Command="{Binding NewShape}" CommandParameter="staticBoxedSpritePolygon"  />
+               <MenuItem Header="Dynamic Boxed Sprite Polygon" Command="{Binding NewShape}" CommandParameter="dynamicBoxedSpritePolygon"  />
             </MenuItem>
+            <Separator/>
+            <MenuItem Header="Delete" Command="{Binding Delete}" />
          </MenuItem>
          <MenuItem Header="View">
             <MenuItem Header="Swap states" Command="{Binding State}" />

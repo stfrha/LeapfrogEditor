@@ -8,25 +8,21 @@ using System.Windows.Data;
 
 namespace LeapfrogEditor
 {
-   class EllipseCenterValueConverter : IMultiValueConverter
+   class EllipseCenterValueConverter : IValueConverter
    {
-      public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+      public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
       {
-         if (values.Count() == 2)
+         if (value is double)
          {
-            if ((values[0] is double) && (values[1] is double))
-            {
-               double pos = (double)values[0];
-               double radius = (double)values[1];
+            double radius = (double)value;
 
-               return pos - radius;
-            }
+            return - radius;
          }
 
          return null;
       }
 
-      public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+      public object ConvertBack(object value, Type targetTypes, object parameter, System.Globalization.CultureInfo culture)
       {
          throw new NotImplementedException();
       }

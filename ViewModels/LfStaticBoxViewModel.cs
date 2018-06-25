@@ -9,7 +9,7 @@ using System.Windows.Media;
 
 namespace LeapfrogEditor
 {
-   class LfStaticBoxViewModel : LfShapeViewModel, IWidthHeightInterface
+   class LfStaticBoxViewModel : LfShapeViewModel, IWidthHeightInterface, IBoxPointsInterface
    {
       #region Declarations
 
@@ -164,7 +164,6 @@ namespace LeapfrogEditor
          OnPropertyChanged("");
 
       }
-
 
       #endregion
    }

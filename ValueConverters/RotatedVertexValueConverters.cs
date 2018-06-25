@@ -107,7 +107,8 @@ namespace LeapfrogEditor
             if ((values[0] is double) && (values[1] is LfPointViewModel))
             {
                LfPointViewModel origVertex = (LfPointViewModel)values[1];
-               LfStaticBoxViewModel boxVm = origVertex.Parent;
+               IBoxPointsInterface boxVm = origVertex.Parent;
+               LfShapeViewModel shapeVm = (LfShapeViewModel)origVertex.Parent;
 
                int i = boxVm.PointVms.IndexOf(origVertex);
 
@@ -128,7 +129,7 @@ namespace LeapfrogEditor
                }
 
                Point p = new Point(vertex.PosX, vertex.PosY);
-               Point rp = boxVm.RotatedPointFromLocal(p);
+               Point rp = shapeVm.RotatedPointFromLocal(p);
 
                if (parameter as string == "x")
                {
@@ -160,20 +161,21 @@ namespace LeapfrogEditor
             {
                double pos = (double)values[0];
                LfPointViewModel vertex = (LfPointViewModel)values[1];
-               LfStaticBoxViewModel boxVm = vertex.Parent;
+               IBoxPointsInterface boxVm = vertex.Parent;
+               LfShapeViewModel shapeVm = (LfShapeViewModel)vertex.Parent;
 
                Point p;
 
                if (parameter as string == "x")
                {
                   p = new Point(pos, vertex.PosY);
-                  Point rp = boxVm.RotatedPointFromLocal(p);
+                  Point rp = shapeVm.RotatedPointFromLocal(p);
                   return rp.X;
                }
                else
                {
                   p = new Point(vertex.PosX, pos);
-                  Point rp = boxVm.RotatedPointFromLocal(p);
+                  Point rp = shapeVm.RotatedPointFromLocal(p);
                   return rp.Y;
                }
             }

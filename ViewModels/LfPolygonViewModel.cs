@@ -82,7 +82,7 @@ namespace LeapfrogEditor
          PointVms.Add(newPoint);
          LocalModelObject.AddPoint(newPoint.ModelObject);
 
-         OnPropertyChanged("");
+         InvalidateAll();
          Parent.OnPropertyChanged("");
 
          return newPoint;
@@ -94,9 +94,8 @@ namespace LeapfrogEditor
 
          PointVms.Remove(point);
          LocalModelObject.RemovePoint(point.ModelObject);
-         OnPropertyChanged("ClosedPointVms");
-         OnPropertyChanged("Points");
-         OnPropertyChanged("");
+
+         InvalidateAll();
          Parent.OnPropertyChanged("");
       }
 
@@ -128,7 +127,7 @@ namespace LeapfrogEditor
             LocalModelObject.InsertPoint(newPoint.ModelObject, null);
          }
 
-         OnPropertyChanged("");
+         InvalidateAll();
          Parent.OnPropertyChanged("");
 
          return newPoint;
