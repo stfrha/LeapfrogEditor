@@ -542,7 +542,23 @@ namespace LeapfrogEditor
          }
       }
 
+      public void GenerateTriangles()
+      {
+         foreach (object o in Shapes)
+         {
+            if (o is LfPolygonViewModel)
+            {
+               LfPolygonViewModel pvm = (LfPolygonViewModel)o;
 
+               pvm.GenerateTriangles();
+            }
+         }
+
+         foreach (CompoundObjectViewModel covm in ChildObjects)
+         {
+            covm.GenerateTriangles();
+         }
+      }
 
       #endregion
 

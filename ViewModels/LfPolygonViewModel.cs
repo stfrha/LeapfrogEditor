@@ -15,7 +15,7 @@ namespace LeapfrogEditor
       #region Declarations
 
       private ObservableCollection<LfDragablePointViewModel> _pointVms = new ObservableCollection<LfDragablePointViewModel>();
-      // TODO: What about triangles?
+      private ObservableCollection<TriangleViewModel> _triangles = new ObservableCollection<TriangleViewModel>();
 
       #endregion
 
@@ -57,6 +57,12 @@ namespace LeapfrogEditor
       {
          get { return _pointVms; }
          set { _pointVms = value; }
+      }
+
+      public ObservableCollection<TriangleViewModel> Triangles
+      {
+         get { return _triangles; }
+         set { _triangles = value; }
       }
 
       #endregion
@@ -140,6 +146,54 @@ namespace LeapfrogEditor
             dp.IsSelected = false;
          }
       }
+
+      public void GenerateTriangles()
+      {
+         GeometryUtility.CPoint2D[] polyVertices = new GeometryUtility.CPoint2D[PointVms.Count];
+
+         int i = 0;
+
+         foreach (LfDragablePointViewModel dpvm in PointVms)
+         {
+            polyVertices[i++] = new GeometryUtility.CPoint2D(dpvm.PosX, dpvm.PosY, dpvm.Id);
+         }
+
+         PolygonCuttingEar.CPolygonShape poly = new PolygonCuttingEar.CPolygonShape(polyVertices);
+
+         poly.CutEar();
+
+         if (LocalModelObject != null)
+         {
+            LocalModelObject.Triangles.Clear();
+            _triangles.Clear();
+
+            for (int n = 0; n < poly.NumberOfPolygons; n++)
+            {
+               Triangle nt = new Triangle((uint)n+1, poly.Polygons(n)[0].Id, poly.Polygons(n)[1].Id, poly.Polygons(n)[2].Id);
+               LocalModelObject.Triangles.Add(nt);
+
+               TriangleViewModel ntvm = new TriangleViewModel(this, nt);
+               _triangles.Add(ntvm);
+            }
+         }
+      }
+
+      public LfDragablePointViewModel GetTrianglePoint(uint pointId)
+      {
+         foreach (LfDragablePointViewModel dpvm in PointVms)
+         {
+            if (dpvm.Id == pointId)
+            {
+               return dpvm;
+            }
+         }
+
+         return null;
+      }
+
+
+
+
 
       #endregion
 

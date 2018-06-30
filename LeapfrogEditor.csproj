@@ -166,6 +166,14 @@
       <Project>{9efe6cbd-df21-436e-9f81-e258bab0b653}</Project>
       <Name>MicroMvvm</Name>
     </ProjectReference>
+    <ProjectReference Include="PolygonTriangulation_src\GeometryUtility\GeometryUtility.csproj">
+      <Project>{fd47d6ac-8238-4975-91c8-51e88326f27f}</Project>
+      <Name>GeometryUtility</Name>
+    </ProjectReference>
+    <ProjectReference Include="PolygonTriangulation_src\PolygonCuttingEar\PolygonCuttingEar.csproj">
+      <Project>{baa6d355-c95d-4714-8989-d9891efc5db6}</Project>
+      <Name>PolygonCuttingEar</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

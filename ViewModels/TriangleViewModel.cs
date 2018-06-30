@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media;
 
 namespace LeapfrogEditor
 {
@@ -11,14 +14,19 @@ namespace LeapfrogEditor
       #region Declarations
 
       private Triangle _modelObject;
+      private LfPolygonViewModel _parent;
+
+      private ObservableCollection<LfDragablePointViewModel> _pointVms = new ObservableCollection<LfDragablePointViewModel>();
 
       #endregion
 
       #region Constructors
 
-      public TriangleViewModel()
+      public TriangleViewModel(LfPolygonViewModel parent, Triangle modelObject)
       {
-         ModelObject = new Triangle();
+         Parent = parent;
+         ModelObject = modelObject;
+         BuildPoints();
       }
 
       #endregion
@@ -35,44 +43,50 @@ namespace LeapfrogEditor
          }
       }
 
-      public uint Id
+      public LfPolygonViewModel Parent
       {
-         get { return _modelObject.Id; }
+         get { return _parent; }
          set
          {
-            _modelObject.Id = value;
+            _parent = value;
+            OnPropertyChanged("");
+         }
+      }
+
+      public ObservableCollection<LfDragablePointViewModel> PointVms
+      {
+         get { return _pointVms; }
+         set { _pointVms = value; }
+      }
+
+      public uint Id
+      {
+         get
+         {
+            if (ModelObject == null) return 0;
+
+            return ModelObject.Id;
+         }
+         set
+         {
+            if (ModelObject == null) return;
+
+            ModelObject.Id = value;
             OnPropertyChanged("Id");
          }
       }
 
-      public uint V1
-      {
-         get { return _modelObject.V1; }
-         set
-         {
-            _modelObject.V1 = value;
-            OnPropertyChanged("V1");
-         }
-      }
+      #endregion
 
-      public uint V2
-      {
-         get { return _modelObject.V2; }
-         set
-         {
-            _modelObject.V2 = value;
-            OnPropertyChanged("V2");
-         }
-      }
+      #region private  methods
 
-      public uint V3
+      private void BuildPoints()
       {
-         get { return _modelObject.V3; }
-         set
-         {
-            _modelObject.V3 = value;
-            OnPropertyChanged("V3");
-         }
+         PointVms.Clear();
+
+         PointVms.Add(Parent.GetTrianglePoint(ModelObject.V1));
+         PointVms.Add(Parent.GetTrianglePoint(ModelObject.V2));
+         PointVms.Add(Parent.GetTrianglePoint(ModelObject.V3));
       }
 
       #endregion

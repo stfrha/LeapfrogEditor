@@ -281,6 +281,16 @@ namespace LeapfrogEditor
 
       #region public Methods
 
+      public void RotateShape(int delta)
+      {
+         if (IsSelected)
+         {
+            Angle += (double)delta / 120 * 5 / 180 * Math.PI;
+            InvalidateAll();
+         }
+      }
+
+
       public virtual void InvalidateAll()
       {
          OnPropertyChanged("");

@@ -67,6 +67,20 @@ namespace LeapfrogEditor
       public MainWindow()
       {
          InitializeComponent();
+
+         PreviewKeyDown += (s, e) =>
+         {
+            if (myMainViewModel.SelectedShapes.Count > 0)
+            {
+               if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+                  this.Cursor = Cursors.Hand;
+            }
+         };
+         PreviewKeyUp += (s, e) =>
+         {
+            this.Cursor = null;
+         };
+
       }
 
 
@@ -205,17 +219,26 @@ namespace LeapfrogEditor
       /// </summary>
       private void zoomAndPanControl_MouseWheel(object sender, MouseWheelEventArgs e)
       {
+         bool ctrl = ((Keyboard.Modifiers & ModifierKeys.Control) != 0);
+
          e.Handled = true;
 
-         if (e.Delta > 0)
+         if (ctrl)
          {
-            Point curContentMousePoint = e.GetPosition(content);
-            ZoomIn(curContentMousePoint);
+            myMainViewModel.RotateSelectedShape(e.Delta);
          }
-         else if (e.Delta < 0)
+         else
          {
-            Point curContentMousePoint = e.GetPosition(content);
-            ZoomOut(curContentMousePoint);
+            if (e.Delta > 0)
+            {
+               Point curContentMousePoint = e.GetPosition(content);
+               ZoomIn(curContentMousePoint);
+            }
+            else if (e.Delta < 0)
+            {
+               Point curContentMousePoint = e.GetPosition(content);
+               ZoomOut(curContentMousePoint);
+            }
          }
       }
 
@@ -563,6 +586,11 @@ namespace LeapfrogEditor
          {
             e.Handled = true;
          }
+      }
+
+      private void MouseWheel_Rotate(object sender, MouseWheelEventArgs e)
+      {
+
       }
    }
 }

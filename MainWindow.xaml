@@ -46,6 +46,7 @@
          </MenuItem>
          <MenuItem Header="View">
             <MenuItem Header="Swap states" Command="{Binding State}" />
+            <MenuItem Header="Create Triangles" Command="{Binding CreateTriangles}" />
          </MenuItem>
       </Menu>
       <!--<StackPanel Grid.Row="0" HorizontalAlignment="Left" Orientation="Horizontal">
@@ -92,13 +93,14 @@
 						   Background="White"
 					      MouseUp="Canvas_MouseUp"
                      MouseDown="Canvas_MouseDown"
+                     MouseWheel="MouseWheel_Rotate"
+
                   >
                      <ContentControl 
                         DataContext="{Binding MyCpVm}"
                         Canvas.Left="{Binding PosX}"
                         Canvas.Top="{Binding PosY}"
-                        Content="{Binding}"
-							   Cursor="Hand" />
+                        Content="{Binding}" />
                   </Canvas>
 
                   <!--

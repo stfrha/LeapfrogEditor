@@ -44,120 +44,120 @@ namespace LeapfrogEditor
       }
 
 
-      private void General_MouseDown(object sender, MouseButtonEventArgs e)
-      {
-         UIElement parentCanvas = FindParent<Canvas>(content);
-         parentCanvas.Focus();
-         Keyboard.Focus(parentCanvas);
+//      private void General_MouseDown(object sender, MouseButtonEventArgs e)
+//      {
+//         UIElement parentCanvas = FindParent<Canvas>(content);
+//         parentCanvas.Focus();
+//         Keyboard.Focus(parentCanvas);
 
-         mouseButtonDown = e.ChangedButton;
+//         mouseButtonDown = e.ChangedButton;
 
-         if (mouseButtonDown == MouseButton.Left)
-         {
-            mouseHandlingMode = ZoomAndPan.MouseHandlingMode.DraggingObjects;
-            origContentMouseDownPoint = e.GetPosition(parentCanvas);
+//         if (mouseButtonDown == MouseButton.Left)
+//         {
+//            mouseHandlingMode = ZoomAndPan.MouseHandlingMode.DraggingObjects;
+//            origContentMouseDownPoint = e.GetPosition(parentCanvas);
 
-            UIElement dragObject = (UIElement)sender;
-            dragObject.CaptureMouse();
+//            UIElement dragObject = (UIElement)sender;
+//            dragObject.CaptureMouse();
 
-//          e.Handled = true;
-         }
+////          e.Handled = true;
+//         }
          
-         bool shift = ((Keyboard.Modifiers & ModifierKeys.Shift) != 0);
-         bool ctrl = ((Keyboard.Modifiers & ModifierKeys.Control) != 0);
-         bool alt = ((Keyboard.Modifiers & ModifierKeys.Alt) != 0);
+//         bool shift = ((Keyboard.Modifiers & ModifierKeys.Shift) != 0);
+//         bool ctrl = ((Keyboard.Modifiers & ModifierKeys.Control) != 0);
+//         bool alt = ((Keyboard.Modifiers & ModifierKeys.Alt) != 0);
 
-         if (sender is FrameworkElement)
-         {
-            FrameworkElement fwe = (FrameworkElement)sender;
+//         if (sender is FrameworkElement)
+//         {
+//            FrameworkElement fwe = (FrameworkElement)sender;
 
-            if (fwe.DataContext is IPositionInterface)
-            {
-               IPositionInterface obj = (IPositionInterface)fwe.DataContext;
-               if (obj.MainVm.MouseDown(fwe, e.ChangedButton, e.GetPosition(content), e.ClickCount, shift, ctrl, alt))
-               {
-                  e.Handled = true;
-               }
+//            if (fwe.DataContext is IPositionInterface)
+//            {
+//               IPositionInterface obj = (IPositionInterface)fwe.DataContext;
+//               if (obj.MainVm.MouseDown(Type,  fwe, e.ChangedButton, e.GetPosition(content), e.ClickCount, shift, ctrl, alt))
+//               {
+//                  e.Handled = true;
+//               }
 
-            }
-         }
-      }
+//            }
+//         }
+//      }
 
-      private void General_MouseUp(object sender, MouseButtonEventArgs e)
-      {
-         UIElement parentCanvas = FindParent<Canvas>(content);
-         parentCanvas.Focus();
-         Keyboard.Focus(parentCanvas);
+//      private void General_MouseUp(object sender, MouseButtonEventArgs e)
+//      {
+//         UIElement parentCanvas = FindParent<Canvas>(content);
+//         parentCanvas.Focus();
+//         Keyboard.Focus(parentCanvas);
 
-         if (mouseHandlingMode == ZoomAndPan.MouseHandlingMode.DraggingObjects)
-         {
-            mouseButtonDown = e.ChangedButton;
+//         if (mouseHandlingMode == ZoomAndPan.MouseHandlingMode.DraggingObjects)
+//         {
+//            mouseButtonDown = e.ChangedButton;
 
-            if (mouseButtonDown == MouseButton.Left)
-            {
-               mouseHandlingMode = ZoomAndPan.MouseHandlingMode.None;
+//            if (mouseButtonDown == MouseButton.Left)
+//            {
+//               mouseHandlingMode = ZoomAndPan.MouseHandlingMode.None;
 
-               UIElement rectangle = (UIElement)sender;
-               rectangle.ReleaseMouseCapture();
+//               UIElement rectangle = (UIElement)sender;
+//               rectangle.ReleaseMouseCapture();
 
-//             e.Handled = true;
-            }
-         }
+////             e.Handled = true;
+//            }
+//         }
 
-         bool shift = ((Keyboard.Modifiers & ModifierKeys.Shift) != 0);
-         bool ctrl = ((Keyboard.Modifiers & ModifierKeys.Control) != 0);
-         bool alt = ((Keyboard.Modifiers & ModifierKeys.Alt) != 0);
+//         bool shift = ((Keyboard.Modifiers & ModifierKeys.Shift) != 0);
+//         bool ctrl = ((Keyboard.Modifiers & ModifierKeys.Control) != 0);
+//         bool alt = ((Keyboard.Modifiers & ModifierKeys.Alt) != 0);
 
-         if (sender is FrameworkElement)
-         {
-            FrameworkElement fwe = (FrameworkElement)sender;
+//         if (sender is FrameworkElement)
+//         {
+//            FrameworkElement fwe = (FrameworkElement)sender;
 
-            if (fwe.DataContext is IPositionInterface)
-            {
-               IPositionInterface obj = (IPositionInterface)fwe.DataContext;
+//            if (fwe.DataContext is IPositionInterface)
+//            {
+//               IPositionInterface obj = (IPositionInterface)fwe.DataContext;
 
-               if (obj.MainVm.MouseUp(fwe, e.ChangedButton, e.GetPosition(content), e.ClickCount, shift, ctrl, alt))
-               {
-                  e.Handled = true;
-               }
-            }
-         }
-      }
+//               if (obj.MainVm.MouseUp(fwe, e.ChangedButton, e.GetPosition(content), e.ClickCount, shift, ctrl, alt))
+//               {
+//                  e.Handled = true;
+//               }
+//            }
+//         }
+//      }
 
-      private void General_MouseMove(object sender, MouseEventArgs e)
-      {
-         if (mouseHandlingMode == ZoomAndPan.MouseHandlingMode.DraggingObjects)
-         {
-            if (mouseButtonDown == MouseButton.Left)
-            {
-               UIElement parentCanvas = FindParent<Canvas>(content);
+//      private void General_MouseMove(object sender, MouseEventArgs e)
+//      {
+//         if (mouseHandlingMode == ZoomAndPan.MouseHandlingMode.DraggingObjects)
+//         {
+//            if (mouseButtonDown == MouseButton.Left)
+//            {
+//               UIElement parentCanvas = FindParent<Canvas>(content);
 
-               Point curContentPoint = e.GetPosition(parentCanvas);
-               Vector rectangleDragVector = curContentPoint - origContentMouseDownPoint;
+//               Point curContentPoint = e.GetPosition(parentCanvas);
+//               Vector rectangleDragVector = curContentPoint - origContentMouseDownPoint;
 
-               origContentMouseDownPoint = curContentPoint;
+//               origContentMouseDownPoint = curContentPoint;
 
-               bool shift = ((Keyboard.Modifiers & ModifierKeys.Shift) != 0);
-               bool ctrl = ((Keyboard.Modifiers & ModifierKeys.Control) != 0);
-               bool alt = ((Keyboard.Modifiers & ModifierKeys.Alt) != 0);
+//               bool shift = ((Keyboard.Modifiers & ModifierKeys.Shift) != 0);
+//               bool ctrl = ((Keyboard.Modifiers & ModifierKeys.Control) != 0);
+//               bool alt = ((Keyboard.Modifiers & ModifierKeys.Alt) != 0);
 
-               if (sender is FrameworkElement)
-               {
-                  FrameworkElement fwe = (FrameworkElement)sender;
+//               if (sender is FrameworkElement)
+//               {
+//                  FrameworkElement fwe = (FrameworkElement)sender;
 
-                  if (fwe.DataContext is IPositionInterface)
-                  {
-                     IPositionInterface obj = (IPositionInterface)fwe.DataContext;
+//                  if (fwe.DataContext is IPositionInterface)
+//                  {
+//                     IPositionInterface obj = (IPositionInterface)fwe.DataContext;
 
-                     obj.MainVm.MouseMove(fwe, rectangleDragVector, shift, ctrl, alt);
-                  }
-               }
+//                     obj.MainVm.MouseMove(fwe, rectangleDragVector, shift, ctrl, alt);
+//                  }
+//               }
 
-               e.Handled = true;
+//               e.Handled = true;
 
-            }
-         }
-      }
+//            }
+//         }
+//      }
 
       public static T FindParent<T>(DependencyObject child) where T : DependencyObject
          // From: https://www.infragistics.com/community/blogs/b/blagunas/posts/find-the-parent-control-of-a-specific-type-in-wpf-and-silverlight
@@ -186,13 +186,199 @@ namespace LeapfrogEditor
             {
                LfShapeViewModel svm = (LfShapeViewModel)fwe.DataContext;
 
-               if (svm.IsSelected)
+               bool ctrl = ((Keyboard.Modifiers & ModifierKeys.Control) != 0);
+
+               if (ctrl)
                {
-                  svm.Angle += (double)e.Delta / 120 * 5 / 180 * Math.PI;
-                  svm.InvalidateAll();
+                  svm.RotateShape(e.Delta);
                   e.Handled = true;
                }
             }
+         }
+      }
+
+      private void GeneralMouse<T>(bool down, MouseEventObjectType type, object sender, MouseButtonEventArgs e)
+      {
+         UIElement parentCanvas = FindParent<Canvas>(content);
+         parentCanvas.Focus();
+         Keyboard.Focus(parentCanvas);
+
+         mouseButtonDown = e.ChangedButton;
+
+         bool shift = ((Keyboard.Modifiers & ModifierKeys.Shift) != 0);
+         bool ctrl = ((Keyboard.Modifiers & ModifierKeys.Control) != 0);
+         bool alt = ((Keyboard.Modifiers & ModifierKeys.Alt) != 0);
+
+         // If ctrl is held down, we never intent to drag things
+         if (!ctrl && (mouseButtonDown == MouseButton.Left))
+         {
+            if (down)
+            {
+               mouseHandlingMode = ZoomAndPan.MouseHandlingMode.DraggingObjects;
+               origContentMouseDownPoint = e.GetPosition(parentCanvas);
+
+               UIElement dragObject = (UIElement)sender;
+               dragObject.CaptureMouse();
+
+               e.Handled = true;
+            }
+            else
+            {
+               if (mouseHandlingMode == ZoomAndPan.MouseHandlingMode.DraggingObjects)
+               {
+                  mouseButtonDown = e.ChangedButton;
+
+                  if (mouseButtonDown == MouseButton.Left)
+                  {
+                     mouseHandlingMode = ZoomAndPan.MouseHandlingMode.None;
+
+                     UIElement rectangle = (UIElement)sender;
+                     rectangle.ReleaseMouseCapture();
+
+                     e.Handled = true;
+                  }
+               }
+            }
+         }
+
+         if (sender is FrameworkElement)
+         {
+            FrameworkElement fwe = (FrameworkElement)sender;
+
+            if (fwe.DataContext is T)
+            {
+               IPositionInterface obj = (IPositionInterface)fwe.DataContext;
+
+               if (down)
+               {
+                  if (obj.MainVm.MouseDown(type, obj, e.ChangedButton, e.GetPosition(content), e.ClickCount, shift, ctrl, alt))
+                  {
+                     e.Handled = true;
+                  }
+               }
+               else
+               {
+                  if (obj.MainVm.MouseUp(type, obj, e.ChangedButton, e.GetPosition(content), e.ClickCount, shift, ctrl, alt))
+                  {
+                     e.Handled = true;
+                  }
+               }
+            }
+         }
+      }
+
+      private void GeneralMouseMove(MouseEventObjectType type, object sender, MouseEventArgs e)
+      {
+         if (mouseHandlingMode == ZoomAndPan.MouseHandlingMode.DraggingObjects)
+         {
+            if (mouseButtonDown == MouseButton.Left)
+            {
+               UIElement parentCanvas = FindParent<Canvas>(content);
+
+               Point curContentPoint = e.GetPosition(parentCanvas);
+               Vector rectangleDragVector = curContentPoint - origContentMouseDownPoint;
+
+               origContentMouseDownPoint = curContentPoint;
+
+               bool shift = ((Keyboard.Modifiers & ModifierKeys.Shift) != 0);
+               bool ctrl = ((Keyboard.Modifiers & ModifierKeys.Control) != 0);
+               bool alt = ((Keyboard.Modifiers & ModifierKeys.Alt) != 0);
+
+               if (sender is FrameworkElement)
+               {
+                  FrameworkElement fwe = (FrameworkElement)sender;
+
+                  if (fwe.DataContext is IPositionInterface)
+                  {
+                     IPositionInterface obj = (IPositionInterface)fwe.DataContext;
+
+                     obj.MainVm.MouseMove(type, obj, rectangleDragVector, shift, ctrl, alt);
+                  }
+               }
+
+               e.Handled = true;
+
+            }
+         }
+      }
+
+      private void Shape_MouseDown(object sender, MouseButtonEventArgs e)
+      {
+         GeneralMouse<LfShapeViewModel>(true, MouseEventObjectType.shape, sender, e);
+      }
+
+      private void Shape_MouseUp(object sender, MouseButtonEventArgs e)
+      {
+         GeneralMouse<LfShapeViewModel>(false, MouseEventObjectType.shape, sender, e);
+      }
+
+      private void ShapeBorder_MouseDown(object sender, MouseButtonEventArgs e)
+      {
+         GeneralMouse<LfDragablePointViewModel>(true, MouseEventObjectType.dragableBorder, sender, e);
+      }
+
+      private void ShapeBorder_MouseUp(object sender, MouseButtonEventArgs e)
+      {
+         GeneralMouse<LfDragablePointViewModel>(false, MouseEventObjectType.dragableBorder, sender, e);
+      }
+
+      private void ShapeBorder_MouseMove(object sender, MouseEventArgs e)
+      {
+         GeneralMouseMove(MouseEventObjectType.dragableBorder, sender, e);
+      }
+
+      private void DragablePoint_MouseDown(object sender, MouseButtonEventArgs e)
+      {
+         GeneralMouse<LfDragablePointViewModel>(true, MouseEventObjectType.dragablePoint, sender, e);
+      }
+
+      private void DragablePoint_MouseUp(object sender, MouseButtonEventArgs e)
+      {
+         GeneralMouse<LfDragablePointViewModel>(false, MouseEventObjectType.dragablePoint, sender, e);
+      }
+
+      private void DragablePoint_MouseMove(object sender, MouseEventArgs e)
+      {
+         GeneralMouseMove(MouseEventObjectType.dragablePoint, sender, e);
+      }
+
+      private void CompoundObject_MouseDown(object sender, MouseButtonEventArgs e)
+      {
+         GeneralMouse<CompoundObjectViewModel>(true, MouseEventObjectType.compoundObjectBoundaryBox, sender, e);
+      }
+
+      private void CompoundObject_MouseUp(object sender, MouseButtonEventArgs e)
+      {
+         GeneralMouse<CompoundObjectViewModel>(false, MouseEventObjectType.compoundObjectBoundaryBox, sender, e);
+      }
+
+      private void CompoundObject_MouseMove(object sender, MouseEventArgs e)
+      {
+         GeneralMouseMove(MouseEventObjectType.compoundObjectBoundaryBox, sender, e);
+      }
+
+      private void LineCursorKeyDown(object sender, KeyEventArgs e)
+      {
+         if (sender is FrameworkElement)
+         {
+            FrameworkElement el = (FrameworkElement)sender;
+
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+               el.Cursor = Cursors.Pen;
+
+            e.Handled = true;
+         }
+      }
+
+      private void LineCursorKeyUp(object sender, KeyEventArgs e)
+      {
+         if (sender is FrameworkElement)
+         {
+            FrameworkElement el = (FrameworkElement)sender;
+
+            el.Cursor = null;
+
+            e.Handled = true;
          }
       }
    }

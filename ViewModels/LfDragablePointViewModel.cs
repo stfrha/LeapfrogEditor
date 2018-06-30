@@ -156,6 +156,23 @@ namespace LeapfrogEditor
          }
       }
 
+      public uint Id
+      {
+         get
+         {
+            if (ModelObject == null) return 0;
+
+            return ModelObject.Id;
+         }
+         set
+         {
+            if (ModelObject == null) return;
+
+            ModelObject.Id = value;
+            OnPropertyChanged("Id");
+         }
+      }
+
       public bool IsSelected
       {
          get { return _isSelected; }

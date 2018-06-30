@@ -8,6 +8,59 @@ using System.Windows.Data;
 
 namespace LeapfrogEditor
 {
+   class PreviousMultiRotatedTriangleVertexValueConverter : IMultiValueConverter
+   {
+      public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+      {
+         if (values.Count() == 3)
+         {
+            if ((values[0] is double) && (values[1] is LfDragablePointViewModel) && (values[2] is TriangleViewModel))
+            {
+               LfDragablePointViewModel origVertex = (LfDragablePointViewModel)values[1];
+               LfPolygonViewModel polygon = origVertex.Parent;
+               TriangleViewModel tvm = (TriangleViewModel)values[2];
+
+               int i = tvm.PointVms.IndexOf(origVertex);
+
+               if (i == -1)
+               {
+                  return null;
+               }
+
+               LfDragablePointViewModel vertex;
+
+               if (i > 0)
+               {
+                  vertex = tvm.PointVms[i - 1];
+               }
+               else
+               {
+                  vertex = tvm.PointVms[tvm.PointVms.Count() - 1];
+               }
+
+               Point p = new Point(vertex.PosX, vertex.PosY);
+               Point rp = polygon.RotatedPointFromLocal(p);
+
+               if (parameter as string == "x")
+               {
+                  return rp.X;
+               }
+               else
+               {
+                  return rp.Y;
+               }
+            }
+         }
+
+         return null;
+      }
+
+      public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+      {
+         throw new NotImplementedException();
+      }
+   }
+
    class PreviousMultiRotatedVertexValueConverter : IMultiValueConverter
    {
       public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
