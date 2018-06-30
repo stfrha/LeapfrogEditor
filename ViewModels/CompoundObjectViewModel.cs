@@ -21,7 +21,6 @@ namespace LeapfrogEditor
       private int _selectedStateIndex = 0;
 
       private ObservableCollection<CompositeCollection> _shapes = new ObservableCollection<CompositeCollection>();
-
       private ObservableCollection<CompositeCollection> _joints = new ObservableCollection<CompositeCollection>();
 
       // Children collection is two dimensional to accomondate for all State properties
@@ -434,12 +433,26 @@ namespace LeapfrogEditor
          CompositeCollection joints = new CompositeCollection()
          {
             new CollectionContainer { Collection = new ObservableCollection<WeldJointViewModel>() },
+            new CollectionContainer { Collection = new ObservableCollection<RevoluteJointViewModel>() },
+            new CollectionContainer { Collection = new ObservableCollection<PrismaticJointViewModel>() },
          };
 
          foreach (WeldJoint wj in co.WeldJoints)
          {
             WeldJointViewModel wjvm = new WeldJointViewModel(MainVm, this, wj);
-            Joints.Add(wjvm);
+            joints.Add(wjvm);
+         }
+
+         foreach (RevoluteJoint rj in co.RevoluteJoints)
+         {
+            RevoluteJointViewModel rjvm = new RevoluteJointViewModel(MainVm, this, rj);
+            joints.Add(rjvm);
+         }
+
+         foreach (PrismaticJoint pj in co.PrismaticJoints)
+         {
+            PrismaticJointViewModel pjvm = new PrismaticJointViewModel(MainVm, this, pj);
+            joints.Add(pjvm);
          }
 
          return joints;
@@ -463,6 +476,21 @@ namespace LeapfrogEditor
 
       #region Public Methods
 
+      public void InvalidateJoints()
+      {
+         foreach (object o in Joints)
+         {
+            // Below will take care of all joints since they
+            // all inherit from WeldJoint
+            if (o is WeldJointViewModel)
+            {
+               WeldJointViewModel joint = (WeldJointViewModel)o;
+
+               joint.OnPropertyChanged("");
+            }
+         }
+      }
+
       public LfShapeViewModel FindShape(string name)
       {
          foreach (object o in Shapes)
@@ -483,14 +511,14 @@ namespace LeapfrogEditor
 
       public void BuildViewModel(CompoundObjectRef cor)
       {
-         _joints.Clear();
          _shapes.Clear();
+         _joints.Clear();
          _childObjects.Clear();
 
          foreach (ObjectRefStateProperties sp in cor.StateProperties)
          {
-            _joints.Add(SetJoints(sp.CompObj));
             _shapes.Add(SetShapes(sp.CompObj));
+            _joints.Add(SetJoints(sp.CompObj));
             _childObjects.Add(SetChildren(sp.CompObj));
          }
       }

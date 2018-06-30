@@ -8,6 +8,39 @@ using System.Windows.Data;
 
 namespace LeapfrogEditor
 {
+   class MultiRotatedJointValueConverter : IMultiValueConverter
+   {
+      public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+      {
+         if (values.Count() == 3)
+         {
+            if ((values[0] is double) && (values[1] is double) && (values[2] is LfShapeViewModel))
+            {
+               Point pos = new Point((double)values[0], (double)values[1]);
+               LfShapeViewModel shape = (LfShapeViewModel)values[2];
+               Point rp = shape.RotatedPointFromLocal(pos);
+               rp.Offset(shape.PosX, shape.PosY);
+
+               if (parameter as string == "x")
+               {
+                  return rp.X;
+               }
+               else
+               {
+                  return rp.Y;
+               }
+            }
+         }
+
+         return null;
+      }
+      public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+      {
+         throw new NotImplementedException();
+      }
+   }
+
+
    class PreviousMultiRotatedTriangleVertexValueConverter : IMultiValueConverter
    {
       public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)

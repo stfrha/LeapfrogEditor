@@ -689,6 +689,8 @@ namespace LeapfrogEditor
                   {
                      if (_selectedCompoundObject != null)
                      {
+                        _selectedCompoundObject.DeselectAllChildren();
+                        _selectedShapes.Clear();
                         _selectedCompoundObject.IsSelected = false;
                      }
                      _selectedCompoundObject = shvm.Parent;

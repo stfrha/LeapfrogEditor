@@ -62,6 +62,8 @@
     <Compile Include="Models\LfDynamicPolygon.cs" />
     <Compile Include="Models\LfPolygon.cs" />
     <Compile Include="Models\LfDynamicBox.cs" />
+    <Compile Include="Models\PrismaticJoint.cs" />
+    <Compile Include="Models\RevoluteJoint.cs" />
     <Compile Include="Models\WeldJoint.cs" />
     <Compile Include="Models\LfSpriteBox.cs" />
     <Compile Include="Models\LfStaticCircle.cs" />
@@ -101,6 +103,8 @@
     <Compile Include="ViewModels\LfPolygonViewModel.cs" />
     <Compile Include="ViewModels\LfDynamicBoxViewModel.cs" />
     <Compile Include="ViewModels\LfScalableTexturePolygonViewModel.cs" />
+    <Compile Include="ViewModels\PrismaticJointViewModel.cs" />
+    <Compile Include="ViewModels\RevoluteJointViewModel.cs" />
     <Compile Include="ViewModels\WeldJointViewModel.cs" />
     <Compile Include="ViewModels\LfStaticBoxedSpritePolygonViewModel.cs" />
     <Compile Include="ViewModels\LfSpriteBoxViewModel.cs" />
@@ -116,6 +120,7 @@
     <Compile Include="Views\CompoundObjectUserControl.xaml.cs">
       <DependentUpon>CompoundObjectUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\TriangleShape.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

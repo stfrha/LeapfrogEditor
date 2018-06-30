@@ -32,6 +32,8 @@ namespace LeapfrogEditor
       private ObservableCollection<LfDynamicBoxedSpritePolygon> _dynamicBoxedSpritePolygons = new ObservableCollection<LfDynamicBoxedSpritePolygon>();
 
       private ObservableCollection<WeldJoint> _weldJoints = new ObservableCollection<WeldJoint>();
+      private ObservableCollection<RevoluteJoint> _revoluteJoints = new ObservableCollection<RevoluteJoint>();
+      private ObservableCollection<PrismaticJoint> _prismaticJoints = new ObservableCollection<PrismaticJoint>();
 
       private ObservableCollection<CompoundObjectRef> _childObjectRefs = new ObservableCollection<CompoundObjectRef>();
 
@@ -129,6 +131,20 @@ namespace LeapfrogEditor
       {
          get { return _weldJoints; }
          set { _weldJoints = value; }
+      }
+
+      [XmlElement("revoluteJoint")]
+      public ObservableCollection<RevoluteJoint> RevoluteJoints
+      {
+         get { return _revoluteJoints; }
+         set { _revoluteJoints = value; }
+      }
+
+      [XmlElement("prismaticJoint")]
+      public ObservableCollection<PrismaticJoint> PrismaticJoints
+      {
+         get { return _prismaticJoints; }
+         set { _prismaticJoints = value; }
       }
 
       // At serialisation of a parent CompoundObject this collection

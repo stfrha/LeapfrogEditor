@@ -78,8 +78,8 @@ namespace LeapfrogEditor
       [XmlAttribute("objectBAnchorX")]
       public double BAnchorX
       {
-         get { return _aAnchorX; }
-         set { _aAnchorX = value; }
+         get { return _bAnchorX; }
+         set { _bAnchorX = value; }
       }
 
       [XmlAttribute("objectBAnchorY")]

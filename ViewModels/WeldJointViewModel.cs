@@ -16,8 +16,8 @@ namespace LeapfrogEditor
       private MainViewModel _mainVm;
       private WeldJoint _modelObject;
       private CompoundObjectViewModel _parent;
-      private LfShapeViewModel _aVm;
-      private LfShapeViewModel _bVm;
+      protected LfShapeViewModel _aVm;
+      protected LfShapeViewModel _bVm;
       private bool _isSelected;
 
       #endregion
@@ -125,6 +125,22 @@ namespace LeapfrogEditor
 
             _modelObject.BName = value;
             OnPropertyChanged("BName");
+         }
+      }
+
+      public LfShapeViewModel AShapeObject
+      {
+         get
+         {
+            return _aVm;
+         }
+      }
+
+      public LfShapeViewModel BShapeObject
+      {
+         get
+         {
+            return _bVm;
          }
       }
 
