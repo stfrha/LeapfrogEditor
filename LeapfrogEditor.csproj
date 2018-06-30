@@ -62,6 +62,7 @@
     <Compile Include="Models\LfDynamicPolygon.cs" />
     <Compile Include="Models\LfPolygon.cs" />
     <Compile Include="Models\LfDynamicBox.cs" />
+    <Compile Include="Models\WeldJoint.cs" />
     <Compile Include="Models\LfSpriteBox.cs" />
     <Compile Include="Models\LfStaticCircle.cs" />
     <Compile Include="Models\LfStaticBoxedSpritePolygon.cs" />
@@ -100,6 +101,7 @@
     <Compile Include="ViewModels\LfPolygonViewModel.cs" />
     <Compile Include="ViewModels\LfDynamicBoxViewModel.cs" />
     <Compile Include="ViewModels\LfScalableTexturePolygonViewModel.cs" />
+    <Compile Include="ViewModels\WeldJointViewModel.cs" />
     <Compile Include="ViewModels\LfStaticBoxedSpritePolygonViewModel.cs" />
     <Compile Include="ViewModels\LfSpriteBoxViewModel.cs" />
     <Compile Include="ViewModels\LfStaticCircleViewModel.cs" />

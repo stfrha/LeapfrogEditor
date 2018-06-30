@@ -28,6 +28,19 @@
       <local:PointCollectionValueConverter x:Key="PointCollectionValueConverter" />
       <local:TwiceDoubleValueConverter x:Key="TwiceDoubleValueConverter" />
       <local:DebugDummyConverter x:Key="DebugDummyConverter" />
+      <DataTemplate DataType="{x:Type local:WeldJointViewModel}">
+         <Canvas>
+            <Rectangle>
+               
+            </Rectangle>
+            <Rectangle>
+               
+            </Rectangle>
+            <Line>
+               
+            </Line>
+         </Canvas>
+      </DataTemplate>
       <DataTemplate DataType="{x:Type local:TriangleViewModel}">
          <!-- Below is the lines between the vertices of all triangles of the polygon. The lines are
          drawn between the vertices of the triangles and they are rotated acc to the angle-->

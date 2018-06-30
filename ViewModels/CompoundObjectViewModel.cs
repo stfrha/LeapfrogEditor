@@ -22,6 +22,8 @@ namespace LeapfrogEditor
 
       private ObservableCollection<CompositeCollection> _shapes = new ObservableCollection<CompositeCollection>();
 
+      private ObservableCollection<CompositeCollection> _joints = new ObservableCollection<CompositeCollection>();
+
       // Children collection is two dimensional to accomondate for all State properties
       private ObservableCollection<ObservableCollection<CompoundObjectViewModel>> _childObjects = new ObservableCollection<ObservableCollection<CompoundObjectViewModel>>();
 
@@ -232,6 +234,25 @@ namespace LeapfrogEditor
          }
       }
 
+      public CompositeCollection Joints
+      {
+         get
+         {
+            if (_joints.Count > 0)
+            {
+               return _joints[_selectedStateIndex];
+            }
+            return null;
+         }
+         set
+         {
+            if (_joints.Count > 0)
+            {
+               _joints[_selectedStateIndex] = value;
+            }
+         }
+      }
+
       public ObservableCollection<CompoundObjectViewModel> ChildObjects
       {
          get
@@ -408,6 +429,22 @@ namespace LeapfrogEditor
 
       }
 
+      private CompositeCollection SetJoints(CompoundObject co)
+      {
+         CompositeCollection joints = new CompositeCollection()
+         {
+            new CollectionContainer { Collection = new ObservableCollection<WeldJointViewModel>() },
+         };
+
+         foreach (WeldJoint wj in co.WeldJoints)
+         {
+            WeldJointViewModel wjvm = new WeldJointViewModel(MainVm, this, wj);
+            Joints.Add(wjvm);
+         }
+
+         return joints;
+      }
+
       private ObservableCollection<CompoundObjectViewModel> SetChildren(CompoundObject co)
       {
          ObservableCollection<CompoundObjectViewModel> tempChildren = new ObservableCollection<CompoundObjectViewModel>();
@@ -426,13 +463,33 @@ namespace LeapfrogEditor
 
       #region Public Methods
 
+      public LfShapeViewModel FindShape(string name)
+      {
+         foreach (object o in Shapes)
+         {
+            if (o is LfShapeViewModel)
+            {
+               LfShapeViewModel shape = (LfShapeViewModel)o;
+
+               if (shape.Name == name)
+               {
+                  return shape;
+               }
+            }
+         }
+
+         return null;
+      }
+
       public void BuildViewModel(CompoundObjectRef cor)
       {
+         _joints.Clear();
          _shapes.Clear();
          _childObjects.Clear();
 
          foreach (ObjectRefStateProperties sp in cor.StateProperties)
          {
+            _joints.Add(SetJoints(sp.CompObj));
             _shapes.Add(SetShapes(sp.CompObj));
             _childObjects.Add(SetChildren(sp.CompObj));
          }

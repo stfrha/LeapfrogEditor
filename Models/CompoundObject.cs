@@ -31,6 +31,8 @@ namespace LeapfrogEditor
       private ObservableCollection<LfStaticBoxedSpritePolygon> _staticBoxedSpritePolygons = new ObservableCollection<LfStaticBoxedSpritePolygon>();
       private ObservableCollection<LfDynamicBoxedSpritePolygon> _dynamicBoxedSpritePolygons = new ObservableCollection<LfDynamicBoxedSpritePolygon>();
 
+      private ObservableCollection<WeldJoint> _weldJoints = new ObservableCollection<WeldJoint>();
+
       private ObservableCollection<CompoundObjectRef> _childObjectRefs = new ObservableCollection<CompoundObjectRef>();
 
       #endregion
@@ -120,6 +122,13 @@ namespace LeapfrogEditor
       {
          get { return _dynamicBoxedSpritePolygons; }
          set { _dynamicBoxedSpritePolygons = value; }
+      }
+
+      [XmlElement("weldJoint")]
+      public ObservableCollection<WeldJoint> WeldJoints
+      {
+         get { return _weldJoints; }
+         set { _weldJoints = value; }
       }
 
       // At serialisation of a parent CompoundObject this collection
