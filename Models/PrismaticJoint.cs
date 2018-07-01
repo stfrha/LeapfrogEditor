@@ -25,11 +25,11 @@ namespace LeapfrogEditor
 
       public PrismaticJoint() : base()
       {
-         _aAxisX = 1;
-         _aAxisY = 0;
+         _aAxisX = 0.707;
+         _aAxisY = 0.707;
          _refAngle = 0;
-         _lowerLimit = 0;
-         _upperLimit = 10;
+         _lowerLimit = -50;
+         _upperLimit = 25;
       }
 
       #endregion

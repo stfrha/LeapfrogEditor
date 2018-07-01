@@ -94,6 +94,7 @@
     <Compile Include="ViewModels\CompoundObjectViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\ICircleInterface.cs" />
     <Compile Include="ViewModels\Interfaces\IBoxPointsInterface.cs" />
+    <Compile Include="ViewModels\Interfaces\IMainVmInterface.cs" />
     <Compile Include="ViewModels\Interfaces\IWidthHeightInterface.cs" />
     <Compile Include="ViewModels\LfPointViewModel.cs" />
     <Compile Include="ViewModels\LfDragablePointViewModel.cs" />

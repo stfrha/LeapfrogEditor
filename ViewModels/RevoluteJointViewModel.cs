@@ -9,7 +9,7 @@ using System.Windows.Media;
 
 namespace LeapfrogEditor
 {
-   class RevoluteJointViewModel : WeldJointViewModel
+   class RevoluteJointViewModel : WeldJointViewModel, IMainVmInterface
    {
       #region Declarations
 

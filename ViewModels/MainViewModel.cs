@@ -38,7 +38,11 @@ namespace LeapfrogEditor
       shape,                        // object is the shape
       dragableBorder,               // object is the point (before or after?) the line
       dragablePoint,                // object is the point
-      compoundObjectBoundaryBox     // object is the CompoundObject
+      compoundObjectBoundaryBox,    // object is the CompoundObject
+      jointAnchorA,                 // object is the joint
+      jointAnchorB,                 // object is the joint
+      prismJointUpperLimit,         // object is the prismatic joint
+      prismJointLowerLimit          // object is the prismatic joint
    }
 
    class MainViewModel : MicroMvvm.ViewModelBase
@@ -297,21 +301,6 @@ namespace LeapfrogEditor
          }
       }
 
-
-
-      //<MenuItem Header = "Sprite Box" Command="{Binding NewSpriteBox}" />
-      //<MenuItem Header = "Sprite Polygon" Command="{Binding NewSpritePolygon}" />
-      //<MenuItem Header = "Static Circle" Command="{Binding NewStaticCircle}" />
-      //<MenuItem Header = "Dynamic Circle" Command="{Binding NewDynamicCircle}" />
-      //<MenuItem Header = "Static Box" Command="{Binding NewStaticBox}" />
-      //<MenuItem Header = "Dynamic Box" Command="{Binding NewDynamicBox}" />
-      //<MenuItem Header = "Static Polygon" Command="{Binding NewStaticPolygon}" />
-      //<MenuItem Header = "Dynamic Polygon" Command="{Binding NewDynamicPolygon}" />
-      //<MenuItem Header = "Static Boxed Sprite Polygon" Command="{Binding NewStaticBoxedSpritePolygon}" />
-      //<MenuItem Header = "Dynamic Boxed Sprite Polygon" Command="{Binding NewDynamicBoxedSpritePolygon}" />
-
-
-
       #endregion
 
 
@@ -405,99 +394,6 @@ namespace LeapfrogEditor
                   BackgroundMouseDown(clickPoint, button, clickCount, shift, ctrl, alt);
                   return false;
             }
-
-
-            //            if (target.DataContext is CompoundObjectViewModel)
-            //            {
-            //               // Mouse down on rectangle around CompoundObject
-            //               CompoundObjectViewModel covm = (CompoundObjectViewModel)target.DataContext;
-
-            //               if (_LeftClickState == LeftClickState.addPoint)
-            //               {
-            //                  TerminatePointAdding();
-            //               }
-
-            //               //Debug.WriteLine("Clicked rectangle around CompoundObject");
-
-            ////               return true;
-            //            }
-            //            else if ((target is Rectangle) && (target.DataContext is LfDragablePointViewModel))
-            //            {
-            //               // Mouse down on rectangle of DragablePoint
-
-            //               if (_LeftClickState == LeftClickState.addPoint)
-            //               {
-            //                  TerminatePointAdding();
-            //               }
-
-            //               LfDragablePointViewModel dpvm = (LfDragablePointViewModel)target.DataContext;
-
-            //               if (dpvm.IsSelected)
-            //               {
-            //                  // Could be the beginning of dragging
-
-            //               }
-            //               else
-            //               {
-            //                  if (!ctrl)
-            //                  {
-            //                     foreach (LfDragablePointViewModel selpoint in _selectedPoints)
-            //                     {
-            //                        selpoint.IsSelected = false;
-            //                     }
-            //                     _selectedPoints.Clear();
-            //                  }
-
-            //                  _selectedPoints.Add(dpvm);
-            //                  dpvm.IsSelected = true;
-            //               }
-
-            //               //Debug.WriteLine("Clicked rectangle of DragablePoint");
-
-            //               return true;
-            //            }
-            //            else if ((target is Line) && (target.DataContext is LfDragablePointViewModel))
-            //            {
-            //               // Mouse down on Line between DragablePoints 
-
-            //               if (_LeftClickState == LeftClickState.addPoint)
-            //               {
-            //                  TerminatePointAdding();
-            //               }
-
-            //               LfDragablePointViewModel dpvm = (LfDragablePointViewModel)target.DataContext;
-
-            //               //Debug.WriteLine("Clicked line between DragablePoint");
-            //            }
-            //            else if (target.DataContext is LfShapeViewModel)
-            //            {
-            //               // Mouse down on Shape
-
-            //               if (_LeftClickState == LeftClickState.addPoint)
-            //               {
-            //                  TerminatePointAdding();
-            //               }
-
-            //               LfShapeViewModel shvm = (LfShapeViewModel)target.DataContext;
-
-            //               //Debug.WriteLine("Clicked on Shape");
-
-            //            }
-            //            else if ((target is Rectangle) && (target.DataContext is IPositionInterface))
-            //            {
-            //               // Mouse down on rectangle around Shape
-
-            //               if (_LeftClickState == LeftClickState.addPoint)
-            //               {
-            //                  TerminatePointAdding();
-            //               }
-
-            //               IPositionInterface posvm = (IPositionInterface)target.DataContext;
-
-            //               //Debug.WriteLine("Clicked rectangle around something that can be dragged");
-
-            //               return true;
-            //            }
          }
 
          return false;
@@ -566,76 +462,95 @@ namespace LeapfrogEditor
 
                return true;
 
+            case MouseEventObjectType.jointAnchorA:
+
+               WeldJointViewModel wjvm = (WeldJointViewModel)sender;
+
+               // Before moving, we rotate the vector to match the shape rotation.
+               vectPoint = new Point(dragVector.X, dragVector.Y);
+               rotPoint = wjvm.AShapeObject.LocalPointFromRotated(vectPoint);
+               rotatedDragVector = new Vector(rotPoint.X, rotPoint.Y);
+
+               // Find new point
+               wjvm.AAnchorX += rotatedDragVector.X;
+               wjvm.AAnchorY += rotatedDragVector.Y;
+
+               wjvm.OnPropertyChanged("");
+
+               return true;
+
+            case MouseEventObjectType.jointAnchorB:
+
+               wjvm = (WeldJointViewModel)sender;
+
+               // Before moving, we rotate the vector to match the shape rotation.
+               vectPoint = new Point(dragVector.X, dragVector.Y);
+               rotPoint = wjvm.BShapeObject.LocalPointFromRotated(vectPoint);
+               rotatedDragVector = new Vector(rotPoint.X, rotPoint.Y);
+
+               // Find new point
+               wjvm.BAnchorX += rotatedDragVector.X;
+               wjvm.BAnchorY += rotatedDragVector.Y;
+
+               wjvm.OnPropertyChanged("");
+
+               return true;
+
+            case MouseEventObjectType.prismJointUpperLimit:
+
+               PrismaticJointViewModel pjvm = (PrismaticJointViewModel)sender;
+
+               // Before moving, we rotate the vector to match the shape rotation.
+               vectPoint = new Point(dragVector.X, dragVector.Y);
+               rotPoint = pjvm.AShapeObject.LocalPointFromRotated(vectPoint);
+               rotatedDragVector = new Vector(rotPoint.X, rotPoint.Y);
+
+               // Find new point
+               double newPosX = pjvm.UpperLimitPosX + rotatedDragVector.X;
+               double newPosY = pjvm.UpperLimitPosY + rotatedDragVector.Y;
+
+               // Now calculate direction vector and upper limit from point
+               Vector v = new Vector(newPosX, newPosY);
+               Vector f = new Vector(pjvm.AAnchorX, pjvm.AAnchorY);
+               v = v - f;
+               pjvm.UpperLimit = v.Length;
+               v.Normalize();
+               pjvm.AAxisX = v.X;
+               pjvm.AAxisY = v.Y;
+               
+               pjvm.OnPropertyChanged("");
+
+               return true;
+
+            case MouseEventObjectType.prismJointLowerLimit:
+
+               pjvm = (PrismaticJointViewModel)sender;
+
+               // Before moving, we rotate the vector to match the shape rotation.
+               vectPoint = new Point(dragVector.X, dragVector.Y);
+               rotPoint = pjvm.AShapeObject.LocalPointFromRotated(vectPoint);
+               rotatedDragVector = new Vector(rotPoint.X, rotPoint.Y);
+
+               // Find new point
+               newPosX = pjvm.LowerLimitPosX + rotatedDragVector.X;
+               newPosY = pjvm.LowerLimitPosY + rotatedDragVector.Y;
+
+               // Now calculate direction vector and upper limit from point
+               v = new Vector(newPosX, newPosY);
+               f = new Vector(pjvm.AAnchorX, pjvm.AAnchorY);
+               v = v - f;
+               pjvm.LowerLimit = v.Length;
+               v.Normalize();
+               pjvm.AAxisX = v.X;
+               pjvm.AAxisY = v.Y;
+
+               pjvm.OnPropertyChanged("");
+
+               return true;
+
             case MouseEventObjectType.none:
                break;
          }
-
-
-//         if (target.DataContext is CompoundObjectViewModel)
-//         {
-//            // Mouse move on rectangle around CompoundObject
-//            CompoundObjectViewModel covm = (CompoundObjectViewModel)target.DataContext;
-
-//            covm.PosX += dragVector.X;
-//            covm.PosY += dragVector.Y;
-
-//            //Debug.WriteLine("Movbed rectangle around CompoundObject");
-//            return true;
-//         }
-//         else if ((target is Rectangle) && (target.DataContext is LfDragablePointViewModel))
-//         {
-//            // Mouse move on rectangle of DragablePoint
-//            LfDragablePointViewModel dpvm = (LfDragablePointViewModel)target.DataContext;
-
-//            // Before moving all vertices, we rotate the vector to match the shape rotation.
-//            Point vectPoint = new Point(dragVector.X, dragVector.Y);
-//            Point rotPoint = dpvm.Parent.LocalPointFromRotated(vectPoint);
-//            Vector rotatedDragVector = new Vector(rotPoint.X, rotPoint.Y);
-
-
-//            foreach (LfDragablePointViewModel point in _selectedPoints)
-//            {
-//               point.PosX += rotatedDragVector.X;
-//               point.PosY += rotatedDragVector.Y;
-//            }
-
-//            //Debug.WriteLine("Move rectangle of DragablePoint");
-
-//            return true;
-//         }
-//         else if (((target is Line) || (target is Ellipse)) && (target.DataContext is IPositionInterface))
-//         {
-//            // Mouse move on Line between DragablePoints 
-////            LfDragablePointViewModel dpvm = (LfDragablePointViewModel)target.DataContext;
-
-//            IPositionInterface posvm = (IPositionInterface)target.DataContext;
-
-//            foreach (IPositionInterface shape in _selectedShapes)
-//            {
-//               shape.PosX += dragVector.X;
-//               shape.PosY += dragVector.Y;
-//            }
-
-//            //Debug.WriteLine("Clicked line between DragablePoint");
-
-//            return true;
-//         }
-//         else if ((target is Rectangle) && (target.DataContext is IPositionInterface))
-//         {
-//            // Mouse move on rectangle around Shape
-//            IPositionInterface posvm = (IPositionInterface)target.DataContext;
-
-//            foreach (IPositionInterface shape in _selectedShapes)
-//            {
-//               shape.PosX += dragVector.X;
-//               shape.PosY += dragVector.Y;
-//            }
-
-
-//            //Debug.WriteLine("Moved rectangle around something that can be dragged");
-
-//            return true;
-//         }
 
          return false;
       }
@@ -751,109 +666,6 @@ namespace LeapfrogEditor
                case MouseEventObjectType.none:
                   return BackgroundMouseUp(clickPoint, button, shift, ctrl, alt);
             }
-
-
-
-         //   if (target.DataContext is CompoundObjectViewModel)
-         //   {
-         //      // Mouse up on rectangle around CompoundObject
-         //      CompoundObjectViewModel covm = (CompoundObjectViewModel)target.DataContext;
-
-         //      //Debug.WriteLine("Clicked rectangle around CompoundObject");
-
-         //      return true;
-         //   }
-         //   else if ((target is Rectangle) && (target.DataContext is LfDragablePointViewModel))
-         //   {
-         //      // Mouse up on rectangle of DragablePoint
-         //      LfDragablePointViewModel dpvm = (LfDragablePointViewModel)target.DataContext;
-
-         //      //Debug.WriteLine("Clicked rectangle of DragablePoint");
-
-         //      return true;
-         //   }
-         //   else if ((target is Line) && (target.DataContext is LfDragablePointViewModel))
-         //   {
-         //      // Mouse up on Line between DragablePoints 
-         //      LfDragablePointViewModel dpvm = (LfDragablePointViewModel)target.DataContext;
-
-         //      if (ctrl)
-         //      {
-         //         // What is the click-point in this case?
-         //         // It is said to be the closesed parenting canvas which
-         //         // should be in CompoundObject coordinates. Lets try to convert
-         //         // this into the rotated shape coordinates. 
-
-         //         Point coPoint = clickPoint;
-
-         //         Point unrotatedShapePoint = dpvm.Parent.Parent.CoPointInShape(clickPoint, dpvm.Parent);
-
-         //         Point rotShapePoint = dpvm.Parent.LocalPointFromRotated(unrotatedShapePoint);
-
-         //         LfDragablePointViewModel newPoint = dpvm.Parent.InsertPoint(rotShapePoint, dpvm);
-         //         foreach (LfDragablePointViewModel selpoint in _selectedPoints)
-         //         {
-         //            selpoint.IsSelected = false;
-         //         }
-         //         _selectedPoints.Clear();
-
-         //         _selectedPoints.Add(newPoint);
-         //         newPoint.IsSelected = true;
-         //      }
-
-         //      //Debug.WriteLine("Clicked line between DragablePoint");
-
-         //      return true;
-         //   }
-         //   else if (target.DataContext is LfShapeViewModel)
-         //   {
-         //      // Mouse up on Shape
-         //      LfShapeViewModel shvm = (LfShapeViewModel)target.DataContext;
-
-         //      //Debug.WriteLine("Mouse up on Shape");
-
-         //      if (shvm.Parent.IsSelected)
-         //      {
-         //         if (!ctrl)
-         //         {
-         //            foreach (LfShapeViewModel selshape in _selectedShapes)
-         //            {
-         //               selshape.IsSelected = false;
-         //            }
-         //            _selectedShapes.Clear();
-         //         }
-
-         //         _selectedShapes.Add(shvm);
-         //         shvm.IsSelected = true;
-         //      }
-         //      else
-         //      {
-         //         if (_selectedCompoundObject != null)
-         //         {
-         //            _selectedCompoundObject.IsSelected = false;
-         //         }
-         //         _selectedCompoundObject = shvm.Parent;
-         //      }
-
-         //      if (!shvm.IsSelected)
-         //      {
-         //         shvm.Parent.IsSelected = true;
-         //         _selectedShapes.Add(shvm);
-         //         _selectedCompoundObject = shvm.Parent;
-
-         //      }
-
-         //      return true;
-
-         //   }
-         //   else if ((target is Rectangle) && (target.DataContext is IPositionInterface))
-         //   {
-         //      // Mouse up on rectangle around Shape
-         //      IPositionInterface posvm = (IPositionInterface)target.DataContext;
-
-         //      //Debug.WriteLine("Clicked rectangle around something that can be dragged");
-         //      return true;
-         //   }
          }
 
          return false;

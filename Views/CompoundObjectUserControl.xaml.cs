@@ -247,7 +247,7 @@ namespace LeapfrogEditor
 
             if (fwe.DataContext is T)
             {
-               IPositionInterface obj = (IPositionInterface)fwe.DataContext;
+               IMainVmInterface obj = (IMainVmInterface)fwe.DataContext;
 
                if (down)
                {
@@ -267,7 +267,7 @@ namespace LeapfrogEditor
          }
       }
 
-      private void GeneralMouseMove(MouseEventObjectType type, object sender, MouseEventArgs e)
+      private void GeneralMouseMove<T>(MouseEventObjectType type, object sender, MouseEventArgs e)
       {
          if (mouseHandlingMode == ZoomAndPan.MouseHandlingMode.DraggingObjects)
          {
@@ -288,11 +288,13 @@ namespace LeapfrogEditor
                {
                   FrameworkElement fwe = (FrameworkElement)sender;
 
-                  if (fwe.DataContext is IPositionInterface)
+                  if (fwe.DataContext is IMainVmInterface)
                   {
-                     IPositionInterface obj = (IPositionInterface)fwe.DataContext;
+                     IMainVmInterface mvm = (IMainVmInterface)fwe.DataContext;
 
-                     obj.MainVm.MouseMove(type, obj, rectangleDragVector, shift, ctrl, alt);
+                     T obj = (T)fwe.DataContext;
+
+                     mvm.MainVm.MouseMove(type, obj, rectangleDragVector, shift, ctrl, alt);
                   }
                }
 
@@ -324,7 +326,7 @@ namespace LeapfrogEditor
 
       private void ShapeBorder_MouseMove(object sender, MouseEventArgs e)
       {
-         GeneralMouseMove(MouseEventObjectType.dragableBorder, sender, e);
+         GeneralMouseMove<IPositionInterface>(MouseEventObjectType.dragableBorder, sender, e);
       }
 
       private void DragablePoint_MouseDown(object sender, MouseButtonEventArgs e)
@@ -339,7 +341,7 @@ namespace LeapfrogEditor
 
       private void DragablePoint_MouseMove(object sender, MouseEventArgs e)
       {
-         GeneralMouseMove(MouseEventObjectType.dragablePoint, sender, e);
+         GeneralMouseMove<IPositionInterface>(MouseEventObjectType.dragablePoint, sender, e);
       }
 
       private void CompoundObject_MouseDown(object sender, MouseButtonEventArgs e)
@@ -354,7 +356,67 @@ namespace LeapfrogEditor
 
       private void CompoundObject_MouseMove(object sender, MouseEventArgs e)
       {
-         GeneralMouseMove(MouseEventObjectType.compoundObjectBoundaryBox, sender, e);
+         GeneralMouseMove<IPositionInterface>(MouseEventObjectType.compoundObjectBoundaryBox, sender, e);
+      }
+
+      private void AnchorA_MouseDown(object sender, MouseButtonEventArgs e)
+      {
+         GeneralMouse<WeldJointViewModel>(true, MouseEventObjectType.jointAnchorA, sender, e);
+      }
+
+      private void AnchorA_MouseUp(object sender, MouseButtonEventArgs e)
+      {
+         GeneralMouse<WeldJointViewModel>(false, MouseEventObjectType.jointAnchorA, sender, e);
+      }
+
+      private void AnchorA_MouseMove(object sender, MouseEventArgs e)
+      {
+         GeneralMouseMove<WeldJointViewModel>(MouseEventObjectType.jointAnchorA, sender, e);
+      }
+
+      private void AnchorB_MouseDown(object sender, MouseButtonEventArgs e)
+      {
+         GeneralMouse<WeldJointViewModel>(true, MouseEventObjectType.jointAnchorB, sender, e);
+      }
+
+      private void AnchorB_MouseUp(object sender, MouseButtonEventArgs e)
+      {
+         GeneralMouse<WeldJointViewModel>(false, MouseEventObjectType.jointAnchorB, sender, e);
+      }
+
+      private void AnchorB_MouseMove(object sender, MouseEventArgs e)
+      {
+         GeneralMouseMove<WeldJointViewModel>(MouseEventObjectType.jointAnchorB, sender, e);
+      }
+
+      private void UpperLimit_MouseDown(object sender, MouseButtonEventArgs e)
+      {
+         GeneralMouse<PrismaticJointViewModel>(true, MouseEventObjectType.prismJointUpperLimit, sender, e);
+      }
+
+      private void UpperLimit_MouseUp(object sender, MouseButtonEventArgs e)
+      {
+         GeneralMouse<PrismaticJointViewModel>(false, MouseEventObjectType.prismJointUpperLimit, sender, e);
+      }
+
+      private void UpperLimit_MouseMove(object sender, MouseEventArgs e)
+      {
+         GeneralMouseMove<PrismaticJointViewModel>(MouseEventObjectType.prismJointUpperLimit, sender, e);
+      }
+
+      private void LowerLimit_MouseDown(object sender, MouseButtonEventArgs e)
+      {
+         GeneralMouse<PrismaticJointViewModel>(true, MouseEventObjectType.prismJointLowerLimit, sender, e);
+      }
+
+      private void LowerLimit_MouseUp(object sender, MouseButtonEventArgs e)
+      {
+         GeneralMouse<PrismaticJointViewModel>(false, MouseEventObjectType.prismJointLowerLimit, sender, e);
+      }
+
+      private void LowerLimit_MouseMove(object sender, MouseEventArgs e)
+      {
+         GeneralMouseMove<PrismaticJointViewModel>(MouseEventObjectType.prismJointLowerLimit, sender, e);
       }
 
       private void LineCursorKeyDown(object sender, KeyEventArgs e)
@@ -381,5 +443,6 @@ namespace LeapfrogEditor
             e.Handled = true;
          }
       }
+
    }
 }

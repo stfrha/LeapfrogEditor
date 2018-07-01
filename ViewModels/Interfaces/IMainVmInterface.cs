@@ -10,15 +10,9 @@ namespace LeapfrogEditor
    // This interface requires connection to MainVIewModel
    // to access it's mouse click and drag methods.
 
-   interface IPositionInterface : IMainVmInterface
+   interface IMainVmInterface
    {
-      double PosX
-      {
-         get;
-         set;
-      }
-
-      double PosY
+      MainViewModel MainVm
       {
          get;
          set;

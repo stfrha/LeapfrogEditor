@@ -9,20 +9,11 @@ using System.Windows.Media;
 
 namespace LeapfrogEditor
 {
-   class PrismaticJointViewModel : WeldJointViewModel
+   class PrismaticJointViewModel : WeldJointViewModel, IMainVmInterface
    {
       #region Declarations
 
       private PrismaticJoint _modelObject;
-
-      // The upper and lower limit points are dummypoints used to
-      // drag the limits and angle. The model objects recide here
-      // TODO: These points need to be more custom. Fortsätt här...
-      private LfDragablePoint _uprLimitP;
-      private LfDragablePoint _lwrLimitP;
-
-      private LfDragablePointViewModel _uprLimitPvm;
-      private LfDragablePointViewModel _lwrLimitPvm;
 
       #endregion
 
@@ -46,11 +37,6 @@ namespace LeapfrogEditor
          {
             MessageBox.Show("The shape B pointed to by " + ModelObject.Name + " does not exists in CO " + Parent.Name, "Error parsing file", MessageBoxButton.OK, MessageBoxImage.Error);
          }
-
-         _uprLimitP = new LfDragablePoint();
-         _lwrLimitP = new LfDragablePoint();
-
-         _uprLimitPvm = new LfDragablePointViewModel(mainVm, parent, _uprLimitP);
       }
 
       #endregion
@@ -85,6 +71,10 @@ namespace LeapfrogEditor
 
             _modelObject.AAxisX = value;
             OnPropertyChanged("AAxisX");
+            OnPropertyChanged("UpperLimitPosX");
+            OnPropertyChanged("UpperLimitPosY");
+            OnPropertyChanged("LowerLimitPosX");
+            OnPropertyChanged("LowerLimitPosY");
          }
       }
 
@@ -102,6 +92,10 @@ namespace LeapfrogEditor
 
             _modelObject.AAxisY = value;
             OnPropertyChanged("AAxisY");
+            OnPropertyChanged("UpperLimitPosX");
+            OnPropertyChanged("UpperLimitPosY");
+            OnPropertyChanged("LowerLimitPosX");
+            OnPropertyChanged("LowerLimitPosY");
          }
       }
 
@@ -136,6 +130,8 @@ namespace LeapfrogEditor
 
             _modelObject.LowerLimit = value;
             OnPropertyChanged("LowerLimit");
+            OnPropertyChanged("LowerLimitPosX");
+            OnPropertyChanged("LowerLimitPosY");
          }
       }
 
@@ -153,8 +149,121 @@ namespace LeapfrogEditor
 
             _modelObject.UpperLimit = value;
             OnPropertyChanged("UpperLimit");
+            OnPropertyChanged("UpperLimitPosX");
+            OnPropertyChanged("UpperLimitPosY");
          }
       }
+
+      public double UpperLimitPosX
+      {
+         get
+         {
+            if (_modelObject == null) return 0;
+
+            return _modelObject.AAxisX * _modelObject.UpperLimit + _modelObject.AAnchorX;
+
+            //double localPosX = _modelObject.AAxisX * _modelObject.UpperLimit;
+            //double localPosY = _modelObject.AAxisY * _modelObject.UpperLimit;
+
+            //Point p = _aVm.RotatedPointFromLocal(new Point(localPosX, localPosY));
+
+            //return p.X;
+         }
+      }
+
+      public double UpperLimitPosY
+      {
+         get
+         {
+            if (_modelObject == null) return 0;
+
+            return _modelObject.AAxisY * _modelObject.UpperLimit + _modelObject.AAnchorY;
+
+            //double localPosX = _modelObject.AAxisX * _modelObject.UpperLimit;
+            //double localPosY = _modelObject.AAxisY * _modelObject.UpperLimit;
+
+            //Point p = _aVm.RotatedPointFromLocal(new Point(localPosX, localPosY));
+
+            //return p.Y;
+         }
+      }
+
+      public double LowerLimitPosX
+      {
+         get
+         {
+            if (_modelObject == null) return 0;
+
+            return _modelObject.AAxisX * _modelObject.LowerLimit + _modelObject.AAnchorX;
+
+            //double localPosX = -_modelObject.AAxisX * _modelObject.LowerLimit;
+            //double localPosY = -_modelObject.AAxisY * _modelObject.LowerLimit;
+
+            //Point p = _aVm.RotatedPointFromLocal(new Point(localPosX, localPosY));
+
+            //return p.X;
+         }
+      }
+
+      public double LowerLimitPosY
+      {
+         get
+         {
+            if (_modelObject == null) return 0;
+
+            return _modelObject.AAxisY * _modelObject.LowerLimit + _modelObject.AAnchorY;
+
+            //double localPosX = -_modelObject.AAxisX * _modelObject.LowerLimit;
+            //double localPosY = -_modelObject.AAxisY * _modelObject.LowerLimit;
+
+            //Point p = _aVm.RotatedPointFromLocal(new Point(localPosX, localPosY));
+
+            //return p.Y;
+         }
+      }
+
+      public new double AAnchorX
+      {
+         get
+         {
+            if (_modelObject == null) return 0;
+
+            return _modelObject.AAnchorX;
+         }
+         set
+         {
+            if (_modelObject == null) return;
+
+            _modelObject.AAnchorX = value;
+            OnPropertyChanged("AAnchorX");
+            OnPropertyChanged("UpperLimitPosX");
+            OnPropertyChanged("UpperLimitPosY");
+            OnPropertyChanged("LowerLimitPosX");
+            OnPropertyChanged("LowerLimitPosY");
+         }
+      }
+
+      public new double AAnchorY
+      {
+         get
+         {
+            if (_modelObject == null) return 0;
+
+            return _modelObject.AAnchorY;
+         }
+         set
+         {
+            if (_modelObject == null) return;
+
+            _modelObject.AAnchorY = value;
+            OnPropertyChanged("AAnchorY");
+            OnPropertyChanged("UpperLimitPosX");
+            OnPropertyChanged("UpperLimitPosY");
+            OnPropertyChanged("LowerLimitPosX");
+            OnPropertyChanged("LowerLimitPosY");
+         }
+      }
+
 
 
       #endregion
