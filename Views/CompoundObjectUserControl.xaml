@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:LeapfrogEditor"
              xmlns:ZoomAndPan="clr-namespace:ZoomAndPan;assembly=ZoomAndPan"
              mc:Ignorable="d" 
+             x:Name="root"
              d:DesignHeight="1000" d:DesignWidth="1000">
    <UserControl.Resources>
       <local:TextureOffsetXValueConverter x:Key="TextureOffsetXValueConverter" />
@@ -68,7 +69,6 @@
                Width="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomHandleSizeValueConverter}}"
                Height="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomHandleSizeValueConverter}}"
                StrokeThickness="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomThicknessValueConverter}}"
-               Stroke="DarkGreen"
                Fill="DarkGreen"
                MouseDown="AnchorA_MouseDown"
 					MouseUp="AnchorA_MouseUp"
@@ -94,12 +94,21 @@
                      Y="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomHandleTranslateValueConverter}}"
                   />
                </Rectangle.RenderTransform>
+               <Rectangle.Style>
+                  <Style TargetType="{x:Type Rectangle}" >
+                     <Setter Property="Stroke" Value="DarkGreen"/>
+                     <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                           <Setter Property="Stroke" Value="LightGreen" />
+                        </DataTrigger>
+                     </Style.Triggers>
+                  </Style>
+               </Rectangle.Style>
             </Rectangle>
             <Rectangle
                Width="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomHandleSizeValueConverter}}"
                Height="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomHandleSizeValueConverter}}"
                StrokeThickness="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomThicknessValueConverter}}"
-               Stroke="DarkGreen"
                Fill="DarkGreen"
                MouseDown="AnchorB_MouseDown"
 					MouseUp="AnchorB_MouseUp"
@@ -125,6 +134,16 @@
                      Y="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomHandleTranslateValueConverter}}"
                   />
                </Rectangle.RenderTransform>
+               <Rectangle.Style>
+                  <Style TargetType="{x:Type Rectangle}" >
+                     <Setter Property="Stroke" Value="DarkGreen"/>
+                     <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                           <Setter Property="Stroke" Value="LightGreen" />
+                        </DataTrigger>
+                     </Style.Triggers>
+                  </Style>
+               </Rectangle.Style>
             </Rectangle>
          </Canvas>
       </DataTemplate>
@@ -167,7 +186,6 @@
                Width="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomHandleSizeValueConverter}}"
                Height="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomHandleSizeValueConverter}}"
                StrokeThickness="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomThicknessValueConverter}}"
-               Stroke="DarkGreen"
                Fill="DarkGreen"
                MouseDown="AnchorA_MouseDown"
 					MouseUp="AnchorA_MouseUp"
@@ -187,6 +205,16 @@
                      <Binding Path="AShapeObject"/>
                   </MultiBinding>
                </Canvas.Top>
+               <Ellipse.Style>
+                  <Style TargetType="{x:Type Ellipse}" >
+                     <Setter Property="Stroke" Value="DarkGreen"/>
+                     <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                           <Setter Property="Stroke" Value="LightGreen" />
+                        </DataTrigger>
+                     </Style.Triggers>
+                  </Style>
+               </Ellipse.Style>
                <Ellipse.RenderTransform>
                   <TranslateTransform 
                      X="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomHandleTranslateValueConverter}}"
@@ -198,7 +226,6 @@
                Width="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomHandleSizeValueConverter}}"
                Height="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomHandleSizeValueConverter}}"
                StrokeThickness="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomThicknessValueConverter}}"
-               Stroke="DarkGreen"
                Fill="DarkGreen"
                MouseDown="AnchorB_MouseDown"
 					MouseUp="AnchorB_MouseUp"
@@ -218,6 +245,16 @@
                      <Binding Path="BShapeObject"/>
                   </MultiBinding>
                </Canvas.Top>
+               <Ellipse.Style>
+                  <Style TargetType="{x:Type Ellipse}" >
+                     <Setter Property="Stroke" Value="DarkGreen"/>
+                     <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                           <Setter Property="Stroke" Value="LightGreen" />
+                        </DataTrigger>
+                     </Style.Triggers>
+                  </Style>
+               </Ellipse.Style>
                <Ellipse.RenderTransform>
                   <TranslateTransform 
                      X="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomHandleTranslateValueConverter}}"
@@ -361,7 +398,6 @@
             <local:TriangleShape
                Size="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomHandleSizeValueConverter}}"
                StrokeThickness="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomThicknessValueConverter}}"
-               Stroke="DarkGreen"
                Fill="DarkGreen"
                MouseDown="AnchorA_MouseDown"
 					MouseUp="AnchorA_MouseUp"
@@ -381,6 +417,16 @@
                      <Binding Path="AShapeObject"/>
                   </MultiBinding>
                </Canvas.Top>
+               <local:TriangleShape.Style>
+                  <Style TargetType="{x:Type Shape}" >
+                     <Setter Property="Stroke" Value="DarkGreen"/>
+                     <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                           <Setter Property="Stroke" Value="LightGreen" />
+                        </DataTrigger>
+                     </Style.Triggers>
+                  </Style>
+               </local:TriangleShape.Style>
                <local:TriangleShape.RenderTransform>
                   <TranslateTransform 
                      X="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomHandleTranslateValueConverter}}"
@@ -391,7 +437,6 @@
             <local:TriangleShape
                Size="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomHandleSizeValueConverter}}"
                StrokeThickness="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomThicknessValueConverter}}"
-               Stroke="DarkGreen"
                Fill="DarkGreen"
                MouseDown="AnchorB_MouseDown"
 					MouseUp="AnchorB_MouseUp"
@@ -411,6 +456,16 @@
                      <Binding Path="BShapeObject"/>
                   </MultiBinding>
                </Canvas.Top>
+               <local:TriangleShape.Style>
+                  <Style TargetType="{x:Type Shape}" >
+                     <Setter Property="Stroke" Value="DarkGreen"/>
+                     <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                           <Setter Property="Stroke" Value="LightGreen" />
+                        </DataTrigger>
+                     </Style.Triggers>
+                  </Style>
+               </local:TriangleShape.Style>
                <local:TriangleShape.RenderTransform>
                   <TranslateTransform 
                      X="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomHandleTranslateValueConverter}}"
@@ -424,7 +479,9 @@
          <!-- Below is the lines between the vertices of all triangles of the polygon. The lines are
          drawn between the vertices of the triangles and they are rotated acc to the angle-->
          <ItemsControl 
-            ItemsSource="{Binding PointVms}" >
+            ItemsSource="{Binding PointVms}" 
+            Visibility="{Binding ShowTriangles, ElementName=root, Converter={StaticResource BoolToVisibilityValueConverter}}"
+            >
             <ItemsControl.ItemsPanel>
                <ItemsPanelTemplate>
                   <Canvas/>
@@ -529,9 +586,9 @@
                         <Line
                            StrokeThickness="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomThicknessValueConverter}}"
                            Stroke="DarkBlue"
-                           MouseDown="ShapeBorder_MouseDown"
-			                  MouseUp="ShapeBorder_MouseUp"
-			                  MouseMove="ShapeBorder_MouseMove"
+                           MouseDown="PolygonBorder_MouseDown"
+			                  MouseUp="PolygonBorder_MouseUp"
+			                  MouseMove="PolygonBorder_MouseMove"
                            Cursor="ScrollAll"
                            KeyDown="LineCursorKeyDown"
                            KeyUp="LineCursorKeyUp"
@@ -683,9 +740,9 @@
                         <Line
                            StrokeThickness="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomThicknessValueConverter}}"
                            Stroke="DarkBlue"
-                           MouseDown="ShapeBorder_MouseDown"
-			                  MouseUp="ShapeBorder_MouseUp"
-			                  MouseMove="ShapeBorder_MouseMove"
+                           MouseDown="PolygonBorder_MouseDown"
+			                  MouseUp="PolygonBorder_MouseUp"
+			                  MouseMove="PolygonBorder_MouseMove"
                            Cursor="ScrollAll"
                            >
                            <Line.X1>
@@ -962,9 +1019,9 @@
                Height="{Binding Radius, Converter={StaticResource TwiceDoubleValueConverter}}"
                StrokeThickness="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomThicknessValueConverter}}"
                Stroke="DarkBlue"
-               MouseDown="ShapeBorder_MouseDown"
-			      MouseUp="ShapeBorder_MouseUp"
-			      MouseMove="ShapeBorder_MouseMove"
+               MouseDown="EllipseBorder_MouseDown"
+			      MouseUp="EllipseBorder_MouseUp"
+			      MouseMove="EllipseBorder_MouseMove"
                Cursor="ScrollAll"
                >
             </Ellipse>
@@ -987,7 +1044,9 @@
             </Style>
          </ItemsControl.ItemContainerStyle>
       </ItemsControl>
-      <ItemsControl ItemsSource="{Binding Joints}">
+      <ItemsControl ItemsSource="{Binding Joints}"
+         Visibility="{Binding ShowJoints, ElementName=root, Converter={StaticResource BoolToVisibilityValueConverter}}"
+         >
          <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
                <Canvas/>

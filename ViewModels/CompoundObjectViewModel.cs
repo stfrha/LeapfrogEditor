@@ -476,6 +476,42 @@ namespace LeapfrogEditor
 
       #region Public Methods
 
+      public void RemoveShape(LfShapeViewModel svm)
+      {
+         // Check if there are any joints connected to this svm, if so, removed them
+         foreach (object o in Joints)
+         {
+            // Below will take care of all joints since they
+            // all inherit from WeldJoint
+            if (o is WeldJointViewModel)
+            {
+               WeldJointViewModel joint = (WeldJointViewModel)o;
+
+               if ((joint.AName == svm.Name) || (joint.BName == svm.Name))
+               {
+                  // Remove the joint
+                  ModelObject.RemoveJoint(joint.ModelObject);
+                  Joints.Remove(joint);
+               }
+            }
+         }
+
+         // Remove the shape model
+         ModelObject.RemoveShape(svm.ModelObject);
+
+         // Remove the shape viewmodel from this
+         Shapes.Remove(svm);
+
+         // If there are no more shapes in the CO, remove the CO
+         if (Shapes.Count == 0)
+         {
+            //Parent.ChildObjects.Remove(this);
+            //Parent.ModelObject.ChildObjectRefs(this.RefObject)
+         }
+
+         OnPropertyChanged("");
+      }
+
       public void InvalidateJoints()
       {
          foreach (object o in Joints)
@@ -533,6 +569,16 @@ namespace LeapfrogEditor
                LfShapeViewModel shape = (LfShapeViewModel)o;
 
                shape.IsSelected = false;
+            }
+         }
+
+         foreach (object o in Shapes)
+         {
+            if (o is WeldJointViewModel)
+            {
+               WeldJointViewModel joint = (WeldJointViewModel)o;
+
+               joint.IsSelected = false;
             }
          }
 

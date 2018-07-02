@@ -43,121 +43,34 @@ namespace LeapfrogEditor
          InitializeComponent();
       }
 
+      public bool ShowJoints
+      {
+         get { return (bool)GetValue(ShowJointsProperty); }
+         set { SetValue(ShowJointsProperty, value); }
+      }
 
-//      private void General_MouseDown(object sender, MouseButtonEventArgs e)
-//      {
-//         UIElement parentCanvas = FindParent<Canvas>(content);
-//         parentCanvas.Focus();
-//         Keyboard.Focus(parentCanvas);
+      // Using a DependencyProperty as the backing store for ShowJoints.  This enables animation, styling, binding, etc...
+      public static readonly DependencyProperty ShowJointsProperty =
+          DependencyProperty.Register("ShowJoints", typeof(bool), typeof(CompoundObjectUserControl), new PropertyMetadata(false));
 
-//         mouseButtonDown = e.ChangedButton;
 
-//         if (mouseButtonDown == MouseButton.Left)
-//         {
-//            mouseHandlingMode = ZoomAndPan.MouseHandlingMode.DraggingObjects;
-//            origContentMouseDownPoint = e.GetPosition(parentCanvas);
 
-//            UIElement dragObject = (UIElement)sender;
-//            dragObject.CaptureMouse();
 
-////          e.Handled = true;
-//         }
-         
-//         bool shift = ((Keyboard.Modifiers & ModifierKeys.Shift) != 0);
-//         bool ctrl = ((Keyboard.Modifiers & ModifierKeys.Control) != 0);
-//         bool alt = ((Keyboard.Modifiers & ModifierKeys.Alt) != 0);
+      public bool ShowTriangles
+      {
+         get { return (bool)GetValue(ShowTrianglesProperty); }
+         set { SetValue(ShowTrianglesProperty, value); }
+      }
 
-//         if (sender is FrameworkElement)
-//         {
-//            FrameworkElement fwe = (FrameworkElement)sender;
+      // Using a DependencyProperty as the backing store for ShowTriangles.  This enables animation, styling, binding, etc...
+      public static readonly DependencyProperty ShowTrianglesProperty =
+          DependencyProperty.Register("ShowTriangles", typeof(bool), typeof(CompoundObjectUserControl), new PropertyMetadata(false));
 
-//            if (fwe.DataContext is IPositionInterface)
-//            {
-//               IPositionInterface obj = (IPositionInterface)fwe.DataContext;
-//               if (obj.MainVm.MouseDown(Type,  fwe, e.ChangedButton, e.GetPosition(content), e.ClickCount, shift, ctrl, alt))
-//               {
-//                  e.Handled = true;
-//               }
 
-//            }
-//         }
-//      }
 
-//      private void General_MouseUp(object sender, MouseButtonEventArgs e)
-//      {
-//         UIElement parentCanvas = FindParent<Canvas>(content);
-//         parentCanvas.Focus();
-//         Keyboard.Focus(parentCanvas);
 
-//         if (mouseHandlingMode == ZoomAndPan.MouseHandlingMode.DraggingObjects)
-//         {
-//            mouseButtonDown = e.ChangedButton;
 
-//            if (mouseButtonDown == MouseButton.Left)
-//            {
-//               mouseHandlingMode = ZoomAndPan.MouseHandlingMode.None;
 
-//               UIElement rectangle = (UIElement)sender;
-//               rectangle.ReleaseMouseCapture();
-
-////             e.Handled = true;
-//            }
-//         }
-
-//         bool shift = ((Keyboard.Modifiers & ModifierKeys.Shift) != 0);
-//         bool ctrl = ((Keyboard.Modifiers & ModifierKeys.Control) != 0);
-//         bool alt = ((Keyboard.Modifiers & ModifierKeys.Alt) != 0);
-
-//         if (sender is FrameworkElement)
-//         {
-//            FrameworkElement fwe = (FrameworkElement)sender;
-
-//            if (fwe.DataContext is IPositionInterface)
-//            {
-//               IPositionInterface obj = (IPositionInterface)fwe.DataContext;
-
-//               if (obj.MainVm.MouseUp(fwe, e.ChangedButton, e.GetPosition(content), e.ClickCount, shift, ctrl, alt))
-//               {
-//                  e.Handled = true;
-//               }
-//            }
-//         }
-//      }
-
-//      private void General_MouseMove(object sender, MouseEventArgs e)
-//      {
-//         if (mouseHandlingMode == ZoomAndPan.MouseHandlingMode.DraggingObjects)
-//         {
-//            if (mouseButtonDown == MouseButton.Left)
-//            {
-//               UIElement parentCanvas = FindParent<Canvas>(content);
-
-//               Point curContentPoint = e.GetPosition(parentCanvas);
-//               Vector rectangleDragVector = curContentPoint - origContentMouseDownPoint;
-
-//               origContentMouseDownPoint = curContentPoint;
-
-//               bool shift = ((Keyboard.Modifiers & ModifierKeys.Shift) != 0);
-//               bool ctrl = ((Keyboard.Modifiers & ModifierKeys.Control) != 0);
-//               bool alt = ((Keyboard.Modifiers & ModifierKeys.Alt) != 0);
-
-//               if (sender is FrameworkElement)
-//               {
-//                  FrameworkElement fwe = (FrameworkElement)sender;
-
-//                  if (fwe.DataContext is IPositionInterface)
-//                  {
-//                     IPositionInterface obj = (IPositionInterface)fwe.DataContext;
-
-//                     obj.MainVm.MouseMove(fwe, rectangleDragVector, shift, ctrl, alt);
-//                  }
-//               }
-
-//               e.Handled = true;
-
-//            }
-//         }
-//      }
 
       public static T FindParent<T>(DependencyObject child) where T : DependencyObject
          // From: https://www.infragistics.com/community/blogs/b/blagunas/posts/find-the-parent-control-of-a-specific-type-in-wpf-and-silverlight
@@ -209,38 +122,8 @@ namespace LeapfrogEditor
          bool ctrl = ((Keyboard.Modifiers & ModifierKeys.Control) != 0);
          bool alt = ((Keyboard.Modifiers & ModifierKeys.Alt) != 0);
 
-         // If ctrl is held down, we never intent to drag things
-         if (!ctrl && (mouseButtonDown == MouseButton.Left))
-         {
-            if (down)
-            {
-               mouseHandlingMode = ZoomAndPan.MouseHandlingMode.DraggingObjects;
-               origContentMouseDownPoint = e.GetPosition(parentCanvas);
-
-               UIElement dragObject = (UIElement)sender;
-               dragObject.CaptureMouse();
-
-               e.Handled = true;
-            }
-            else
-            {
-               if (mouseHandlingMode == ZoomAndPan.MouseHandlingMode.DraggingObjects)
-               {
-                  mouseButtonDown = e.ChangedButton;
-
-                  if (mouseButtonDown == MouseButton.Left)
-                  {
-                     mouseHandlingMode = ZoomAndPan.MouseHandlingMode.None;
-
-                     UIElement rectangle = (UIElement)sender;
-                     rectangle.ReleaseMouseCapture();
-
-                     e.Handled = true;
-                  }
-               }
-            }
-         }
-
+         // If the leftClickState of the Main VM is other than none then 
+         // we do not want to start dragging objects
          if (sender is FrameworkElement)
          {
             FrameworkElement fwe = (FrameworkElement)sender;
@@ -248,6 +131,41 @@ namespace LeapfrogEditor
             if (fwe.DataContext is T)
             {
                IMainVmInterface obj = (IMainVmInterface)fwe.DataContext;
+
+               if (obj.MainVm.LeftClickState == LeftClickState.none)
+               {
+                  // If ctrl is held down, we never intent to drag things
+                  if (!ctrl && (mouseButtonDown == MouseButton.Left))
+                  {
+                     if (down)
+                     {
+                        mouseHandlingMode = ZoomAndPan.MouseHandlingMode.DraggingObjects;
+                        origContentMouseDownPoint = e.GetPosition(parentCanvas);
+
+                        UIElement dragObject = (UIElement)sender;
+                        dragObject.CaptureMouse();
+
+                        e.Handled = true;
+                     }
+                     else
+                     {
+                        if (mouseHandlingMode == ZoomAndPan.MouseHandlingMode.DraggingObjects)
+                        {
+                           mouseButtonDown = e.ChangedButton;
+
+                           if (mouseButtonDown == MouseButton.Left)
+                           {
+                              mouseHandlingMode = ZoomAndPan.MouseHandlingMode.None;
+
+                              UIElement rectangle = (UIElement)sender;
+                              rectangle.ReleaseMouseCapture();
+
+                              e.Handled = true;
+                           }
+                        }
+                     }
+                  }
+               }
 
                if (down)
                {
@@ -314,17 +232,47 @@ namespace LeapfrogEditor
          GeneralMouse<LfShapeViewModel>(false, MouseEventObjectType.shape, sender, e);
       }
 
+      private void PolygonBorder_MouseDown(object sender, MouseButtonEventArgs e)
+      {
+         GeneralMouse<LfDragablePointViewModel>(true, MouseEventObjectType.dragablePolygonBorder, sender, e);
+      }
+
+      private void PolygonBorder_MouseUp(object sender, MouseButtonEventArgs e)
+      {
+         GeneralMouse<LfDragablePointViewModel>(false, MouseEventObjectType.dragablePolygonBorder, sender, e);
+      }
+
+      private void PolygonBorder_MouseMove(object sender, MouseEventArgs e)
+      {
+         GeneralMouseMove<IPositionInterface>(MouseEventObjectType.dragablePolygonBorder, sender, e);
+      }
+
       private void ShapeBorder_MouseDown(object sender, MouseButtonEventArgs e)
       {
-         GeneralMouse<LfDragablePointViewModel>(true, MouseEventObjectType.dragableBorder, sender, e);
+         GeneralMouse<LfPointViewModel>(true, MouseEventObjectType.dragableBorder, sender, e);
       }
 
       private void ShapeBorder_MouseUp(object sender, MouseButtonEventArgs e)
       {
-         GeneralMouse<LfDragablePointViewModel>(false, MouseEventObjectType.dragableBorder, sender, e);
+         GeneralMouse<LfPointViewModel>(false, MouseEventObjectType.dragableBorder, sender, e);
       }
 
       private void ShapeBorder_MouseMove(object sender, MouseEventArgs e)
+      {
+         GeneralMouseMove<IPositionInterface>(MouseEventObjectType.dragableBorder, sender, e);
+      }
+
+      private void EllipseBorder_MouseDown(object sender, MouseButtonEventArgs e)
+      {
+         GeneralMouse<LfStaticCircleViewModel>(true, MouseEventObjectType.dragableBorder, sender, e);
+      }
+
+      private void EllipseBorder_MouseUp(object sender, MouseButtonEventArgs e)
+      {
+         GeneralMouse<LfStaticCircleViewModel>(false, MouseEventObjectType.dragableBorder, sender, e);
+      }
+
+      private void EllipseBorder_MouseMove(object sender, MouseEventArgs e)
       {
          GeneralMouseMove<IPositionInterface>(MouseEventObjectType.dragableBorder, sender, e);
       }
@@ -443,6 +391,5 @@ namespace LeapfrogEditor
             e.Handled = true;
          }
       }
-
    }
 }

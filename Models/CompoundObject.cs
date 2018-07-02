@@ -249,6 +249,22 @@ namespace LeapfrogEditor
          }
       }
 
+      public void RemoveJoint(object shape)
+      {
+         if (shape is WeldJoint)
+         {
+            WeldJoints.Remove((WeldJoint)shape);
+         }
+         else if (shape is RevoluteJoint)
+         {
+            RevoluteJoints.Remove((RevoluteJoint)shape);
+         }
+         else if (shape is PrismaticJoint)
+         {
+            PrismaticJoints.Remove((PrismaticJoint)shape);
+         }
+      }
+
       #endregion
    }
 }

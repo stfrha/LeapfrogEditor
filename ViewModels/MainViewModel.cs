@@ -29,6 +29,9 @@ namespace LeapfrogEditor
       dynamicCircle,
       dynamicPolygon,
       dynamicBoxedSpritePolygon,
+      weldJoint,
+      revoluteJoint,
+      prismaticJoint,
       addPoint
    }
 
@@ -36,6 +39,8 @@ namespace LeapfrogEditor
    {
       none,                         // object is null
       shape,                        // object is the shape
+      dragablePolygonBorder,        // border that a point can be added to,
+                                    // object is the point (before or after?) the line
       dragableBorder,               // object is the point (before or after?) the line
       dragablePoint,                // object is the point
       compoundObjectBoundaryBox,    // object is the CompoundObject
@@ -57,9 +62,13 @@ namespace LeapfrogEditor
 
       private CompoundObjectViewModel _selectedCompoundObject = null;
       private ObservableCollection<LfShapeViewModel> _selectedShapes = new ObservableCollection<LfShapeViewModel>();
+      private ObservableCollection<WeldJointViewModel> _selectedJoints = new ObservableCollection<WeldJointViewModel>();
       private ObservableCollection<LfDragablePointViewModel> _selectedPoints = new ObservableCollection<LfDragablePointViewModel>();
 
       private LeftClickState _LeftClickState = LeftClickState.none;
+
+      private bool _showJoints;
+      private bool _showTriangles;
 
       #endregion
 
@@ -119,6 +128,32 @@ namespace LeapfrogEditor
       {
          get { return _selectedPoints; }
          set { _selectedPoints = value; }
+      }
+
+      public LeftClickState LeftClickState
+      {
+         get { return _LeftClickState; }
+         set { _LeftClickState = value; }
+      }
+
+      public bool ShowJoints
+      {
+         get { return _showJoints; }
+         set
+         {
+            _showJoints = value;
+            OnPropertyChanged("ShowJoints");
+         }
+      }
+
+      public bool ShowTriangles
+      {
+         get { return _showTriangles; }
+         set
+         {
+            _showTriangles = value;
+            OnPropertyChanged("ShowTriangles");
+         }
       }
 
       #endregion
@@ -214,60 +249,59 @@ namespace LeapfrogEditor
          }
       }
 
+       
 
-      
+      //void NewStaticPolygonExecute(Object parameter)
+      //{
+      //   // Deselect all other shapes when generating a new polygon
+      //   foreach (LfShapeViewModel shape in _selectedShapes)
+      //   {
+      //      shape.IsSelected = false;
+      //   }
 
-      void NewStaticPolygonExecute(Object parameter)
-      {
-         // Deselect all other shapes when generating a new polygon
-         foreach (LfShapeViewModel shape in _selectedShapes)
-         {
-            shape.IsSelected = false;
-         }
+      //   _selectedShapes.Clear();
 
-         _selectedShapes.Clear();
+      //   _LeftClickState = LeftClickState.staticPolygon;
+      //}
 
-         _LeftClickState = LeftClickState.staticPolygon;
-      }
+      //bool CanNewStaticPolygonExecute(Object parameter)
+      //{
+      //   return (_selectedCompoundObject != null);
+      //}
 
-      bool CanNewStaticPolygonExecute(Object parameter)
-      {
-         return (_selectedCompoundObject != null);
-      }
+      //public ICommand NewStaticPolygon
+      //{
+      //   get
+      //   {
+      //      return new MicroMvvm.RelayCommand<Object>(parameter => NewStaticPolygonExecute(parameter), parameter => CanNewStaticPolygonExecute(parameter));
+      //   }
+      //}
 
-      public ICommand NewStaticPolygon
-      {
-         get
-         {
-            return new MicroMvvm.RelayCommand<Object>(parameter => NewStaticPolygonExecute(parameter), parameter => CanNewStaticPolygonExecute(parameter));
-         }
-      }
+      //void NewDynamicPolygonExecute(Object parameter)
+      //{
+      //   // Deselect all other shapes when generating a new polygon
+      //   foreach (LfShapeViewModel shape in _selectedShapes)
+      //   {
+      //      shape.IsSelected = false;
+      //   }
 
-      void NewDynamicPolygonExecute(Object parameter)
-      {
-         // Deselect all other shapes when generating a new polygon
-         foreach (LfShapeViewModel shape in _selectedShapes)
-         {
-            shape.IsSelected = false;
-         }
+      //   _selectedShapes.Clear();
 
-         _selectedShapes.Clear();
+      //   _LeftClickState = LeftClickState.dynamicPolygon;
+      //}
 
-         _LeftClickState = LeftClickState.dynamicPolygon;
-      }
+      //bool CanNewDynamicPolygonExecute(Object parameter)
+      //{
+      //   return (_selectedCompoundObject != null);
+      //}
 
-      bool CanNewDynamicPolygonExecute(Object parameter)
-      {
-         return (_selectedCompoundObject != null);
-      }
-
-      public ICommand NewDynamicPolygon
-      {
-         get
-         {
-            return new MicroMvvm.RelayCommand<Object>(parameter => NewDynamicPolygonExecute(parameter), parameter => CanNewDynamicPolygonExecute(parameter));
-         }
-      }
+      //public ICommand NewDynamicPolygon
+      //{
+      //   get
+      //   {
+      //      return new MicroMvvm.RelayCommand<Object>(parameter => NewDynamicPolygonExecute(parameter), parameter => CanNewDynamicPolygonExecute(parameter));
+      //   }
+      //}
 
 
       void NewShapeExecute(Object parameter)
@@ -301,6 +335,97 @@ namespace LeapfrogEditor
          }
       }
 
+      void NewJointExecute(Object parameter)
+      {
+         string param = parameter as string;
+
+         if (!Enum.TryParse<LeftClickState>(param, out _LeftClickState))
+         {
+            _LeftClickState = LeftClickState.none;
+         }
+      }
+
+      bool CanNewJointExecute(Object parameter)
+      {
+         return ((_selectedCompoundObject != null) && (_selectedShapes.Count == 2) && (parameter is string));
+      }
+
+      public ICommand NewJoint
+      {
+         get
+         {
+            return new MicroMvvm.RelayCommand<Object>(parameter => NewJointExecute(parameter), parameter => CanNewJointExecute(parameter));
+         }
+      }
+
+      void DeleteExecute(Object parameter)
+      {
+         if (_selectedPoints.Count > 0)
+         {
+            foreach (LfDragablePointViewModel dp in _selectedPoints)
+            {
+               LfPolygonViewModel polyVm = dp.Parent;
+
+               // Is this the last point to be removed? If so, remove the shape
+               // first so there is no problem with updating something with zero
+               // points.
+               if (polyVm.PointVms.Count == 1)
+               {
+                  // Polygon has no more points, delete the polygon Shape
+
+                  polyVm.Parent.ModelObject.RemoveShape(polyVm.ModelObject);
+                  polyVm.Parent.Shapes.Remove(polyVm);
+               }
+
+               // Before we remove the point
+               polyVm.RemovePoint(dp);
+
+            }
+            _selectedPoints.Clear();
+         }
+         else if (_selectedJoints.Count > 0)
+         {
+            foreach (WeldJointViewModel jvm in _selectedJoints)
+            {
+               CompoundObjectViewModel covm = jvm.Parent;
+
+               covm.ModelObject.RemoveJoint(jvm.ModelObject);
+               covm.Joints.Remove(jvm);
+
+            }
+            _selectedJoints.Clear();
+
+         }
+         else if (_selectedShapes.Count > 0)
+         {
+            foreach (LfShapeViewModel svm in _selectedShapes)
+            {
+               CompoundObjectViewModel covm = svm.Parent;
+
+               covm.ModelObject.RemoveShape(svm.ModelObject);
+               covm.Shapes.Remove(svm);
+
+            }
+            _selectedShapes.Clear();
+         }
+      }
+
+      bool CanDeleteExecute(Object parameter)
+      {
+         return ((_selectedCompoundObject != null) && 
+            ((_selectedShapes.Count > 0) || (_selectedPoints.Count > 0)  || (_selectedJoints.Count > 0) ));
+      }
+
+      public ICommand Delete
+      {
+         get
+         {
+            return new MicroMvvm.RelayCommand<Object>(parameter => DeleteExecute(parameter), parameter => CanDeleteExecute(parameter));
+         }
+      }
+
+
+
       #endregion
 
 
@@ -315,7 +440,7 @@ namespace LeapfrogEditor
       // All mouse handling function return true if the the data was used for some action
       // (if original event was handled)
 
-      
+
       public bool MouseDown(
          MouseEventObjectType objectType, 
          object sender, 
@@ -424,6 +549,7 @@ namespace LeapfrogEditor
                return false;
 
             case MouseEventObjectType.dragableBorder:
+            case MouseEventObjectType.dragablePolygonBorder:
 
                IPositionInterface posvm = (IPositionInterface)sender;
 
@@ -514,6 +640,12 @@ namespace LeapfrogEditor
                Vector f = new Vector(pjvm.AAnchorX, pjvm.AAnchorY);
                v = v - f;
                pjvm.UpperLimit = v.Length;
+
+               if (pjvm.LowerLimit > pjvm.UpperLimit)
+               {
+                  pjvm.LowerLimit = pjvm.UpperLimit;
+               }
+
                v.Normalize();
                pjvm.AAxisX = v.X;
                pjvm.AAxisY = v.Y;
@@ -536,13 +668,21 @@ namespace LeapfrogEditor
                newPosY = pjvm.LowerLimitPosY + rotatedDragVector.Y;
 
                // Now calculate direction vector and upper limit from point
-               v = new Vector(newPosX, newPosY);
                f = new Vector(pjvm.AAnchorX, pjvm.AAnchorY);
-               v = v - f;
-               pjvm.LowerLimit = v.Length;
-               v.Normalize();
-               pjvm.AAxisX = v.X;
-               pjvm.AAxisY = v.Y;
+               Vector upperVector = new Vector(pjvm.UpperLimitPosX, pjvm.UpperLimitPosY) - f;
+               v = new Vector(newPosX, newPosY) - f;
+
+               upperVector.Normalize();
+
+               pjvm.LowerLimit = Vector.Multiply(upperVector, v);
+
+               if (pjvm.LowerLimit > pjvm.UpperLimit)
+               {
+                  pjvm.LowerLimit = pjvm.UpperLimit;
+               }
+               //v.Normalize();
+               //pjvm.AAxisX = v.X;
+               //pjvm.AAxisY = v.Y;
 
                pjvm.OnPropertyChanged("");
 
@@ -595,6 +735,12 @@ namespace LeapfrogEditor
                            selshape.IsSelected = false;
                         }
                         _selectedShapes.Clear();
+
+                        foreach (WeldJointViewModel seljoint in _selectedJoints)
+                        {
+                           seljoint.IsSelected = false;
+                        }
+                        _selectedJoints.Clear();
                      }
 
                      _selectedShapes.Add(shvm);
@@ -606,6 +752,7 @@ namespace LeapfrogEditor
                      {
                         _selectedCompoundObject.DeselectAllChildren();
                         _selectedShapes.Clear();
+                        _selectedJoints.Clear();
                         _selectedCompoundObject.IsSelected = false;
                      }
                      _selectedCompoundObject = shvm.Parent;
@@ -621,12 +768,61 @@ namespace LeapfrogEditor
 
                   return true;
 
-               case MouseEventObjectType.dragableBorder:
+               case MouseEventObjectType.jointAnchorA:
+               case MouseEventObjectType.jointAnchorB:
 
-                  LfDragablePointViewModel dpvm = (LfDragablePointViewModel)sender;
+                  WeldJointViewModel jvm = (WeldJointViewModel)sender;
+
+                  if (jvm.Parent.IsSelected)
+                  {
+                     if (!ctrl)
+                     {
+                        foreach (WeldJointViewModel selJoint in _selectedJoints)
+                        {
+                           selJoint.IsSelected = false;
+                        }
+                        _selectedJoints.Clear();
+
+                        foreach (WeldJointViewModel seljoint in _selectedJoints)
+                        {
+                           seljoint.IsSelected = false;
+                        }
+                        _selectedJoints.Clear();
+
+                     }
+
+                     _selectedJoints.Add(jvm);
+                     jvm.IsSelected = true;
+                  }
+                  else
+                  {
+                     if (_selectedCompoundObject != null)
+                     {
+                        _selectedCompoundObject.DeselectAllChildren();
+                        _selectedShapes.Clear();
+                        _selectedJoints.Clear();
+                        _selectedCompoundObject.IsSelected = false;
+                     }
+                     _selectedCompoundObject = jvm.Parent;
+                  }
+
+                  if (!jvm.IsSelected)
+                  {
+                     jvm.Parent.IsSelected = true;
+                     //_selectedShapes.Add(shvm);
+                     _selectedCompoundObject = jvm.Parent;
+
+                  }
+
+                  return true;
+
+
+               case MouseEventObjectType.dragablePolygonBorder:
 
                   if (ctrl)
                   {
+                     LfDragablePointViewModel dpvm = (LfDragablePointViewModel)sender;
+
                      // What is the click-point in this case?
                      // It is said to be the closesed parenting canvas which
                      // should be in CompoundObject coordinates. Lets try to convert
@@ -648,6 +844,10 @@ namespace LeapfrogEditor
                      _selectedPoints.Add(newPoint);
                      newPoint.IsSelected = true;
                   }
+
+                  return true;
+
+               case MouseEventObjectType.dragableBorder:
 
                   return true;
 
@@ -682,6 +882,8 @@ namespace LeapfrogEditor
                MyCpVm.IsSelected = false;
                _selectedCompoundObject = null;
                _selectedShapes.Clear();
+               _selectedJoints.Clear();
+               _selectedPoints.Clear();
             }
             else if ((_LeftClickState == LeftClickState.staticBox) ||
                (_LeftClickState == LeftClickState.dynamicBox) ||
@@ -749,7 +951,7 @@ namespace LeapfrogEditor
                _LeftClickState = LeftClickState.none;
 
             }
-            else if ((_LeftClickState == LeftClickState.staticPolygon) || 
+            else if ((_LeftClickState == LeftClickState.staticPolygon) ||
                (_LeftClickState == LeftClickState.dynamicPolygon) ||
                (_LeftClickState == LeftClickState.spritePolygon))
             {
@@ -768,7 +970,7 @@ namespace LeapfrogEditor
                   newPolygonVm = new LfStaticPolygonViewModel(this, _selectedCompoundObject, (LfStaticPolygon)newPolygon);
                   _selectedCompoundObject.ModelObject.StaticPolygons.Add((LfStaticPolygon)newPolygon);
                }
-               else if(_LeftClickState == LeftClickState.dynamicPolygon)
+               else if (_LeftClickState == LeftClickState.dynamicPolygon)
                {
                   newPolygon = new LfDynamicPolygon();
                   newPolygonVm = new LfDynamicPolygonViewModel(this, _selectedCompoundObject, (LfDynamicPolygon)newPolygon);
@@ -789,7 +991,7 @@ namespace LeapfrogEditor
                _selectedShapes.Add(newPolygonVm);
                newPolygonVm.IsSelected = true;
 
-               LfDragablePointViewModel newPoint = newPolygonVm.InsertPoint(new Point(0,0), null);
+               LfDragablePointViewModel newPoint = newPolygonVm.InsertPoint(new Point(0, 0), null);
 
                foreach (LfDragablePointViewModel selpoint in _selectedPoints)
                {
@@ -803,7 +1005,7 @@ namespace LeapfrogEditor
                _LeftClickState = LeftClickState.addPoint;
 
             }
-            else if ((_LeftClickState == LeftClickState.staticBoxedSpritePolygon) || 
+            else if ((_LeftClickState == LeftClickState.staticBoxedSpritePolygon) ||
                (_LeftClickState == LeftClickState.dynamicBoxedSpritePolygon))
             {
                // The first point of this polygon will be the PosX and PosY of the 
@@ -827,10 +1029,10 @@ namespace LeapfrogEditor
                   newPolygonVm = new LfDynamicBoxedSpritePolygonViewModel(this, _selectedCompoundObject, (LfDynamicBoxedSpritePolygon)newPolygon);
                   _selectedCompoundObject.ModelObject.DynamicBoxedSpritePolygons.Add((LfDynamicBoxedSpritePolygon)newPolygon);
                }
-               
+
                newPolygon.PosX = localClickPoint.X;
                newPolygon.PosY = localClickPoint.Y;
-               
+
                _selectedCompoundObject.Shapes.Add(newPolygonVm);
 
                _selectedShapes.Add(newPolygonVm);
@@ -848,6 +1050,75 @@ namespace LeapfrogEditor
                newPoint.IsSelected = true;
 
                _LeftClickState = LeftClickState.addPoint;
+
+            }
+            else if ((_LeftClickState == LeftClickState.weldJoint) ||
+               (_LeftClickState == LeftClickState.revoluteJoint) ||
+               (_LeftClickState == LeftClickState.prismaticJoint))
+            {
+               WeldJoint wj = null;
+               
+               if (_LeftClickState == LeftClickState.weldJoint)
+               {
+                  wj = new WeldJoint();
+               }
+               else if (_LeftClickState == LeftClickState.revoluteJoint)
+               {
+                  wj = new RevoluteJoint();
+               }
+               else
+               {
+                  wj = new PrismaticJoint();
+               }
+
+               wj.AName = _selectedShapes[0].Name;
+               wj.BName = _selectedShapes[1].Name;
+
+               WeldJointViewModel wjvm = null;
+
+               if (_LeftClickState == LeftClickState.weldJoint)
+               {
+                  wjvm = new WeldJointViewModel(this, _selectedCompoundObject, wj);
+               }
+               else if (_LeftClickState == LeftClickState.revoluteJoint)
+               {
+                  wjvm = new RevoluteJointViewModel(this, _selectedCompoundObject, (RevoluteJoint)wj);
+               }
+               else
+               {
+                  wjvm = new PrismaticJointViewModel(this, _selectedCompoundObject, (PrismaticJoint)wj);
+               }
+
+               Point parentObjectOrigo = new Point(_selectedCompoundObject.PosX, _selectedCompoundObject.PosY);
+
+               // Shape A point
+               Point shapeAOrigo = new Point(wjvm.AShapeObject.PosX, wjvm.AShapeObject.PosY);
+               shapeAOrigo.Offset(parentObjectOrigo.X, parentObjectOrigo.Y);
+               Point localAClickPoint = new Point();
+               localAClickPoint = (Point)(clickPoint - shapeAOrigo);
+
+               // Rotate point to shape rotation
+               Point rotatedAClickPoint = wjvm.AShapeObject.RotatedPointFromLocal(localAClickPoint);
+
+               wjvm.AAnchorX = rotatedAClickPoint.X;
+               wjvm.AAnchorY = rotatedAClickPoint.Y;
+
+               // Shape A point
+               Point shapeBOrigo = new Point(wjvm.BShapeObject.PosX, wjvm.BShapeObject.PosY);
+               shapeBOrigo.Offset(parentObjectOrigo.X, parentObjectOrigo.Y);
+               Point localBClickPoint = new Point();
+               localBClickPoint = (Point)(clickPoint - shapeBOrigo);
+
+               // Rotate point to shape rotation
+               Point rotatedBClickPoint = wjvm.BShapeObject.RotatedPointFromLocal(localBClickPoint);
+
+               wjvm.BAnchorX = rotatedBClickPoint.X;
+               wjvm.BAnchorY = rotatedBClickPoint.Y;
+
+               _selectedCompoundObject.Joints.Add(wjvm);
+               _selectedCompoundObject.ModelObject.WeldJoints.Add(wj);
+
+               _LeftClickState = LeftClickState.none;
 
             }
             else if (_LeftClickState == LeftClickState.addPoint)
@@ -904,29 +1175,33 @@ namespace LeapfrogEditor
       {
          if (e.Key == Key.Delete)
          {
-            if (_selectedPoints.Count > 0)
+            if (CanDeleteExecute(null))
             {
-               foreach (LfDragablePointViewModel dp in _selectedPoints)
-               {
-                  LfPolygonViewModel polyVm = dp.Parent;
-
-                  // Is this the last point to be removed? If so, remove the shape
-                  // first so there is no problem with updating something with zero
-                  // points.
-                  if (polyVm.PointVms.Count == 1)
-                  {
-                     // Polygon has no more points, delete the polygon Shape
-
-                     polyVm.Parent.ModelObject.RemoveShape(polyVm.ModelObject);
-                     polyVm.Parent.Shapes.Remove(polyVm);
-                  }
-
-                  // Before we remove the point
-                  polyVm.RemovePoint(dp);
-
-               }
-               _selectedPoints.Clear();
+               DeleteExecute(null);
             }
+            //if (_selectedPoints.Count > 0)
+            //{
+            //   foreach (LfDragablePointViewModel dp in _selectedPoints)
+            //   {
+            //      LfPolygonViewModel polyVm = dp.Parent;
+
+            //      // Is this the last point to be removed? If so, remove the shape
+            //      // first so there is no problem with updating something with zero
+            //      // points.
+            //      if (polyVm.PointVms.Count == 1)
+            //      {
+            //         // Polygon has no more points, delete the polygon Shape
+
+            //         polyVm.Parent.ModelObject.RemoveShape(polyVm.ModelObject);
+            //         polyVm.Parent.Shapes.Remove(polyVm);
+            //      }
+
+            //      // Before we remove the point
+            //      polyVm.RemovePoint(dp);
+
+            //   }
+            //   _selectedPoints.Clear();
+            //}
          }
 
          return false;

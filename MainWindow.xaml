@@ -6,6 +6,7 @@
         xmlns:ZoomAndPan="clr-namespace:ZoomAndPan;assembly=ZoomAndPan"
         xmlns:local="clr-namespace:LeapfrogEditor"
         mc:Ignorable="d"
+        x:Name="root"
         Title="MainWindow" Height="800" Width="1200"
         KeyDown="Window_KeyDown">
    <Window.DataContext>
@@ -13,7 +14,10 @@
    </Window.DataContext>
    <Window.Resources>
       <DataTemplate DataType="{x:Type local:CompoundObjectViewModel}">
-         <local:CompoundObjectUserControl />
+         <local:CompoundObjectUserControl 
+            ShowJoints="{Binding DataContext.ShowJoints, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+            ShowTriangles="{Binding DataContext.ShowTriangles, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+            />
       </DataTemplate>
    </Window.Resources>
    <Grid>
@@ -40,6 +44,10 @@
                <MenuItem Header="Dynamic Polygon" Command="{Binding NewShape}" CommandParameter="dynamicPolygon"  />
                <MenuItem Header="Static Boxed Sprite Polygon" Command="{Binding NewShape}" CommandParameter="staticBoxedSpritePolygon"  />
                <MenuItem Header="Dynamic Boxed Sprite Polygon" Command="{Binding NewShape}" CommandParameter="dynamicBoxedSpritePolygon"  />
+               <Separator />
+               <MenuItem Header="Weld Joint" Command="{Binding NewJoint}" CommandParameter="weldJoint"  />
+               <MenuItem Header="Revolute Joint" Command="{Binding NewJoint}" CommandParameter="revoluteJoint"  />
+               <MenuItem Header="Prismatic Joint" Command="{Binding NewJoint}" CommandParameter="prismaticJoint"  />
             </MenuItem>
             <Separator/>
             <MenuItem Header="Delete" Command="{Binding Delete}" />
@@ -47,6 +55,10 @@
          <MenuItem Header="View">
             <MenuItem Header="Swap states" Command="{Binding State}" />
             <MenuItem Header="Create Triangles" Command="{Binding CreateTriangles}" />
+            <MenuItem Header="Show">
+               <MenuItem Header="Joints" IsCheckable="True" IsChecked="{Binding ShowJoints}" />
+               <MenuItem Header="Triangles" IsCheckable="True" IsChecked="{Binding ShowTriangles}" />
+            </MenuItem>
          </MenuItem>
       </Menu>
       <!--<StackPanel Grid.Row="0" HorizontalAlignment="Left" Orientation="Horizontal">

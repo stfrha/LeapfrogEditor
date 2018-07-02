@@ -17,7 +17,7 @@ namespace LeapfrogEditor
             double scale = (double)value;
 
             // Thickness at scale = 1 is 1
-            return 2 / scale;
+            return 1 / scale;
          }
 
          return null;
