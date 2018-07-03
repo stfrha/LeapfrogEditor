@@ -220,12 +220,13 @@ namespace LeapfrogEditor
       private void zoomAndPanControl_MouseWheel(object sender, MouseWheelEventArgs e)
       {
          bool ctrl = ((Keyboard.Modifiers & ModifierKeys.Control) != 0);
+         bool shift = ((Keyboard.Modifiers & ModifierKeys.Shift) != 0);
 
          e.Handled = true;
 
          if (ctrl)
          {
-            myMainViewModel.RotateSelectedShape(e.Delta);
+            myMainViewModel.RotateSelectedShape(e.Delta, shift);
          }
          else
          {

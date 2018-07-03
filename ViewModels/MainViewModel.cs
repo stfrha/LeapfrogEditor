@@ -76,7 +76,8 @@ namespace LeapfrogEditor
 
       public MainViewModel()
       {
-         MyCP = CompoundObject.ReadFromFile("landing_scene.xml");
+         MyStateProp.File = "landing_scene.xml";
+         MyCP = CompoundObject.ReadFromFile(MyStateProp.File);
          MyStateProp.CompObj = MyCP;
          MyCpRef.StateProperties.Add(MyStateProp);
 
@@ -180,7 +181,7 @@ namespace LeapfrogEditor
 
       void ReloadExecute(Object parameter)
       {
-         MyCP = CompoundObject.ReadFromFile("landing_scene.xml");
+         MyCP = CompoundObject.ReadFromFile(MyStateProp.File);
          MyStateProp.CompObj = MyCP;
          MyCpRef.StateProperties.Add(MyStateProp);
 
@@ -206,7 +207,7 @@ namespace LeapfrogEditor
          // Generate Triangles before saving
          MyCpVm.GenerateTriangles();
 
-         MyCpVm.ModelObject.WriteToFile();
+         MyCpVm.ModelObject.WriteToFile(MyStateProp.File);
       }
 
       bool CanSaveExecute(Object parameter)
@@ -1207,11 +1208,11 @@ namespace LeapfrogEditor
          return false;
       }
 
-      public void RotateSelectedShape(int delta)
+      public void RotateSelectedShape(int delta, bool fine)
       {
          foreach (LfShapeViewModel svm in _selectedShapes)
          {
-            svm.RotateShape(delta);
+            svm.RotateShape(delta, fine);
          }
       }
 

@@ -184,25 +184,40 @@ namespace LeapfrogEditor
             }
          }
 
+         fs.Close();
+
          return co;
       }
 
-      public void WriteToFile()
+      public void WriteToFile(string file)
       {
-         //string relPath = @"..\..\..\leapfrog\data\" + File;
+         string relPath = @"..\..\..\leapfrog\data\" + file;
 
-         //string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), relPath);
+         string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), relPath);
 
-         //XmlSerializer ser = new XmlSerializer(typeof(CompoundObject));
-         //FileStream fs = new FileStream(path, FileMode.Create);
-         //XmlWriter writer = XmlWriter.Create(fs);
-         //ser.Serialize(writer, this);
+         XmlWriterSettings settings = new XmlWriterSettings();
+         settings.Indent = true;
+         settings.NewLineOnAttributes = true;
 
-         //// Iterate COmpounfObjects to save all child objects
-         //foreach (CompoundObject co in ChildObjects)
-         //{
-         //   co.WriteToFile();
-         //}
+         XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+         ns.Add("", "");
+
+         XmlSerializer ser = new XmlSerializer(typeof(CompoundObject));
+         FileStream fs = new FileStream(path, FileMode.Create);
+         XmlWriter writer = XmlWriter.Create(fs, settings);
+         ser.Serialize(writer, this, ns);
+
+         // Iterate COmpounfObjects to save all child objects
+         foreach (CompoundObjectRef co in ChildObjectRefs)
+         {
+            foreach (ObjectRefStateProperties sp in co.StateProperties)
+            {
+               sp.CompObj.WriteToFile(sp.File);
+
+            }
+         }
+
+         fs.Close();
       }
 
       public void RemoveShape(object shape)

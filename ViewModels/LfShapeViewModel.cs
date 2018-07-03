@@ -284,11 +284,22 @@ namespace LeapfrogEditor
 
       #region public Methods
 
-      public void RotateShape(int delta)
+      public void RotateShape(int delta, bool fine)
       {
+         double increment;
+
+         if (fine)
+         {
+            increment = (double)delta * 0.1;
+         }
+         else
+         {
+            increment = (double)delta * 1;
+         }
+
          if (IsSelected)
          {
-            Angle += (double)delta / 120 * 5 / 180 * Math.PI;
+            Angle += increment / 120 / 180 * Math.PI;
             InvalidateAll();
          }
       }

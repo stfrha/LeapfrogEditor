@@ -100,10 +100,11 @@ namespace LeapfrogEditor
                LfShapeViewModel svm = (LfShapeViewModel)fwe.DataContext;
 
                bool ctrl = ((Keyboard.Modifiers & ModifierKeys.Control) != 0);
+               bool shift = ((Keyboard.Modifiers & ModifierKeys.Shift) != 0);
 
                if (ctrl)
                {
-                  svm.RotateShape(e.Delta);
+                  svm.RotateShape(e.Delta, shift);
                   e.Handled = true;
                }
             }
