@@ -479,19 +479,20 @@ namespace LeapfrogEditor
       public void RemoveShape(LfShapeViewModel svm)
       {
          // Check if there are any joints connected to this svm, if so, removed them
-         foreach (object o in Joints)
+         // We may remove joints so we need a for loop here:
+         for (int i = Joints.Count - 1; i >= 0; i--)
          {
             // Below will take care of all joints since they
             // all inherit from WeldJoint
-            if (o is WeldJointViewModel)
+            if (Joints[i] is WeldJointViewModel)
             {
-               WeldJointViewModel joint = (WeldJointViewModel)o;
+               WeldJointViewModel joint = (WeldJointViewModel)Joints[i];
 
                if ((joint.AName == svm.Name) || (joint.BName == svm.Name))
                {
                   // Remove the joint
                   ModelObject.RemoveJoint(joint.ModelObject);
-                  Joints.Remove(joint);
+                  Joints.RemoveAt(i);
                }
             }
          }
@@ -572,7 +573,7 @@ namespace LeapfrogEditor
             }
          }
 
-         foreach (object o in Shapes)
+         foreach (object o in Joints)
          {
             if (o is WeldJointViewModel)
             {

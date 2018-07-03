@@ -403,7 +403,7 @@ namespace LeapfrogEditor
                CompoundObjectViewModel covm = svm.Parent;
 
                covm.ModelObject.RemoveShape(svm.ModelObject);
-               covm.Shapes.Remove(svm);
+               covm.RemoveShape(svm);
 
             }
             _selectedShapes.Clear();
