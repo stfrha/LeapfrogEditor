@@ -241,7 +241,8 @@ namespace LeapfrogEditor
          {
             if (_joints.Count > 0)
             {
-               return _joints[_selectedStateIndex];
+//               return _joints[_selectedStateIndex];
+               return _joints[0];
             }
             return null;
          }
@@ -249,7 +250,8 @@ namespace LeapfrogEditor
          {
             if (_joints.Count > 0)
             {
-               _joints[_selectedStateIndex] = value;
+//               _joints[_selectedStateIndex] = value;
+               _joints[0] = value;
             }
          }
       }
@@ -348,6 +350,25 @@ namespace LeapfrogEditor
             new CollectionContainer { Collection = new ObservableCollection<LfDynamicPolygonViewModel>() },
             new CollectionContainer { Collection = new ObservableCollection<LfDynamicBoxedSpritePolygonViewModel>() },
          };
+
+         foreach (LfSpriteBox sb in co.SpriteBoxes)
+         {
+            LfSpriteBoxViewModel shapevm = new LfSpriteBoxViewModel(MainVm, this, sb);
+            shapes.Add(shapevm);
+         }
+
+         foreach (LfSpritePolygon sp in co.SpritePolygons)
+         {
+            LfSpritePolygonViewModel shapevm = new LfSpritePolygonViewModel(MainVm, this, sp);
+
+            foreach (LfDragablePoint dragPoint in sp.Points)
+            {
+               LfDragablePointViewModel dragPointVm = new LfDragablePointViewModel(MainVm, shapevm, dragPoint);
+               shapevm.PointVms.Add(dragPointVm);
+            }
+
+            shapes.Add(shapevm);
+         }
 
          foreach (LfStaticBox sb in co.StaticBoxes)
          {
