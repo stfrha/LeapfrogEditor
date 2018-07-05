@@ -16,10 +16,11 @@ namespace LeapfrogEditor
          {
             string texture = (string)value;
 
-            // TODO: Change this to relative path, doesn't seem to work
-            // just now.
-            return @"E:\git\leapfrog\data\images\" + texture + ".png";
-//            return @"c:\git\leapfrog\data\images\" + texture + ".png";
+            string s = @".\..\..\..\leapfrog\data\images\" + texture + ".png";
+            string fullPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            string fullFileName = System.IO.Path.Combine(fullPath, s);
+
+            return fullFileName;
          }
 
 
