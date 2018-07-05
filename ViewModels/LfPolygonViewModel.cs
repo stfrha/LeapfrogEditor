@@ -83,7 +83,7 @@ namespace LeapfrogEditor
       {
          if (LocalModelObject == null) return null;
 
-         LfDragablePoint np = new LfDragablePoint(1, point.X, point.Y);
+         LfDragablePoint np = new LfDragablePoint(GetFreeVertexIndex(), point.X, point.Y);
          LfDragablePointViewModel newPoint = new LfDragablePointViewModel(MainVm, this, np);
          PointVms.Add(newPoint);
          LocalModelObject.AddPoint(newPoint.ModelObject);
@@ -109,7 +109,7 @@ namespace LeapfrogEditor
       {
          if (LocalModelObject == null) return null;
 
-         LfDragablePoint np = new LfDragablePoint(1, insertMe.X, insertMe.Y);
+         LfDragablePoint np = new LfDragablePoint(GetFreeVertexIndex(), insertMe.X, insertMe.Y);
          LfDragablePointViewModel newPoint = new LfDragablePointViewModel(MainVm, this, np);
 
          int index = 0;
@@ -191,6 +191,33 @@ namespace LeapfrogEditor
          return null;
       }
 
+      #region private Methods
+
+      private uint GetFreeVertexIndex()
+      {
+         bool freeIdFound = true;
+         uint id = 1;
+
+         do
+         {
+            freeIdFound = true;
+
+            foreach (LfDragablePointViewModel dpvm in PointVms)
+            {
+               if (id == dpvm.Id)
+               {
+                  id++;
+                  freeIdFound = false;
+                  break;
+               }
+            }
+         }
+         while (!freeIdFound);
+
+         return id;
+      }
+
+      #endregion
 
 
 

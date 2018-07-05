@@ -76,8 +76,14 @@ namespace LeapfrogEditor
 
       public MainViewModel()
       {
-         MyStateProp.File = "landing_scene.xml";
-         MyCP = CompoundObject.ReadFromFile(MyStateProp.File);
+         string fileName = "landing_scene.xml";
+         string s = @"..\..\..\leapfrog\data\" + fileName;
+         string fullPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+         string fullFileName = System.IO.Path.Combine(fullPath, s);
+
+         MyStateProp.File = fullFileName;
+         MyCP = CompoundObject.ReadFromFile(fullFileName);
+
          MyStateProp.CompObj = MyCP;
          MyCpRef.StateProperties.Add(MyStateProp);
 
@@ -428,8 +434,6 @@ namespace LeapfrogEditor
 
 
       #endregion
-
-
 
       #region Public Methods
 

@@ -163,12 +163,10 @@ namespace LeapfrogEditor
 
       public static CompoundObject ReadFromFile(string fileName)
       {
-         string relPath = @"..\..\..\leapfrog\data\" + fileName;
-
-         string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), relPath);
+         string path = Path.GetDirectoryName(fileName);
 
          XmlSerializer ser = new XmlSerializer(typeof(CompoundObject));
-         FileStream fs = new FileStream(path, FileMode.Open);
+         FileStream fs = new FileStream(fileName, FileMode.Open);
          XmlReader reader = XmlReader.Create(fs);
          CompoundObject co = (CompoundObject)ser.Deserialize(reader);
 
@@ -178,7 +176,9 @@ namespace LeapfrogEditor
             // Iterate all state properties
             foreach (ObjectRefStateProperties sp in cor.StateProperties)
             {
-               CompoundObject childCo = CompoundObject.ReadFromFile(sp.File);
+               string newFile = System.IO.Path.Combine(path, sp.File);
+
+               CompoundObject childCo = CompoundObject.ReadFromFile(newFile);
 
                sp.CompObj = childCo;
             }
@@ -189,21 +189,19 @@ namespace LeapfrogEditor
          return co;
       }
 
-      public void WriteToFile(string file)
+      public void WriteToFile(string fileName)
       {
-         string relPath = @"..\..\..\leapfrog\data\" + file;
-
-         string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), relPath);
-
          XmlWriterSettings settings = new XmlWriterSettings();
          settings.Indent = true;
          settings.NewLineOnAttributes = true;
+
+         string path = Path.GetDirectoryName(fileName);
 
          XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
          ns.Add("", "");
 
          XmlSerializer ser = new XmlSerializer(typeof(CompoundObject));
-         FileStream fs = new FileStream(path, FileMode.Create);
+         FileStream fs = new FileStream(fileName, FileMode.Create);
          XmlWriter writer = XmlWriter.Create(fs, settings);
          ser.Serialize(writer, this, ns);
 
@@ -212,7 +210,9 @@ namespace LeapfrogEditor
          {
             foreach (ObjectRefStateProperties sp in co.StateProperties)
             {
-               sp.CompObj.WriteToFile(sp.File);
+               string newFile = System.IO.Path.Combine(path, sp.File);
+
+               sp.CompObj.WriteToFile(newFile);
 
             }
          }
