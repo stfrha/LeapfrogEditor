@@ -220,7 +220,7 @@ namespace LeapfrogEditor
       {
          get
          {
-            if (_shapes.Count > 0)
+            if (_shapes.Count > _selectedStateIndex)
             {
                return _shapes[_selectedStateIndex];
             }
@@ -228,7 +228,7 @@ namespace LeapfrogEditor
          }
          set
          {
-            if (_shapes.Count > 0)
+            if (_shapes.Count > _selectedStateIndex)
             {
                _shapes[_selectedStateIndex] = value;
             }
@@ -239,19 +239,17 @@ namespace LeapfrogEditor
       {
          get
          {
-            if (_joints.Count > 0)
+            if (_joints.Count > _selectedStateIndex)
             {
-//               return _joints[_selectedStateIndex];
-               return _joints[0];
+               return _joints[_selectedStateIndex];
             }
             return null;
          }
          set
          {
-            if (_joints.Count > 0)
+            if (_joints.Count > _selectedStateIndex)
             {
-//               _joints[_selectedStateIndex] = value;
-               _joints[0] = value;
+               _joints[_selectedStateIndex] = value;
             }
          }
       }
@@ -260,7 +258,7 @@ namespace LeapfrogEditor
       {
          get
          {
-            if (_childObjects.Count > 0)
+            if (_childObjects.Count > _selectedStateIndex)
             {
                return _childObjects[_selectedStateIndex];
             }
@@ -268,7 +266,7 @@ namespace LeapfrogEditor
          }
          set
          {
-            if (_childObjects.Count > 0)
+            if (_childObjects.Count > _selectedStateIndex)
             {
                _childObjects[_selectedStateIndex] = value;
             }
@@ -551,9 +549,9 @@ namespace LeapfrogEditor
          }
       }
 
-      public LfShapeViewModel FindShape(string name)
+      public LfShapeViewModel FindShape(string name, CompositeCollection shapes)
       {
-         foreach (object o in Shapes)
+         foreach (object o in shapes)
          {
             if (o is LfShapeViewModel)
             {
@@ -577,39 +575,62 @@ namespace LeapfrogEditor
 
          foreach (ObjectRefStateProperties sp in cor.StateProperties)
          {
-            _shapes.Add(SetShapes(sp.CompObj));
-            _joints.Add(SetJoints(sp.CompObj));
+            CompositeCollection sc = SetShapes(sp.CompObj);
+            _shapes.Add(sc);
+
+            CompositeCollection jc = SetJoints(sp.CompObj);
+            _joints.Add(jc);
+
             _childObjects.Add(SetChildren(sp.CompObj));
+
+            // Only now is the Joints property valid for this state
+            foreach (object o in jc)
+            {
+               if (o is WeldJointViewModel)
+               {
+                  WeldJointViewModel joint = (WeldJointViewModel)o;
+
+                  joint.ConnectToShapes(sc);
+               }
+            }
          }
       }
 
       public void DeselectAllChildren()
       {
-
-         foreach (object o in Shapes)
+         if (Shapes != null)
          {
-            if (o is LfShapeViewModel)
+            foreach (object o in Shapes)
             {
-               LfShapeViewModel shape = (LfShapeViewModel)o;
+               if (o is LfShapeViewModel)
+               {
+                  LfShapeViewModel shape = (LfShapeViewModel)o;
 
-               shape.IsSelected = false;
+                  shape.IsSelected = false;
+               }
             }
          }
 
-         foreach (object o in Joints)
+         if (Joints != null)
          {
-            if (o is WeldJointViewModel)
+            foreach (object o in Joints)
             {
-               WeldJointViewModel joint = (WeldJointViewModel)o;
+               if (o is WeldJointViewModel)
+               {
+                  WeldJointViewModel joint = (WeldJointViewModel)o;
 
-               joint.IsSelected = false;
+                  joint.IsSelected = false;
+               }
             }
          }
 
-         foreach (CompoundObjectViewModel child in ChildObjects)
+         if (ChildObjects != null)
          {
-            child.DeselectAllChildren();
-            child.IsSelected = false;
+            foreach (CompoundObjectViewModel child in ChildObjects)
+            {
+               child.DeselectAllChildren();
+               child.IsSelected = false;
+            }
          }
       }
 

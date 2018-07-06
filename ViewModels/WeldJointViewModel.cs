@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Media;
 
 namespace LeapfrogEditor
@@ -29,18 +30,6 @@ namespace LeapfrogEditor
          MainVm = mainVm;
          Parent = parent;
          ModelObject = modelObject;
-
-         _aVm = Parent.FindShape(ModelObject.AName);
-         if (_aVm == null)
-         {
-            MessageBox.Show("The shape A pointed to by " + ModelObject.Name + " does not exists in CO " + Parent.Name, "Error parsing file", MessageBoxButton.OK, MessageBoxImage.Error);
-         }
-
-         _bVm = Parent.FindShape(ModelObject.BName);
-         if (_bVm == null)
-         {
-            MessageBox.Show("The shape B pointed to by " + ModelObject.Name + " does not exists in CO " + Parent.Name, "Error parsing file", MessageBoxButton.OK, MessageBoxImage.Error);
-         }
       }
 
       #endregion
@@ -225,6 +214,21 @@ namespace LeapfrogEditor
       #endregion
 
       #region public Methods
+
+      public void ConnectToShapes(CompositeCollection shapes)
+      {
+         _aVm = Parent.FindShape(ModelObject.AName, shapes);
+         if (_aVm == null)
+         {
+            MessageBox.Show("The shape A pointed to by " + ModelObject.Name + " does not exists in CO " + Parent.Name, "Error parsing file", MessageBoxButton.OK, MessageBoxImage.Error);
+         }
+
+         _bVm = Parent.FindShape(ModelObject.BName, shapes);
+         if (_bVm == null)
+         {
+            MessageBox.Show("The shape B pointed to by " + ModelObject.Name + " does not exists in CO " + Parent.Name, "Error parsing file", MessageBoxButton.OK, MessageBoxImage.Error);
+         }
+      }
 
       #endregion
    }

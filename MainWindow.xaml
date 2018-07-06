@@ -53,6 +53,14 @@
             <MenuItem Header="Delete" Command="{Binding Delete}" />
          </MenuItem>
          <MenuItem Header="View">
+            <MenuItem Header="Zoom">
+               <MenuItem Header="Zoom Fit"  />
+               <MenuItem Header="Zoom Actual Size" />
+               <MenuItem Header="Zoom In" />
+               <MenuItem Header="Zoom Out" />
+
+            </MenuItem>
+
             <MenuItem Header="Swap states" Command="{Binding State}" />
             <MenuItem Header="Create Triangles" Command="{Binding CreateTriangles}" />
             <MenuItem Header="Show">

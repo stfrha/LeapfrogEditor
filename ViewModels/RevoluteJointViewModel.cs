@@ -26,17 +26,17 @@ namespace LeapfrogEditor
          Parent = parent;
          ModelObject = modelObject;
 
-         _aVm = Parent.FindShape(ModelObject.AName);
-         if (_aVm == null)
-         {
-            MessageBox.Show("The shape A pointed to by " + ModelObject.Name + " does not exists in CO " + Parent.Name, "Error parsing file", MessageBoxButton.OK, MessageBoxImage.Error);
-         }
+         //_aVm = Parent.FindShape(ModelObject.AName);
+         //if (_aVm == null)
+         //{
+         //   MessageBox.Show("The shape A pointed to by " + ModelObject.Name + " does not exists in CO " + Parent.Name, "Error parsing file", MessageBoxButton.OK, MessageBoxImage.Error);
+         //}
 
-         _bVm = Parent.FindShape(ModelObject.BName);
-         if (_bVm == null)
-         {
-            MessageBox.Show("The shape B pointed to by " + ModelObject.Name + " does not exists in CO " + Parent.Name, "Error parsing file", MessageBoxButton.OK, MessageBoxImage.Error);
-         }
+         //_bVm = Parent.FindShape(ModelObject.BName);
+         //if (_bVm == null)
+         //{
+         //   MessageBox.Show("The shape B pointed to by " + ModelObject.Name + " does not exists in CO " + Parent.Name, "Error parsing file", MessageBoxButton.OK, MessageBoxImage.Error);
+         //}
       }
 
       #endregion
