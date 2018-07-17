@@ -8,6 +8,50 @@ using System.Windows.Data;
 
 namespace LeapfrogEditor
 {
+   class NegativeHalfValueConverter : IValueConverter
+   {
+      public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+      {
+         if (value is double)
+         {
+            double val = (double)value;
+
+            return -val / 2;
+         }
+
+         return null;
+
+      }
+
+      public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+      {
+         return DependencyProperty.UnsetValue;
+      }
+   }
+
+   class NegativeValueConverter : IValueConverter
+   {
+      public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+      {
+         if (value is double)
+         {
+            double val = (double)value;
+
+            return -val;
+         }
+
+         return null;
+
+      }
+
+      public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+      {
+         return DependencyProperty.UnsetValue;
+      }
+   }
+
+
+
    class TextureOffsetXValueConverter : IValueConverter
    {
       public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

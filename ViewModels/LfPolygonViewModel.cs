@@ -10,7 +10,7 @@ using System.Windows.Media;
 
 namespace LeapfrogEditor
 {
-   class LfPolygonViewModel : LfShapeViewModel
+   public class LfPolygonViewModel : LfShapeViewModel
    {
       #region Declarations
 

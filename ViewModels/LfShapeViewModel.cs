@@ -9,7 +9,7 @@ using System.Windows.Media;
 
 namespace LeapfrogEditor
 {
-   class LfShapeViewModel : MicroMvvm.ViewModelBase, IPositionInterface
+   public class LfShapeViewModel : MicroMvvm.ViewModelBase, IPositionInterface
    {
       #region Declarations
 
@@ -179,6 +179,7 @@ namespace LeapfrogEditor
                p.InvalidateJoints();
                p = p.Parent;
             }
+            InvalidateAll();
          }
       }
 
@@ -303,7 +304,7 @@ namespace LeapfrogEditor
          if (IsSelected)
          {
             Angle += increment / 120 / 180 * Math.PI;
-            InvalidateAll();
+            //InvalidateAll();
          }
       }
 

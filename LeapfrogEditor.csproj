@@ -54,6 +54,26 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\ZLevelItem.cs" />
+    <Compile Include="Models\ZLevels.cs" />
+    <Compile Include="Views\Controls\ComboboxEditorControl.xaml.cs">
+      <DependentUpon>ComboboxEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\IntEditorControl.xaml.cs">
+      <DependentUpon>IntEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\HeadlineControl.xaml.cs">
+      <DependentUpon>HeadlineControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\StringEditorControl.xaml.cs">
+      <DependentUpon>StringEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\PropertiesEditor.xaml.cs">
+      <DependentUpon>PropertiesEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\DoubleEditorControl.xaml.cs">
+      <DependentUpon>DoubleEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Models\CompoundObject.cs" />
     <Compile Include="Models\CompoundObjectRef.cs" />
     <Compile Include="Models\LfDragablePoint.cs" />
@@ -122,6 +142,33 @@
       <DependentUpon>CompoundObjectUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TriangleShape.cs" />
+    <Compile Include="ZLevelPicker.xaml.cs">
+      <DependentUpon>ZLevelPicker.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Views\Controls\ComboboxEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\IntEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\HeadlineControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\StringEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\PropertiesEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Controls\DoubleEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -135,6 +182,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\CompoundObjectUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ZLevelPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

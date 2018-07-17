@@ -48,6 +48,7 @@ namespace LeapfrogEditor
             LocalModelObject.Width = value;
             OnPropertyChanged("Width");
             OnPropertyChanged("BoundingBox");
+            OnPropertyChanged("");
 
             CompoundObjectViewModel p = Parent;
 

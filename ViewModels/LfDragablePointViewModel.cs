@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LeapfrogEditor
 {
-    class LfDragablePointViewModel : MicroMvvm.ViewModelBase, IPositionInterface
+   public class LfDragablePointViewModel : MicroMvvm.ViewModelBase, IPositionInterface
    {
       #region Declarations
 

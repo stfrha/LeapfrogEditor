@@ -9,7 +9,7 @@ using System.Windows.Media;
 
 namespace LeapfrogEditor
 {
-    class TriangleViewModel : MicroMvvm.ViewModelBase
+   public class TriangleViewModel : MicroMvvm.ViewModelBase
    {
       #region Declarations
 

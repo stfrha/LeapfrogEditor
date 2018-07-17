@@ -11,7 +11,7 @@ using System.Windows.Media;
 
 namespace LeapfrogEditor
 {
-   class CompoundObjectViewModel : MicroMvvm.ViewModelBase, IPositionInterface
+   public class CompoundObjectViewModel : MicroMvvm.ViewModelBase, IPositionInterface
    {
       #region Declarations
 

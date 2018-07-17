@@ -69,26 +69,24 @@
             </MenuItem>
          </MenuItem>
       </Menu>
-      <!--<StackPanel Grid.Row="0" HorizontalAlignment="Left" Orientation="Horizontal">
-         <Button Content="Read" Width="75" Margin="2" 
-            Command="{Binding Reload}"/>
-         <Button Content="Save" Width="75" Margin="2"
-            Command="{Binding Save}"/>
-         <Button Content="ChangeState" Width="75" Margin="2"
-            Command="{Binding State}"/>
-      </StackPanel>-->
-      <DockPanel Grid.Row="1">
-         <ScrollViewer
+      <Grid Grid.Row="1">
+         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="250" />
+
+         </Grid.ColumnDefinitions>
+         <DockPanel Grid.Column="0">
+            <ScrollViewer
 			x:Name="scroller"
             CanContentScroll="True"
             VerticalScrollBarVisibility="Visible"
             HorizontalScrollBarVisibility="Visible"
             >
 
-            <!--
+               <!--
             This is the control that handles zooming and panning.
             -->
-            <ZoomAndPan:ZoomAndPanControl
+               <ZoomAndPan:ZoomAndPanControl
                 x:Name="zoomAndPanControl"
                 Background="LightGray"
 	            MouseDown="zoomAndPanControl_MouseDown"
@@ -97,18 +95,18 @@
 	            MouseWheel="zoomAndPanControl_MouseWheel"
                 >
 
-               <!-- 
+                  <!-- 
 				This is the content that is displayed.
 				-->
-               <Grid
+                  <Grid
                     x:Name="theGrid"
                     Width="2000"
                     Height="2000"
 					>
-                  <!--
+                     <!--
             		This Canvas is the main part of the content that is displayed.
 					-->
-                  <Canvas
+                     <Canvas
 						   x:Name="content"
 						   Background="White"
 					      MouseUp="Canvas_MouseUp"
@@ -116,22 +114,22 @@
                      MouseWheel="MouseWheel_Rotate"
 
                   >
-                     <ContentControl 
+                        <ContentControl 
                         DataContext="{Binding MyCpVm}"
                         Canvas.Left="{Binding PosX}"
                         Canvas.Top="{Binding PosY}"
                         Content="{Binding}" />
-                  </Canvas>
+                     </Canvas>
 
-                  <!--
+                     <!--
 					This Canvas and Border are used as a very simple way to render a drag rectangle that the user
 					uses to specify an area to zoom in on.
 					-->
-                  <Canvas
+                     <Canvas
 						x:Name="dragZoomCanvas"
 						Visibility="Collapsed"
 						>
-                     <Border 
+                        <Border 
 							x:Name="dragZoomBorder"
 							BorderBrush="Black"
 							BorderThickness="1"
@@ -139,10 +137,24 @@
 							CornerRadius="1"
 							Opacity="0"
 							/>
-                  </Canvas>
-               </Grid>
-            </ZoomAndPan:ZoomAndPanControl>
+                     </Canvas>
+                  </Grid>
+               </ZoomAndPan:ZoomAndPanControl>
+            </ScrollViewer>
+         </DockPanel>
+         <ScrollViewer Grid.Column="1">
+            <local:PropertiesEditor 
+            EditableCompoundObject="{Binding SelectedCompoundObject}"
+            EditableShapes="{Binding SelectedShapes}" />
          </ScrollViewer>
-      </DockPanel>
+      </Grid>
+      <!--<StackPanel Grid.Row="0" HorizontalAlignment="Left" Orientation="Horizontal">
+         <Button Content="Read" Width="75" Margin="2" 
+            Command="{Binding Reload}"/>
+         <Button Content="Save" Width="75" Margin="2"
+            Command="{Binding Save}"/>
+         <Button Content="ChangeState" Width="75" Margin="2"
+            Command="{Binding State}"/>
+      </StackPanel>-->
    </Grid>
 </Window>

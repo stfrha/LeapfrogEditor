@@ -9,8 +9,6 @@
              x:Name="root"
              d:DesignHeight="1000" d:DesignWidth="1000">
    <UserControl.Resources>
-      <local:TextureOffsetXValueConverter x:Key="TextureOffsetXValueConverter" />
-      <local:TextureOffsetYValueConverter x:Key="TextureOffsetYValueConverter" />
       <local:MultiRotatedVertexValueConverter x:Key="MultiRotatedVertexValueConverter" />
       <local:PreviousMultiRotatedVertexValueConverter x:Key="PreviousMultiRotatedVertexValueConverter" />
       <local:PreviousMultiRotatedTriangleVertexValueConverter x:Key="PreviousMultiRotatedTriangleVertexValueConverter" />
@@ -21,6 +19,7 @@
       <local:TextureCircleValueConverter x:Key="TextureCircleValueConverter" />
       <local:TexturePathValueConverter x:Key="TexturePathValueConverter" />
       <local:TextureRectValueConverter x:Key="TextureRectValueConverter" />
+      <local:TextureRectMultiValueConverter x:Key="TextureRectMultiValueConverter" />
       <local:BoolToVisibilityValueConverter x:Key="BoolToVisibilityValueConverter" />
       <local:RadToDegValueConverter x:Key="RadToDegValueConverter" />
       <local:NegRadToDegValueConverter x:Key="NegRadToDegValueConverter" />
@@ -29,6 +28,8 @@
       <local:ZoomHandleTranslateValueConverter x:Key="ZoomHandleTranslateValueConverter" />
       <local:PointCollectionValueConverter x:Key="PointCollectionValueConverter" />
       <local:TwiceDoubleValueConverter x:Key="TwiceDoubleValueConverter" />
+      <local:NegativeHalfValueConverter x:Key="NegativeHalfValueConverter" />
+      <local:NegativeValueConverter x:Key="NegativeValueConverter" />
       <local:DebugDummyConverter x:Key="DebugDummyConverter" />
       <DataTemplate DataType="{x:Type local:WeldJointViewModel}">
          <Canvas>
@@ -532,7 +533,8 @@
             </ItemsControl.ItemTemplate>
          </ItemsControl>
       </DataTemplate>
-      <DataTemplate DataType="{x:Type local:LfScalableTexturePolygonViewModel}">
+      <DataTemplate 
+         DataType="{x:Type local:LfScalableTexturePolygonViewModel}">
          <Grid>
             <Polygon 
                x:Name="stpvm"
@@ -543,13 +545,21 @@
                >
                <Polygon.Fill>
                   <ImageBrush
-                     Viewport="{Binding Converter={StaticResource TextureRectValueConverter}}"
                      ViewportUnits="Absolute"
                      TileMode="Tile"
                      Stretch="None"
                      AlignmentX="Center"
                      AlignmentY="Center" 
-                     ImageSource="{Binding Texture, Converter={StaticResource TexturePathValueConverter}}" />
+                     ImageSource="{Binding Texture, Converter={StaticResource TexturePathValueConverter}}" >
+                     <ImageBrush.Viewport>
+                        <MultiBinding Converter="{StaticResource TextureRectMultiValueConverter}" >
+                           <Binding Path="TextureOffsetX" />
+                           <Binding Path="TextureOffsetY" />
+                           <Binding Path="TextureWidth" />
+                           <Binding Path="TextureHeight" />
+                        </MultiBinding>
+                     </ImageBrush.Viewport>
+                  </ImageBrush>
                </Polygon.Fill>
                <Polygon.RenderTransform>
                   <TransformGroup>
@@ -689,6 +699,7 @@
             </ItemsControl>
          </Grid>
       </DataTemplate>
+
       <DataTemplate DataType="{x:Type local:LfStaticBoxedSpritePolygonViewModel}">
          <Canvas>
             <!-- The Image is the Box texture of shape. This is translated so
@@ -705,8 +716,8 @@
                <Image.RenderTransform >
                   <TransformGroup>
                      <TranslateTransform x:Name="d2"
-                        X="{Binding Converter={StaticResource TextureOffsetXValueConverter}}" 
-                        Y="{Binding Converter={StaticResource TextureOffsetYValueConverter}}" 
+                        X="{Binding Width, Converter={StaticResource NegativeHalfValueConverter}}" 
+                        Y="{Binding Height, Converter={StaticResource NegativeHalfValueConverter}}" 
                      />
                      <RotateTransform x:Name="d1"
                         Angle="{Binding Angle, Converter={StaticResource NegRadToDegValueConverter}}"
@@ -849,12 +860,13 @@
                Source="{Binding Texture, Converter={StaticResource TexturePathValueConverter}}"
 				   MouseDown="Shape_MouseDown"
 				   MouseUp="Shape_MouseUp"
+               Stretch="Fill"
                >
                <Image.RenderTransform >
                   <TransformGroup>
                      <TranslateTransform x:Name="d2"
-                        X="{Binding Converter={StaticResource TextureOffsetXValueConverter}}" 
-                        Y="{Binding Converter={StaticResource TextureOffsetYValueConverter}}" 
+                        X="{Binding Width, Converter={StaticResource NegativeHalfValueConverter}}" 
+                        Y="{Binding Height, Converter={StaticResource NegativeHalfValueConverter}}" 
                      />
                      <RotateTransform x:Name="d1"
                         Angle="{Binding Angle, Converter={StaticResource NegRadToDegValueConverter}}"
@@ -923,12 +935,13 @@
                Source="{Binding Texture, Converter={StaticResource TexturePathValueConverter}}"
 				   MouseDown="Shape_MouseDown"
 				   MouseUp="Shape_MouseUp"
+               Stretch="Fill"
                >
                <Image.RenderTransform >
                   <TransformGroup>
                      <TranslateTransform x:Name="d2"
-                        X="{Binding Converter={StaticResource TextureOffsetXValueConverter}}" 
-                        Y="{Binding Converter={StaticResource TextureOffsetYValueConverter}}" 
+                        X="{Binding Width, Converter={StaticResource NegativeHalfValueConverter}}" 
+                        Y="{Binding Height, Converter={StaticResource NegativeHalfValueConverter}}" 
                      />
                      <RotateTransform x:Name="d1"
                         Angle="{Binding Angle, Converter={StaticResource NegRadToDegValueConverter}}"
@@ -1002,8 +1015,8 @@
                <Image.RenderTransform >
                   <TransformGroup>
                      <TranslateTransform x:Name="d2"
-                        X="{Binding Converter={StaticResource TextureOffsetXValueConverter}}" 
-                        Y="{Binding Converter={StaticResource TextureOffsetYValueConverter}}" 
+                        X="{Binding Radius, Converter={StaticResource NegativeValueConverter}}" 
+                        Y="{Binding Radius, Converter={StaticResource NegativeValueConverter}}" 
                      />
                      <RotateTransform x:Name="d1"
                         Angle="{Binding Angle, Converter={StaticResource NegRadToDegValueConverter}}"
