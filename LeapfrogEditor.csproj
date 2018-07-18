@@ -56,8 +56,8 @@
     </ApplicationDefinition>
     <Compile Include="Models\ZLevelItem.cs" />
     <Compile Include="Models\ZLevels.cs" />
-    <Compile Include="Views\Controls\ComboboxEditorControl.xaml.cs">
-      <DependentUpon>ComboboxEditorControl.xaml</DependentUpon>
+    <Compile Include="Views\Controls\ZLevelEditorControl.xaml.cs">
+      <DependentUpon>ZLevelEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\IntEditorControl.xaml.cs">
       <DependentUpon>IntEditorControl.xaml</DependentUpon>
@@ -142,10 +142,7 @@
       <DependentUpon>CompoundObjectUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TriangleShape.cs" />
-    <Compile Include="ZLevelPicker.xaml.cs">
-      <DependentUpon>ZLevelPicker.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Views\Controls\ComboboxEditorControl.xaml">
+    <Page Include="Views\Controls\ZLevelEditorControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -182,10 +179,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\CompoundObjectUserControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ZLevelPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -234,5 +227,6 @@
       <Name>PolygonCuttingEar</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

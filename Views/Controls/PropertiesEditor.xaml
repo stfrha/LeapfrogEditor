@@ -50,7 +50,7 @@
                         <local:DoubleEditorControl Headline="Width" MyValue="{Binding Width, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Height" MyValue="{Binding Height, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Angle" MyValue="{Binding Angle, Mode=TwoWay}" />
-                        <local:IntEditorControl Headline="Z-level" MyValue="{Binding ZLevel, Mode=TwoWay}" />
+                        <local:ZLevelEditorControl Headline="Z-level" MyValue="{Binding ZLevel, Mode=TwoWay}" />
                      </StackPanel>
                   </Border>
                </DockPanel>
@@ -69,7 +69,7 @@
                         <local:DoubleEditorControl Headline="Texture Height" MyValue="{Binding TextureHeight, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Texture Offset X" MyValue="{Binding TextureOffsetX, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Texture Offset Y" MyValue="{Binding TextureOffsetY, Mode=TwoWay}" />
-                        <local:IntEditorControl Headline="Z-level" MyValue="{Binding ZLevel, Mode=TwoWay}" />
+                        <local:ZLevelEditorControl Headline="Z-level" MyValue="{Binding ZLevel, Mode=TwoWay}" />
                      </StackPanel>
                   </Border>
                </DockPanel>
@@ -85,8 +85,8 @@
                         <local:DoubleEditorControl Headline="PosY" MyValue="{Binding PosY, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Radius" MyValue="{Binding Radius, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Angle" MyValue="{Binding Angle, Mode=TwoWay}" />
-                        <local:IntEditorControl Headline="Z-level" MyValue="{Binding ZLevel, Mode=TwoWay}" />
-                        <local:IntEditorControl Headline="Collision Entity" MyValue="{Binding CollisionEntity, Mode=TwoWay}" />
+                        <local:ZLevelEditorControl Headline="Z-level" MyValue="{Binding ZLevel, Mode=TwoWay}" />
+                        <local:StringEditorControl Headline="Collision Entity" MyValue="{Binding CollisionEntity, Mode=TwoWay}" />
                         <local:IntEditorControl Headline="Coll. Category" MyValue="{Binding CollisionCategory, Mode=TwoWay}" />
                         <local:IntEditorControl Headline="Collision Mask" MyValue="{Binding CollisionMask, Mode=TwoWay}" />
                      </StackPanel>
@@ -105,8 +105,8 @@
                         <local:DoubleEditorControl Headline="Width" MyValue="{Binding Width, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Height" MyValue="{Binding Height, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Angle" MyValue="{Binding Angle, Mode=TwoWay}" />
-                        <local:IntEditorControl Headline="Z-level" MyValue="{Binding ZLevel, Mode=TwoWay}" />
-                        <local:IntEditorControl Headline="Collision Entity" MyValue="{Binding CollisionEntity, Mode=TwoWay}" />
+                        <local:ZLevelEditorControl Headline="Z-level" MyValue="{Binding ZLevel, Mode=TwoWay}" />
+                        <local:StringEditorControl Headline="Collision Entity" MyValue="{Binding CollisionEntity, Mode=TwoWay}" />
                         <local:IntEditorControl Headline="Coll. Category" MyValue="{Binding CollisionCategory, Mode=TwoWay}" />
                         <local:IntEditorControl Headline="Collision Mask" MyValue="{Binding CollisionMask, Mode=TwoWay}" />
                      </StackPanel>
@@ -127,8 +127,8 @@
                         <local:DoubleEditorControl Headline="Texture Height" MyValue="{Binding TextureHeight, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Texture Offset X" MyValue="{Binding TextureOffsetX, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Texture Offset Y" MyValue="{Binding TextureOffsetY, Mode=TwoWay}" />
-                        <local:IntEditorControl Headline="Z-level" MyValue="{Binding ZLevel, Mode=TwoWay}" />
-                        <local:IntEditorControl Headline="Collision Entity" MyValue="{Binding CollisionEntity, Mode=TwoWay}" />
+                        <local:ZLevelEditorControl Headline="Z-level" MyValue="{Binding ZLevel, Mode=TwoWay}" />
+                        <local:StringEditorControl Headline="Collision Entity" MyValue="{Binding CollisionEntity, Mode=TwoWay}" />
                         <local:IntEditorControl Headline="Coll. Category" MyValue="{Binding CollisionCategory, Mode=TwoWay}" />
                         <local:IntEditorControl Headline="Collision Mask" MyValue="{Binding CollisionMask, Mode=TwoWay}" />
                      </StackPanel>
@@ -147,8 +147,8 @@
                         <local:DoubleEditorControl Headline="Width" MyValue="{Binding Width, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Height" MyValue="{Binding Height, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Angle" MyValue="{Binding Angle, Mode=TwoWay}" />
-                        <local:IntEditorControl Headline="Z-level" MyValue="{Binding ZLevel, Mode=TwoWay}" />
-                        <local:IntEditorControl Headline="Collision Entity" MyValue="{Binding CollisionEntity, Mode=TwoWay}" />
+                        <local:ZLevelEditorControl Headline="Z-level" MyValue="{Binding ZLevel, Mode=TwoWay}" />
+                        <local:StringEditorControl Headline="Collision Entity" MyValue="{Binding CollisionEntity, Mode=TwoWay}" />
                         <local:IntEditorControl Headline="Coll. Category" MyValue="{Binding CollisionCategory, Mode=TwoWay}" />
                         <local:IntEditorControl Headline="Collision Mask" MyValue="{Binding CollisionMask, Mode=TwoWay}" />
                      </StackPanel>
@@ -167,8 +167,8 @@
                         <local:DoubleEditorControl Headline="Radius" MyValue="{Binding Radius, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Angle" MyValue="{Binding Angle, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Density" MyValue="0" />
-                        <local:IntEditorControl Headline="Z-level" MyValue="{Binding ZLevel, Mode=TwoWay}" />
-                        <local:IntEditorControl Headline="Collision Entity" MyValue="{Binding CollisionEntity, Mode=TwoWay}" />
+                        <local:ZLevelEditorControl Headline="Z-level" MyValue="{Binding ZLevel, Mode=TwoWay}" />
+                        <local:StringEditorControl Headline="Collision Entity" MyValue="{Binding CollisionEntity, Mode=TwoWay}" />
                         <local:IntEditorControl Headline="Coll. Category" MyValue="{Binding CollisionCategory, Mode=TwoWay}" />
                         <local:IntEditorControl Headline="Collision Mask" MyValue="{Binding CollisionMask, Mode=TwoWay}" />
                      </StackPanel>
@@ -188,8 +188,8 @@
                         <local:DoubleEditorControl Headline="Height" MyValue="{Binding Height, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Angle" MyValue="{Binding Angle, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Density" MyValue="0" />
-                        <local:IntEditorControl Headline="Z-level" MyValue="{Binding ZLevel, Mode=TwoWay}" />
-                        <local:IntEditorControl Headline="Collision Entity" MyValue="{Binding CollisionEntity, Mode=TwoWay}" />
+                        <local:ZLevelEditorControl Headline="Z-level" MyValue="{Binding ZLevel, Mode=TwoWay}" />
+                        <local:StringEditorControl Headline="Collision Entity" MyValue="{Binding CollisionEntity, Mode=TwoWay}" />
                         <local:IntEditorControl Headline="Coll. Category" MyValue="{Binding CollisionCategory, Mode=TwoWay}" />
                         <local:IntEditorControl Headline="Collision Mask" MyValue="{Binding CollisionMask, Mode=TwoWay}" />
                      </StackPanel>
@@ -211,8 +211,8 @@
                         <local:DoubleEditorControl Headline="Texture Height" MyValue="{Binding TextureHeight, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Texture Offset X" MyValue="{Binding TextureOffsetX, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Texture Offset Y" MyValue="{Binding TextureOffsetY, Mode=TwoWay}" />
-                        <local:IntEditorControl Headline="Z-level" MyValue="{Binding ZLevel, Mode=TwoWay}" />
-                        <local:IntEditorControl Headline="Collision Entity" MyValue="{Binding CollisionEntity, Mode=TwoWay}" />
+                        <local:ZLevelEditorControl Headline="Z-level" MyValue="{Binding ZLevel, Mode=TwoWay}" />
+                        <local:StringEditorControl Headline="Collision Entity" MyValue="{Binding CollisionEntity, Mode=TwoWay}" />
                         <local:IntEditorControl Headline="Coll. Category" MyValue="{Binding CollisionCategory, Mode=TwoWay}" />
                         <local:IntEditorControl Headline="Collision Mask" MyValue="{Binding CollisionMask, Mode=TwoWay}" />
                      </StackPanel>
@@ -232,8 +232,8 @@
                         <local:DoubleEditorControl Headline="Height" MyValue="{Binding Height, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Angle" MyValue="{Binding Angle, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Density" MyValue="0" />
-                        <local:IntEditorControl Headline="Z-level" MyValue="{Binding ZLevel, Mode=TwoWay}" />
-                        <local:IntEditorControl Headline="Collision Entity" MyValue="{Binding CollisionEntity, Mode=TwoWay}" />
+                        <local:ZLevelEditorControl Headline="Z-level" MyValue="{Binding ZLevel, Mode=TwoWay}" />
+                        <local:StringEditorControl Headline="Collision Entity" MyValue="{Binding CollisionEntity, Mode=TwoWay}" />
                         <local:IntEditorControl Headline="Coll. Category" MyValue="{Binding CollisionCategory, Mode=TwoWay}" />
                         <local:IntEditorControl Headline="Collision Mask" MyValue="{Binding CollisionMask, Mode=TwoWay}" />
                      </StackPanel>

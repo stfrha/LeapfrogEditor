@@ -145,7 +145,9 @@
          <ScrollViewer Grid.Column="1">
             <local:PropertiesEditor 
             EditableCompoundObject="{Binding SelectedCompoundObject}"
-            EditableShapes="{Binding SelectedShapes}" />
+            EditableShapes="{Binding SelectedShapes}"
+            
+            />
          </ScrollViewer>
       </Grid>
       <!--<StackPanel Grid.Row="0" HorizontalAlignment="Left" Orientation="Horizontal">

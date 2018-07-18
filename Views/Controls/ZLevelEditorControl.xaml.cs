@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,11 +17,11 @@ using System.Windows.Shapes;
 namespace LeapfrogEditor
 {
    /// <summary>
-   /// Interaction logic for IntEditorControl.xaml
+   /// Interaction logic for ZLevelEditorControl.xaml
    /// </summary>
-   public partial class IntEditorControl : UserControl
+   public partial class ZLevelEditorControl : UserControl
    {
-      public IntEditorControl()
+      public ZLevelEditorControl()
       {
          InitializeComponent();
       }
@@ -33,7 +34,7 @@ namespace LeapfrogEditor
 
       // Using a DependencyProperty as the backing store for Headline.  This enables animation, styling, binding, etc...
       public static readonly DependencyProperty HeadlineProperty =
-          DependencyProperty.Register("Headline", typeof(string), typeof(IntEditorControl), new PropertyMetadata(default(string)));
+          DependencyProperty.Register("Headline", typeof(string), typeof(ZLevelEditorControl), new PropertyMetadata(default(string)));
 
       public double MyValue
       {
@@ -43,7 +44,7 @@ namespace LeapfrogEditor
 
       // Using a DependencyProperty as the backing store for MyValue.  This enables animation, styling, binding, etc...
       public static readonly DependencyProperty MyValueProperty =
-          DependencyProperty.Register("MyValue", typeof(double), typeof(IntEditorControl), new PropertyMetadata(default(double)));
+          DependencyProperty.Register("MyValue", typeof(double), typeof(ZLevelEditorControl), new PropertyMetadata(default(double)));
 
    }
 }
