@@ -66,6 +66,7 @@ namespace LeapfrogEditor
       private ObservableCollection<LfDragablePointViewModel> _selectedPoints = new ObservableCollection<LfDragablePointViewModel>();
 
       private ZLevels _zLevels = new ZLevels();
+      private CollisionEntities _collEnts = new CollisionEntities();
 
       private LeftClickState _LeftClickState = LeftClickState.none;
 
@@ -83,8 +84,14 @@ namespace LeapfrogEditor
          string fullPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
          string fullFileName = System.IO.Path.Combine(fullPath, s);
 
-         MyStateProp.File = fullFileName;
          MyZLevels = ZLevels.ReadFromFile(fullFileName);
+
+         fileName = "collision_entities.xml";
+         s = @"..\..\..\leapfrog\data\" + fileName;
+         fullPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+         fullFileName = System.IO.Path.Combine(fullPath, s);
+
+         CollEnts = CollisionEntities.ReadFromFile(fullFileName);
 
          fileName = "landing_scene.xml";
          s = @"..\..\..\leapfrog\data\" + fileName;
@@ -184,6 +191,16 @@ namespace LeapfrogEditor
          {
             _zLevels = value;
             OnPropertyChanged("MyZLevels");
+         }
+      }
+
+      public CollisionEntities CollEnts
+      {
+         get { return _collEnts; }
+         set
+         {
+            _collEnts = value;
+            OnPropertyChanged("CollEnts");
          }
       }
 

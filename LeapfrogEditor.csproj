@@ -54,8 +54,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\CollisionEntity.cs" />
     <Compile Include="Models\ZLevelItem.cs" />
+    <Compile Include="Models\CollisionEntities.cs" />
     <Compile Include="Models\ZLevels.cs" />
+    <Compile Include="ValueConverters\BitValueConverter.cs" />
+    <Compile Include="Views\Controls\CollisionEntityEditorControl.xaml.cs">
+      <DependentUpon>CollisionEntityEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\CollisionCategoryEditorControl.xaml.cs">
+      <DependentUpon>CollisionCategoryEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\ZLevelEditorControl.xaml.cs">
       <DependentUpon>ZLevelEditorControl.xaml</DependentUpon>
     </Compile>
@@ -142,6 +151,14 @@
       <DependentUpon>CompoundObjectUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TriangleShape.cs" />
+    <Page Include="Views\Controls\CollisionEntityEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\CollisionCategoryEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\Controls\ZLevelEditorControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
