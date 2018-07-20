@@ -59,6 +59,15 @@
     <Compile Include="Models\CollisionEntities.cs" />
     <Compile Include="Models\ZLevels.cs" />
     <Compile Include="ValueConverters\BitValueConverter.cs" />
+    <Compile Include="Views\Controls\HeightEditorControl.xaml.cs">
+      <DependentUpon>HeightEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\CoStateEditorControl.xaml.cs">
+      <DependentUpon>CoStateEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\WidthEditorControl.xaml.cs">
+      <DependentUpon>WidthEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\CollisionEntityEditorControl.xaml.cs">
       <DependentUpon>CollisionEntityEditorControl.xaml</DependentUpon>
     </Compile>
@@ -151,6 +160,18 @@
       <DependentUpon>CompoundObjectUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TriangleShape.cs" />
+    <Page Include="Views\Controls\HeightEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\CoStateEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\WidthEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\Controls\CollisionEntityEditorControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -20,5 +20,8 @@ namespace LeapfrogEditor
          set;
       }
 
+      void SetHeightToTextureAspectRatio();
+
+      void SetWidthToTextureAspectRatio();
    }
 }

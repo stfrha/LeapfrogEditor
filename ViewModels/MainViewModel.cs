@@ -208,6 +208,52 @@ namespace LeapfrogEditor
 
       #region Commands
 
+      void SetShapeWidthExecute(Object parameter)
+      {
+         if (parameter is IWidthHeightInterface)
+         {
+            IWidthHeightInterface iwh = (IWidthHeightInterface)parameter;
+
+            iwh.SetWidthToTextureAspectRatio();
+         }
+      }
+
+      bool CanSetShapeWidthExecute(Object parameter)
+      {
+         return true;
+      }
+
+      public ICommand SetShapeWidth
+      {
+         get
+         {
+            return new MicroMvvm.RelayCommand<Object>(parameter => SetShapeWidthExecute(parameter), parameter => CanSetShapeWidthExecute(parameter));
+         }
+      }
+
+      void SetShapeHeightExecute(Object parameter)
+      {
+         if (parameter is IWidthHeightInterface)
+         {
+            IWidthHeightInterface iwh = (IWidthHeightInterface)parameter;
+
+            iwh.SetHeightToTextureAspectRatio();
+         }
+      }
+
+      bool CanSetShapeHeightExecute(Object parameter)
+      {
+         return true;
+      }
+
+      public ICommand SetShapeHeight
+      {
+         get
+         {
+            return new MicroMvvm.RelayCommand<Object>(parameter => SetShapeHeightExecute(parameter), parameter => CanSetShapeHeightExecute(parameter));
+         }
+      }
+
       void CreateTrianglesExecute(Object parameter)
       {
          MyCpVm.GenerateTriangles();

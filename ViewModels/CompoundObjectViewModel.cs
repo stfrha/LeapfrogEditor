@@ -39,6 +39,7 @@ namespace LeapfrogEditor
          MainVm = mainVm;
          Parent = parent;
          RefObject = refObject;
+         SelectedStateIndex = 0;
       }
 
       #endregion
@@ -191,7 +192,10 @@ namespace LeapfrogEditor
 
       public int SelectedStateIndex
       {
-         get { return _selectedStateIndex; }
+         get
+         {
+            return _selectedStateIndex;
+         }
          set
          {
             _selectedStateIndex = value;

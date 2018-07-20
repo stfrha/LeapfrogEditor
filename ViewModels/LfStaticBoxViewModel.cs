@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace LeapfrogEditor
 {
@@ -157,6 +158,37 @@ namespace LeapfrogEditor
       #endregion
 
       #region public Methods
+
+      public void SetWidthToTextureAspectRatio()
+      {
+         // Get bitmap file and path
+         string s = @".\..\..\..\leapfrog\data\images\" + Texture + ".png";
+         string fullPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+         string fullFileName = System.IO.Path.Combine(fullPath, s);
+
+         // Get Bitmap width and height
+         Uri u = new Uri(fullFileName);
+         BitmapImage bi = new BitmapImage(u);
+
+         // Set width
+         Width = bi.Width / bi.Height * Height;
+
+      }
+
+      public void SetHeightToTextureAspectRatio()
+      {
+         // Get bitmap file and path
+         string s = @".\..\..\..\leapfrog\data\images\" + Texture + ".png";
+         string fullPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+         string fullFileName = System.IO.Path.Combine(fullPath, s);
+
+         // Get Bitmap width and height
+         Uri u = new Uri(fullFileName);
+         BitmapImage bi = new BitmapImage(u);
+
+         // Set width
+         Height = bi.Height / bi.Width * Width;
+      }
 
       public override void InvalidateAll()
       {
