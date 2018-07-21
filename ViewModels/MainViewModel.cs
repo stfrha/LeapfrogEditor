@@ -73,6 +73,8 @@ namespace LeapfrogEditor
       private bool _showJoints;
       private bool _showTriangles;
 
+      private ObservableCollection<string> _textures = new ObservableCollection<string>();
+
       #endregion
 
       #region Constructor
@@ -106,6 +108,23 @@ namespace LeapfrogEditor
 
          MyCpVm = new CompoundObjectViewModel(this, null, MyCpRef);
          MyCpVm.BuildViewModel(MyCpRef);
+
+         // Build collections of texture names
+         // Process the list of files found in the directory.
+         s = @"..\..\..\leapfrog\data\images";
+
+         string[] fileEntries = Directory.GetFiles(s);
+         foreach (string file in fileEntries)
+         {
+            string fname = System.IO.Path.GetFileNameWithoutExtension(file);
+            string ext = System.IO.Path.GetExtension(file);
+
+            if (ext == ".png")
+            {
+               Textures.Add(fname);
+            }
+         }
+
       }
 
       #endregion
@@ -203,6 +222,13 @@ namespace LeapfrogEditor
             OnPropertyChanged("CollEnts");
          }
       }
+
+      public ObservableCollection<string> Textures
+      {
+         get { return _textures; }
+         set { _textures = value; }
+      }
+
 
       #endregion
 

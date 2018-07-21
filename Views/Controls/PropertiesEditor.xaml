@@ -45,7 +45,7 @@
                      <StackPanel Margin="2">
                         <local:HeadlineControl Headline="Sprite Box" />
                         <local:StringEditorControl Headline="Name" MyValue="{Binding Name, Mode=TwoWay}" />
-                        <local:StringEditorControl Headline="Texture" MyValue="{Binding Texture, Mode=TwoWay}" />
+                        <local:TexturePickerEditorControl Headline="Texture" MyValue="{Binding Texture, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="PosX" MyValue="{Binding PosX, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="PosY" MyValue="{Binding PosY, Mode=TwoWay}" />
                         <local:WidthEditorControl Headline="Width" MyValue="{Binding Width, Mode=TwoWay}" />
@@ -62,7 +62,7 @@
                      <StackPanel Margin="2">
                         <local:HeadlineControl Headline="Sprite Polygon" />
                         <local:StringEditorControl Headline="Name" MyValue="{Binding Name, Mode=TwoWay}" />
-                        <local:StringEditorControl Headline="Texture" MyValue="{Binding Texture, Mode=TwoWay}" />
+                        <local:TexturePickerEditorControl Headline="Texture" MyValue="{Binding Texture, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="PosX" MyValue="{Binding PosX, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="PosY" MyValue="{Binding PosY, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Angle" MyValue="{Binding Angle, Mode=TwoWay}" />
@@ -81,7 +81,7 @@
                      <StackPanel Margin="2">
                         <local:HeadlineControl Headline="Static circle" />
                         <local:StringEditorControl Headline="Name" MyValue="{Binding Name, Mode=TwoWay}" />
-                        <local:StringEditorControl Headline="Texture" MyValue="{Binding Texture, Mode=TwoWay}" />
+                        <local:TexturePickerEditorControl Headline="Texture" MyValue="{Binding Texture, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="PosX" MyValue="{Binding PosX, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="PosY" MyValue="{Binding PosY, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Radius" MyValue="{Binding Radius, Mode=TwoWay}" />
@@ -100,7 +100,7 @@
                      <StackPanel Margin="2">
                         <local:HeadlineControl Headline="Static Box" />
                         <local:StringEditorControl Headline="Name" MyValue="{Binding Name, Mode=TwoWay}" />
-                        <local:StringEditorControl Headline="Texture" MyValue="{Binding Texture, Mode=TwoWay}" />
+                        <local:TexturePickerEditorControl Headline="Texture" MyValue="{Binding Texture, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="PosX" MyValue="{Binding PosX, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="PosY" MyValue="{Binding PosY, Mode=TwoWay}" />
                         <local:WidthEditorControl Headline="Width" MyValue="{Binding Width, Mode=TwoWay}" />
@@ -120,7 +120,7 @@
                      <StackPanel Margin="2">
                         <local:HeadlineControl Headline="Static Polygon" />
                         <local:StringEditorControl Headline="Name" MyValue="{Binding Name, Mode=TwoWay}" />
-                        <local:StringEditorControl Headline="Texture" MyValue="{Binding Texture, Mode=TwoWay}" />
+                        <local:TexturePickerEditorControl Headline="Texture" MyValue="{Binding Texture, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="PosX" MyValue="{Binding PosX, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="PosY" MyValue="{Binding PosY, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Angle" MyValue="{Binding Angle, Mode=TwoWay}" />
@@ -142,7 +142,7 @@
                      <StackPanel Margin="2">
                         <local:HeadlineControl Headline="Static Boxed Sprite Polygon" />
                         <local:StringEditorControl Headline="Name" MyValue="{Binding Name, Mode=TwoWay}" />
-                        <local:StringEditorControl Headline="Texture" MyValue="{Binding Texture, Mode=TwoWay}" />
+                        <local:TexturePickerEditorControl Headline="Texture" MyValue="{Binding Texture, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="PosX" MyValue="{Binding PosX, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="PosY" MyValue="{Binding PosY, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Width" MyValue="{Binding Width, Mode=TwoWay}" />
@@ -162,7 +162,7 @@
                      <StackPanel Margin="2">
                         <local:HeadlineControl Headline="Dynamic Circle" />
                         <local:StringEditorControl Headline="Name" MyValue="{Binding Name, Mode=TwoWay}" />
-                        <local:StringEditorControl Headline="Texture" MyValue="{Binding Texture, Mode=TwoWay}" />
+                        <local:TexturePickerEditorControl Headline="Texture" MyValue="{Binding Texture, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="PosX" MyValue="{Binding PosX, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="PosY" MyValue="{Binding PosY, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Radius" MyValue="{Binding Radius, Mode=TwoWay}" />
@@ -182,7 +182,7 @@
                      <StackPanel Margin="2">
                         <local:HeadlineControl Headline="Dynamic Box" />
                         <local:StringEditorControl Headline="Name" MyValue="{Binding Name, Mode=TwoWay}" />
-                        <local:StringEditorControl Headline="Texture" MyValue="{Binding Texture, Mode=TwoWay}" />
+                        <local:TexturePickerEditorControl Headline="Texture" MyValue="{Binding Texture, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="PosX" MyValue="{Binding PosX, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="PosY" MyValue="{Binding PosY, Mode=TwoWay}" />
                         <local:WidthEditorControl Headline="Width" MyValue="{Binding Width, Mode=TwoWay}" />
@@ -203,7 +203,7 @@
                      <StackPanel Margin="2">
                         <local:HeadlineControl Headline="Dynamic Polygon" />
                         <local:StringEditorControl Headline="Name" MyValue="{Binding Name, Mode=TwoWay}" />
-                        <local:StringEditorControl Headline="Texture" MyValue="{Binding Texture, Mode=TwoWay}" />
+                        <local:TexturePickerEditorControl Headline="Texture" MyValue="{Binding Texture, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="PosX" MyValue="{Binding PosX, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="PosY" MyValue="{Binding PosY, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Angle" MyValue="{Binding Angle, Mode=TwoWay}" />
@@ -226,7 +226,7 @@
                      <StackPanel Margin="2">
                         <local:HeadlineControl Headline="Dynamic Boxed Sprite Polygon" />
                         <local:StringEditorControl Headline="Name" MyValue="{Binding Name, Mode=TwoWay}" />
-                        <local:StringEditorControl Headline="Texture" MyValue="{Binding Texture, Mode=TwoWay}" />
+                        <local:TexturePickerEditorControl Headline="Texture" MyValue="{Binding Texture, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="PosX" MyValue="{Binding PosX, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="PosY" MyValue="{Binding PosY, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Width" MyValue="{Binding Width, Mode=TwoWay}" />

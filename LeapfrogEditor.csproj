@@ -59,6 +59,9 @@
     <Compile Include="Models\CollisionEntities.cs" />
     <Compile Include="Models\ZLevels.cs" />
     <Compile Include="ValueConverters\BitValueConverter.cs" />
+    <Compile Include="Views\Controls\TexturePickerEditorControl.xaml.cs">
+      <DependentUpon>TexturePickerEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\HeightEditorControl.xaml.cs">
       <DependentUpon>HeightEditorControl.xaml</DependentUpon>
     </Compile>
@@ -160,6 +163,10 @@
       <DependentUpon>CompoundObjectUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TriangleShape.cs" />
+    <Page Include="Views\Controls\TexturePickerEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\Controls\HeightEditorControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
