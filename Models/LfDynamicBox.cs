@@ -14,6 +14,7 @@ namespace LeapfrogEditor
       #region Declarations
 
       private double _density;
+      private double _friction;
 
       #endregion
 
@@ -33,6 +34,13 @@ namespace LeapfrogEditor
       {
          get { return _density; }
          set { _density = value; }
+      }
+
+      [XmlAttribute("friction")]
+      public double Friction
+      {
+         get { return _friction; }
+         set { _friction = value; }
       }
 
       #endregion

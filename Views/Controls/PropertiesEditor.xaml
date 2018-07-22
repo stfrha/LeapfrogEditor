@@ -167,7 +167,8 @@
                         <local:DoubleEditorControl Headline="PosY" MyValue="{Binding PosY, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Radius" MyValue="{Binding Radius, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Angle" MyValue="{Binding Angle, Mode=TwoWay}" />
-                        <local:DoubleEditorControl Headline="Density" MyValue="0" />
+                        <local:DoubleEditorControl Headline="Density" MyValue="{Binding Density, Mode=TwoWay}" />
+                        <local:DoubleEditorControl Headline="Friction" MyValue="{Binding Friction, Mode=TwoWay}" />
                         <local:ZLevelEditorControl Headline="Z-level" MyValue="{Binding ZLevel, Mode=TwoWay}" />
                         <local:CollisionEntityEditorControl Headline="Collision Entity" MyValue="{Binding CollisionEntity, Mode=TwoWay}" />
                         <local:CollisionCategoryEditorControl Headline="Coll. Category" MyValue="{Binding CollisionCategory, Mode=TwoWay}" />
@@ -188,7 +189,8 @@
                         <local:WidthEditorControl Headline="Width" MyValue="{Binding Width, Mode=TwoWay}" />
                         <local:HeightEditorControl Headline="Height" MyValue="{Binding Height, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Angle" MyValue="{Binding Angle, Mode=TwoWay}" />
-                        <local:DoubleEditorControl Headline="Density" MyValue="0" />
+                        <local:DoubleEditorControl Headline="Density" MyValue="{Binding Density, Mode=TwoWay}" />
+                        <local:DoubleEditorControl Headline="Friction" MyValue="{Binding Friction, Mode=TwoWay}" />
                         <local:ZLevelEditorControl Headline="Z-level" MyValue="{Binding ZLevel, Mode=TwoWay}" />
                         <local:CollisionEntityEditorControl Headline="Collision Entity" MyValue="{Binding CollisionEntity, Mode=TwoWay}" />
                         <local:CollisionCategoryEditorControl Headline="Coll. Category" MyValue="{Binding CollisionCategory, Mode=TwoWay}" />
@@ -207,7 +209,8 @@
                         <local:DoubleEditorControl Headline="PosX" MyValue="{Binding PosX, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="PosY" MyValue="{Binding PosY, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Angle" MyValue="{Binding Angle, Mode=TwoWay}" />
-                        <local:DoubleEditorControl Headline="Density" MyValue="0" />
+                        <local:DoubleEditorControl Headline="Density" MyValue="{Binding Density, Mode=TwoWay}" />
+                        <local:DoubleEditorControl Headline="Friction" MyValue="{Binding Friction, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Texture Width" MyValue="{Binding TextureWidth, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Texture Height" MyValue="{Binding TextureHeight, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Texture Offset X" MyValue="{Binding TextureOffsetX, Mode=TwoWay}" />
@@ -232,7 +235,8 @@
                         <local:DoubleEditorControl Headline="Width" MyValue="{Binding Width, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Height" MyValue="{Binding Height, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Angle" MyValue="{Binding Angle, Mode=TwoWay}" />
-                        <local:DoubleEditorControl Headline="Density" MyValue="0" />
+                        <local:DoubleEditorControl Headline="Density" MyValue="{Binding Density, Mode=TwoWay}" />
+                        <local:DoubleEditorControl Headline="Friction" MyValue="{Binding Friction, Mode=TwoWay}" />
                         <local:ZLevelEditorControl Headline="Z-level" MyValue="{Binding ZLevel, Mode=TwoWay}" />
                         <local:CollisionEntityEditorControl Headline="Collision Entity" MyValue="{Binding CollisionEntity, Mode=TwoWay}" />
                         <local:CollisionCategoryEditorControl Headline="Coll. Category" MyValue="{Binding CollisionCategory, Mode=TwoWay}" />
