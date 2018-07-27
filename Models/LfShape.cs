@@ -40,8 +40,8 @@ namespace LeapfrogEditor
          //_anchorY = 0;
          _zLevel = 0;
          _collisionEntity = "notApplicable";
-         _collisionCategory = 0;
-         _collisionMask = 0;
+         _collisionCategory = 1;
+         _collisionMask = 65534;
       }
 
       #endregion

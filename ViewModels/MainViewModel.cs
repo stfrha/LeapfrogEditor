@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -95,19 +96,19 @@ namespace LeapfrogEditor
 
          CollEnts = CollisionEntities.ReadFromFile(fullFileName);
 
-         fileName = "landing_scene.xml";
-         s = @"..\..\..\leapfrog\data\" + fileName;
-         fullPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-         fullFileName = System.IO.Path.Combine(fullPath, s);
+         //fileName = "landing_scene.xml";
+         //s = @"..\..\..\leapfrog\data\" + fileName;
+         //fullPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+         //fullFileName = System.IO.Path.Combine(fullPath, s);
 
-         MyStateProp.File = fullFileName;
-         MyCP = CompoundObject.ReadFromFile(fullFileName);
+         //MyStateProp.File = fullFileName;
+         //MyCP = CompoundObject.ReadFromFile(fullFileName);
 
-         MyStateProp.CompObj = MyCP;
-         MyCpRef.StateProperties.Add(MyStateProp);
+         //MyStateProp.CompObj = MyCP;
+         //MyCpRef.StateProperties.Add(MyStateProp);
 
-         MyCpVm = new CompoundObjectViewModel(this, null, MyCpRef);
-         MyCpVm.BuildViewModel(MyCpRef);
+         //MyCpVm = new CompoundObjectViewModel(this, null, MyCpRef);
+         //MyCpVm.BuildViewModel(MyCpRef);
 
          // Build collections of texture names
          // Process the list of files found in the directory.
@@ -152,7 +153,26 @@ namespace LeapfrogEditor
       public CompoundObjectViewModel MyCpVm
       {
          get { return _myCpVm; }
-         set { _myCpVm = value; }
+         set
+         {
+            _myCpVm = value;
+            OnPropertyChanged("MyCpVm");
+         }
+      }
+
+      public string WindowTitle
+      {
+         get
+         {
+            if (MyCpVm == null)
+            {
+               return "Leapfrog Editor - No file loaded";
+            }
+
+            string fileName = System.IO.Path.GetFileName(MyCpVm.File);
+
+            return "Leapfrog Editor - " + fileName;
+         }
       }
 
       public CompoundObjectViewModel SelectedCompoundObject
@@ -234,6 +254,201 @@ namespace LeapfrogEditor
 
       #region Commands
 
+      void NewExecute(Object parameter)
+      {
+         if (MessageBox.Show("There is no check if there is unsaved data. Do you really want to open a new scene?", "Open Scene Warning", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
+         {
+            SaveFileDialog sfd = new SaveFileDialog();
+
+            if (sfd.ShowDialog() == true)
+            {
+               string fileName = System.IO.Path.GetFileName(sfd.FileName);
+               string s = @"..\..\..\leapfrog\data\" + fileName;
+               string fullPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+               string fullFileName = System.IO.Path.Combine(fullPath, s);
+
+               MyStateProp = new ObjectRefStateProperties();
+               MyStateProp.File = fullFileName;
+
+               MyCP = new CompoundObject();
+
+               MyStateProp.CompObj = MyCP;
+
+               MyCpRef = new CompoundObjectRef();
+
+               MyCpRef.StateProperties.Add(MyStateProp);
+
+               MyCpVm = new CompoundObjectViewModel(this, null, MyCpRef);
+
+               // To get a handle to the new CompoundObject we need a shape
+               // to select. Lets place a default Sprite Box at coordinate 0,0
+               LfStaticCircle defShape = new LfStaticCircle();
+               MyCP.StaticCircles.Add(defShape);
+               LfStaticCircleViewModel defShapeVM = new LfStaticCircleViewModel(this, null, defShape);
+               MyCpVm.BuildViewModel(MyCpRef);
+               MyCpVm.OnPropertyChanged("");
+               OnPropertyChanged("");
+            }
+         }
+      }
+
+      bool CanNewExecute(Object parameter)
+      {
+         return true;
+      }
+
+      public ICommand New
+      {
+         get
+         {
+            return new MicroMvvm.RelayCommand<Object>(parameter => NewExecute(parameter), parameter => CanNewExecute(parameter));
+         }
+      }
+
+      void ReloadExecute(Object parameter)
+      {
+         if (MessageBox.Show("There is no check if there is unsaved data. Do you really want to open a new scene?", "Open Scene Warning", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
+         {
+            OpenFileDialog ofd = new OpenFileDialog();
+
+            ofd.Filter = "Scene files (*.xml)|*.xml|All files (*.*)|*.*";
+            ofd.CheckFileExists = true;
+
+            if (ofd.ShowDialog() == true)
+            {
+               string fileName = System.IO.Path.GetFileName(ofd.FileName);
+               string s = @"..\..\..\leapfrog\data\" + fileName;
+               string fullPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+               string fullFileName = System.IO.Path.Combine(fullPath, s);
+
+               MyStateProp.File = fullFileName;
+
+               MyCP = CompoundObject.ReadFromFile(fullFileName);
+
+               MyStateProp.CompObj = MyCP;
+               MyCpRef.StateProperties.Add(MyStateProp);
+
+               MyCpVm = new CompoundObjectViewModel(this, null, MyCpRef);
+               MyCpVm.BuildViewModel(MyCpRef);
+               MyCpVm.OnPropertyChanged("");
+               OnPropertyChanged("");
+            }
+         }
+      }
+
+      bool CanReloadExecute(Object parameter)
+      {
+         return true;
+      }
+
+      public ICommand Reload
+      {
+         get
+         {
+            return new MicroMvvm.RelayCommand<Object>(parameter => ReloadExecute(parameter), parameter => CanReloadExecute(parameter));
+         }
+      }
+
+      void SaveExecute(Object parameter)
+      {
+         // Generate Triangles before saving
+         MyCpVm.GenerateTriangles();
+
+         MyCpVm.ModelObject.WriteToFile(MyStateProp.File);
+      }
+
+      bool CanSaveExecute(Object parameter)
+      {
+         return true;
+      }
+
+      public ICommand Save
+      {
+         get
+         {
+            return new MicroMvvm.RelayCommand<Object>(parameter => SaveExecute(parameter), parameter => CanSaveExecute(parameter));
+         }
+      }
+
+      void SaveAsExecute(Object parameter)
+      {
+         SaveFileDialog sfd = new SaveFileDialog();
+
+         if (sfd.ShowDialog() == true)
+         {
+            MyCpVm.GenerateTriangles();
+
+            MyStateProp.File = sfd.FileName;
+            MyCpVm.ModelObject.WriteToFile(MyStateProp.File);
+         }
+      }
+
+      bool CanSaveAsExecute(Object parameter)
+      {
+         return true;
+      }
+
+      public ICommand SaveAs
+      {
+         get
+         {
+            return new MicroMvvm.RelayCommand<Object>(parameter => SaveAsExecute(parameter), parameter => CanSaveAsExecute(parameter));
+         }
+      }
+
+      void ImportCompoundObjectExecute(Object parameter)
+      {
+         OpenFileDialog ofd = new OpenFileDialog();
+
+         ofd.Filter = "Compound Object files (*.xml)|*.xml|All files (*.*)|*.*";
+         ofd.CheckFileExists = true;
+
+         if (ofd.ShowDialog() == true)
+         {
+            string fileName = System.IO.Path.GetFileName(ofd.FileName);
+            string s = @"..\..\..\leapfrog\data\" + fileName;
+            string fullPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            string fullFileName = System.IO.Path.Combine(fullPath, s);
+
+            // Fortsätt här!!!!!
+
+            ObjectRefStateProperties newStateProp = new ObjectRefStateProperties();
+            newStateProp.State = "default";
+            newStateProp.File = fullFileName;
+
+            CompoundObject newCp = CompoundObject.ReadFromFile(fullFileName);
+
+            newStateProp.CompObj = newCp;
+
+            CompoundObjectRef newCpRef = new CompoundObjectRef();
+
+            newCpRef.StateProperties.Add(newStateProp);
+
+            CompoundObjectViewModel newCpVm = new CompoundObjectViewModel(this, null, newCpRef);
+            newCpVm.BuildViewModel(newCpRef);
+
+            SelectedCompoundObject.ModelObject.ChildObjectRefs.Add(newCpRef);
+            SelectedCompoundObject.ChildObjects.Add(newCpVm);
+
+            MyCpVm.OnPropertyChanged("");
+            OnPropertyChanged("");
+         }
+      }
+
+      bool CanImportCompoundObjectExecute(Object parameter)
+      {
+         return (SelectedCompoundObject != null);
+      }
+
+      public ICommand ImportCompoundObject
+      {
+         get
+         {
+            return new MicroMvvm.RelayCommand<Object>(parameter => ImportCompoundObjectExecute(parameter), parameter => CanImportCompoundObjectExecute(parameter));
+         }
+      }
+
+
       void SetShapeWidthExecute(Object parameter)
       {
          if (parameter is IWidthHeightInterface)
@@ -295,50 +510,6 @@ namespace LeapfrogEditor
          get
          {
             return new MicroMvvm.RelayCommand<Object>(parameter => CreateTrianglesExecute(parameter), parameter => CanCreateTrianglesExecute(parameter));
-         }
-      }
-
-      void ReloadExecute(Object parameter)
-      {
-         MyCP = CompoundObject.ReadFromFile(MyStateProp.File);
-         MyStateProp.CompObj = MyCP;
-         MyCpRef.StateProperties.Add(MyStateProp);
-
-         MyCpVm.BuildViewModel(MyCpRef);
-
-      }
-
-      bool CanReloadExecute(Object parameter)
-      {
-         return true;
-      }
-
-      public ICommand Reload
-      {
-         get
-         {
-            return new MicroMvvm.RelayCommand<Object>(parameter => ReloadExecute(parameter), parameter => CanReloadExecute(parameter));
-         }
-      }
-
-      void SaveExecute(Object parameter)
-      {
-         // Generate Triangles before saving
-         MyCpVm.GenerateTriangles();
-
-         MyCpVm.ModelObject.WriteToFile(MyStateProp.File);
-      }
-
-      bool CanSaveExecute(Object parameter)
-      {
-         return true;
-      }
-
-      public ICommand Save
-      {
-         get
-         {
-            return new MicroMvvm.RelayCommand<Object>(parameter => SaveExecute(parameter), parameter => CanSaveExecute(parameter));
          }
       }
 
@@ -991,6 +1162,8 @@ namespace LeapfrogEditor
 
       public bool BackgroundMouseUp(Point clickPoint, MouseButton button, bool shift, bool ctrl, bool alt)
       {
+         if (MyCpVm == null) return false;
+
          if (button == MouseButton.Left)
          {
             //Debug.WriteLine("Clicked on background");

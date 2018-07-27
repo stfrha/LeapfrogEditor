@@ -593,5 +593,15 @@ namespace LeapfrogEditor
       {
 
       }
+
+      private void HandleCloseApplication(object sender, System.ComponentModel.CancelEventArgs e)
+      {
+         e.Cancel = (MessageBox.Show("There is no check if there is unsaved data. Do you really want to close?", "Closing Applicaption Warning", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.Cancel);
+      }
+
+      private void HandleExitClick(object sender, RoutedEventArgs e)
+      {
+         this.Close();
+      }
    }
 }

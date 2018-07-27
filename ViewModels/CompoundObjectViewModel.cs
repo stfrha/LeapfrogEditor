@@ -110,7 +110,14 @@ namespace LeapfrogEditor
 
       public string File
       {
-         get { return _refObject.StateProperties[_selectedStateIndex].File; }
+         get
+         {
+            if ((_selectedStateIndex >= 0) && _refObject.StateProperties.Count > 0)
+            {
+               return _refObject.StateProperties[_selectedStateIndex].File;
+            }
+            return "";
+         }
          set
          {
             _refObject.StateProperties[_selectedStateIndex].File = value;
@@ -124,7 +131,7 @@ namespace LeapfrogEditor
          {
             if (_refObject != null)
             {
-               if (_refObject.StateProperties.Count > 0)
+               if ((_selectedStateIndex >= 0) && (_refObject.StateProperties.Count > 0))
                {
                   return _refObject.StateProperties[_selectedStateIndex].PosX;
                }
@@ -135,7 +142,7 @@ namespace LeapfrogEditor
          {
             if (_refObject != null)
             {
-               if (_refObject.StateProperties.Count > 0)
+               if ((_selectedStateIndex >= 0) && (_refObject.StateProperties.Count > 0))
                {
                   _refObject.StateProperties[_selectedStateIndex].PosX = value;
 
@@ -160,7 +167,7 @@ namespace LeapfrogEditor
          {
             if (_refObject != null)
             {
-               if (_refObject.StateProperties.Count > 0)
+               if ((_selectedStateIndex >= 0) && (_refObject.StateProperties.Count > _selectedStateIndex))
                {
                   return _refObject.StateProperties[_selectedStateIndex].PosY;
                }
@@ -171,7 +178,7 @@ namespace LeapfrogEditor
          {
             if (_refObject != null)
             {
-               if (_refObject.StateProperties.Count > 0)
+               if ((_selectedStateIndex >= 0) && (_refObject.StateProperties.Count > 0))
                {
                   _refObject.StateProperties[_selectedStateIndex].PosY = value;
 
@@ -198,7 +205,15 @@ namespace LeapfrogEditor
          }
          set
          {
-            _selectedStateIndex = value;
+            if (value == -1)
+            {
+               _selectedStateIndex = 0;
+            }
+            else
+            {
+               _selectedStateIndex = value;
+            }
+
             DeselectAllChildren();
             OnPropertyChanged("");
          }
@@ -224,7 +239,7 @@ namespace LeapfrogEditor
       {
          get
          {
-            if (_shapes.Count > _selectedStateIndex)
+            if ((_selectedStateIndex >= 0) && (_shapes.Count > _selectedStateIndex))
             {
                return _shapes[_selectedStateIndex];
             }
@@ -232,7 +247,7 @@ namespace LeapfrogEditor
          }
          set
          {
-            if (_shapes.Count > _selectedStateIndex)
+            if ((_selectedStateIndex >= 0) && (_shapes.Count > _selectedStateIndex))
             {
                _shapes[_selectedStateIndex] = value;
             }
@@ -243,7 +258,7 @@ namespace LeapfrogEditor
       {
          get
          {
-            if (_joints.Count > _selectedStateIndex)
+            if ((_selectedStateIndex >= 0) && (_joints.Count > _selectedStateIndex))
             {
                return _joints[_selectedStateIndex];
             }
@@ -251,7 +266,7 @@ namespace LeapfrogEditor
          }
          set
          {
-            if (_joints.Count > _selectedStateIndex)
+            if ((_selectedStateIndex >= 0) && (_joints.Count > _selectedStateIndex))
             {
                _joints[_selectedStateIndex] = value;
             }
@@ -262,7 +277,7 @@ namespace LeapfrogEditor
       {
          get
          {
-            if (_childObjects.Count > _selectedStateIndex)
+            if ((_selectedStateIndex >= 0) && (_childObjects.Count > _selectedStateIndex))
             {
                return _childObjects[_selectedStateIndex];
             }
@@ -270,7 +285,7 @@ namespace LeapfrogEditor
          }
          set
          {
-            if (_childObjects.Count > _selectedStateIndex)
+            if ((_selectedStateIndex >= 0) && (_childObjects.Count > _selectedStateIndex))
             {
                _childObjects[_selectedStateIndex] = value;
             }
@@ -281,10 +296,8 @@ namespace LeapfrogEditor
       {
          get
          {
-            if (Shapes.Count == 11)
-            {
-               int a = 10;
-            }
+            if (Shapes == null) return new Rect(0, 0, 0, 0);
+
             if ((Shapes.Count == 0) && (ChildObjects.Count == 0))
             {
                return new Rect(0,0,0,0);

@@ -7,8 +7,10 @@
         xmlns:local="clr-namespace:LeapfrogEditor"
         mc:Ignorable="d"
         x:Name="root"
-        Title="MainWindow" Height="800" Width="1200"
-        KeyDown="Window_KeyDown">
+        Title="{Binding WindowTitle}" 
+        Height="800" Width="1200"
+        KeyDown="Window_KeyDown"
+        Closing="HandleCloseApplication">
    <Window.DataContext>
       <local:MainViewModel x:Name="myMainViewModel"/>
    </Window.DataContext>
@@ -27,10 +29,12 @@
       </Grid.RowDefinitions>
       <Menu Grid.Row="0" >
          <MenuItem Header="File">
-            <MenuItem Header="Read" Command="{Binding Reload}" />
+            <MenuItem Header="New..." Command="{Binding New}" />
+            <MenuItem Header="Open..." Command="{Binding Reload}" />
             <MenuItem Header="Save" Command="{Binding Save}" />
+            <MenuItem Header="Save As..." Command="{Binding SaveAs}" />
             <Separator/>
-            <MenuItem Header="Exit" />
+            <MenuItem Header="Exit" Click="HandleExitClick" />
          </MenuItem>
          <MenuItem Header="Edit">
             <MenuItem Header="Add" >
@@ -48,6 +52,9 @@
                <MenuItem Header="Weld Joint" Command="{Binding NewJoint}" CommandParameter="weldJoint"  />
                <MenuItem Header="Revolute Joint" Command="{Binding NewJoint}" CommandParameter="revoluteJoint"  />
                <MenuItem Header="Prismatic Joint" Command="{Binding NewJoint}" CommandParameter="prismaticJoint"  />
+            </MenuItem>
+            <MenuItem Header="Import">
+               <MenuItem Header="Compound Object" Command="{Binding ImportCompoundObject}" />
             </MenuItem>
             <Separator/>
             <MenuItem Header="Delete" Command="{Binding Delete}" />
