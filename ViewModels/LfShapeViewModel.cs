@@ -63,7 +63,7 @@ namespace LeapfrogEditor
          }
       }
 
-      public string Name
+      public virtual string Name
       {
          get
          {
@@ -97,7 +97,7 @@ namespace LeapfrogEditor
          }
       }
 
-      public double PosX
+      public virtual double PosX
       {
          get
          {
@@ -125,7 +125,7 @@ namespace LeapfrogEditor
       }
 
 
-      public double PosY
+      public virtual double PosY
       {
          get
          {

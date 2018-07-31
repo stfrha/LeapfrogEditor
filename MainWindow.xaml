@@ -52,6 +52,8 @@
                <MenuItem Header="Weld Joint" Command="{Binding NewJoint}" CommandParameter="weldJoint"  />
                <MenuItem Header="Revolute Joint" Command="{Binding NewJoint}" CommandParameter="revoluteJoint"  />
                <MenuItem Header="Prismatic Joint" Command="{Binding NewJoint}" CommandParameter="prismaticJoint"  />
+               <Separator />
+               <MenuItem Header="Asteroid Field" Command="{Binding NewShape}" CommandParameter="asteroidField"  />
             </MenuItem>
             <MenuItem Header="Import">
                <MenuItem Header="Compound Object" Command="{Binding ImportCompoundObject}" />

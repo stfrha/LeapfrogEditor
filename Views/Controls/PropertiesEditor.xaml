@@ -245,6 +245,24 @@
                   </Border>
                </DockPanel>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type local:AsteroidFieldViewModel}">
+               <DockPanel Margin="2">
+                  <Border CornerRadius="5" BorderBrush="DarkGray" BorderThickness="1">
+                     <StackPanel Margin="2">
+                        <local:HeadlineControl Headline="Asteroid Field" />
+                        <local:StringEditorControl Headline="Name" MyValue="{Binding Name, Mode=TwoWay}" />
+                        <local:CoStateEditorControl Headline="States" />
+                        <local:DoubleEditorControl Headline="PosX" MyValue="{Binding PosX, Mode=TwoWay}" />
+                        <local:DoubleEditorControl Headline="PosY" MyValue="{Binding PosY, Mode=TwoWay}" />
+                        <local:DoubleEditorControl Headline="Width" MyValue="{Binding Width, Mode=TwoWay}" />
+                        <local:DoubleEditorControl Headline="Height" MyValue="{Binding Height, Mode=TwoWay}" />
+                        <local:IntEditorControl Headline="Initally Spawned" MyValue="{Binding SpawnInitial, Mode=TwoWay}" />
+                        <local:DoubleEditorControl Headline="Intensity" MyValue="{Binding Intensity, Mode=TwoWay}" />
+                        <local:IntEditorControl Headline="Life Time" MyValue="{Binding LifeTime, Mode=TwoWay}" />
+                     </StackPanel>
+                  </Border>
+               </DockPanel>
+            </DataTemplate>
          </ItemsControl.Resources>
          <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>

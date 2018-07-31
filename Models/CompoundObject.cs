@@ -35,6 +35,10 @@ namespace LeapfrogEditor
       private ObservableCollection<RevoluteJoint> _revoluteJoints = new ObservableCollection<RevoluteJoint>();
       private ObservableCollection<PrismaticJoint> _prismaticJoints = new ObservableCollection<PrismaticJoint>();
 
+      private ObservableCollection<PlanetActorRef> _planetActors = new ObservableCollection<PlanetActorRef>();
+      private ObservableCollection<ClippedWindowRef> _clippedWindows = new ObservableCollection<ClippedWindowRef>();
+      private ObservableCollection<AsteroidFieldRef> _asteroidFields = new ObservableCollection<AsteroidFieldRef>();
+
       private ObservableCollection<CompoundObjectRef> _childObjectRefs = new ObservableCollection<CompoundObjectRef>();
 
       #endregion
@@ -147,6 +151,30 @@ namespace LeapfrogEditor
          set { _prismaticJoints = value; }
       }
 
+      [XmlElement("planetActor")]
+      public ObservableCollection<PlanetActorRef> PlanetActors
+      {
+         get { return _planetActors; }
+         set { _planetActors = value; }
+      }
+
+      [XmlElement("asteroidField")]
+      public ObservableCollection<AsteroidFieldRef> AsteroidFields
+      {
+         get { return _asteroidFields; }
+         set { _asteroidFields = value; }
+      }
+
+      // At serialisation of a parent CompoundObject this collection
+      // is read. Once read, the spaceSceneFile is used to create 
+      // a child CompoundObject.
+      [XmlElement("clippedWindow")]
+      public ObservableCollection<ClippedWindowRef> ClippedWindows
+      {
+         get { return _clippedWindows; }
+         set { _clippedWindows = value; }
+      }
+
       // At serialisation of a parent CompoundObject this collection
       // is read. Once read, it is used to create CompoundObjects as 
       // children.
@@ -184,6 +212,20 @@ namespace LeapfrogEditor
             }
          }
 
+         // Iterate ClippedWindows to load all each child objects
+         foreach (ClippedWindowRef cwr in co.ClippedWindows)
+         {
+            // Iterate all state properties
+            foreach (TStateProperties<ClippedWindowProperties> sp in cwr.StateProperties)
+            {
+               string newFile = System.IO.Path.Combine(path, sp.Properties.SpaceSceneFile);
+
+               CompoundObject childCo = CompoundObject.ReadFromFile(newFile);
+
+               sp.Properties.CompObj = childCo;
+            }
+         }
+
          fs.Close();
 
          return co;
@@ -205,7 +247,7 @@ namespace LeapfrogEditor
          XmlWriter writer = XmlWriter.Create(fs, settings);
          ser.Serialize(writer, this, ns);
 
-         // Iterate COmpounfObjects to save all child objects
+         // Iterate ChildObjectRefs to save all child objects
          foreach (CompoundObjectRef co in ChildObjectRefs)
          {
             foreach (ObjectRefStateProperties sp in co.StateProperties)
@@ -214,6 +256,17 @@ namespace LeapfrogEditor
 
                sp.CompObj.WriteToFile(newFile);
 
+            }
+         }
+
+         // Iterate ClippedWindowProperties to save all space scenes as child objects
+         foreach (ClippedWindowRef cw in ClippedWindows)
+         {
+            foreach (TStateProperties<ClippedWindowProperties> sp in cw.StateProperties)
+            {
+               string newFile = System.IO.Path.Combine(path, sp.Properties.SpaceSceneFile);
+
+               sp.Properties.CompObj.WriteToFile(newFile);
             }
          }
 

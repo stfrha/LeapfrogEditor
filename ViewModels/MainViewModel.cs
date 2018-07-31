@@ -33,7 +33,8 @@ namespace LeapfrogEditor
       weldJoint,
       revoluteJoint,
       prismaticJoint,
-      addPoint
+      addPoint,
+      asteroidField
    }
 
    public enum MouseEventObjectType
@@ -1348,7 +1349,7 @@ namespace LeapfrogEditor
                (_LeftClickState == LeftClickState.prismaticJoint))
             {
                WeldJoint wj = null;
-               
+
                if (_LeftClickState == LeftClickState.weldJoint)
                {
                   wj = new WeldJoint();
@@ -1408,6 +1409,38 @@ namespace LeapfrogEditor
 
                SelectedCompoundObject.Joints.Add(wjvm);
                SelectedCompoundObject.ModelObject.WeldJoints.Add(wj);
+
+               _LeftClickState = LeftClickState.none;
+
+            }
+            else if (_LeftClickState == LeftClickState.asteroidField)
+            {
+               // The first point of this polygon will be the PosX and PosY of the 
+               // new shape, and thus, the first polygon vertex should be at 0,0.
+               Point parentOrigo = new Point(SelectedCompoundObject.PosX, SelectedCompoundObject.PosY);
+               Point localClickPoint = new Point();
+               localClickPoint = (Point)(clickPoint - parentOrigo);
+
+               AsteroidFieldRef afr = new AsteroidFieldRef();
+
+               TStateProperties<AsteroidFieldProperties> sp = new TStateProperties<AsteroidFieldProperties>();
+
+               afr.StateProperties.Add(sp);
+
+               AsteroidFieldProperties afp = new AsteroidFieldProperties();
+               afp.PosX = localClickPoint.X;
+               afp.PosY = localClickPoint.Y;
+
+               sp.Properties = afp;
+
+               AsteroidFieldViewModel afvm = new AsteroidFieldViewModel(this, SelectedCompoundObject, afr);
+
+               SelectedCompoundObject.ModelObject.AsteroidFields.Add(afr);
+
+               SelectedCompoundObject.Shapes.Add(afvm);
+
+               _selectedShapes.Add(afvm);
+               afvm.IsSelected = true;
 
                _LeftClickState = LeftClickState.none;
 

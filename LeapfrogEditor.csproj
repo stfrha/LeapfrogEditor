@@ -54,11 +54,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\AsteroidFieldRef.cs" />
+    <Compile Include="Models\AsteroidFieldProperties.cs" />
     <Compile Include="Models\CollisionEntity.cs" />
+    <Compile Include="Models\LandingSite.cs" />
+    <Compile Include="Models\ClippedWindowProperties.cs" />
+    <Compile Include="Models\PlanetActorProperties.cs" />
+    <Compile Include="Models\ClippedWindowRef.cs" />
+    <Compile Include="Models\PlanetActorRef.cs" />
+    <Compile Include="Models\TStateProperties.cs" />
     <Compile Include="Models\ZLevelItem.cs" />
     <Compile Include="Models\CollisionEntities.cs" />
     <Compile Include="Models\ZLevels.cs" />
     <Compile Include="ValueConverters\BitValueConverter.cs" />
+    <Compile Include="ViewModels\AsteroidFieldPropertiesViewModel.cs" />
+    <Compile Include="ViewModels\AsteroidFieldViewModel.cs" />
     <Compile Include="Views\Controls\TexturePickerEditorControl.xaml.cs">
       <DependentUpon>TexturePickerEditorControl.xaml</DependentUpon>
     </Compile>

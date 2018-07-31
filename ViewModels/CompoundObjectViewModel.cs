@@ -216,6 +216,14 @@ namespace LeapfrogEditor
 
             DeselectAllChildren();
             OnPropertyChanged("");
+
+            CompoundObjectViewModel p = Parent;
+
+            while (p != null)
+            {
+               p.OnPropertyChanged("BoundingBox");
+               p = p.Parent;
+            }
          }
       }
 
@@ -364,6 +372,7 @@ namespace LeapfrogEditor
             new CollectionContainer { Collection = new ObservableCollection<LfDynamicCircleViewModel>() },
             new CollectionContainer { Collection = new ObservableCollection<LfDynamicPolygonViewModel>() },
             new CollectionContainer { Collection = new ObservableCollection<LfDynamicBoxedSpritePolygonViewModel>() },
+            new CollectionContainer { Collection = new ObservableCollection<AsteroidFieldViewModel>() },
          };
 
          foreach (LfSpriteBox sb in co.SpriteBoxes)
@@ -461,6 +470,11 @@ namespace LeapfrogEditor
             shapes.Add(shapevm);
          }
 
+         foreach (AsteroidFieldRef asf in co.AsteroidFields)
+         {
+            AsteroidFieldViewModel shapevm = new AsteroidFieldViewModel(MainVm, this, asf);
+            shapes.Add(shapevm);
+         }
 
          return shapes;
 
