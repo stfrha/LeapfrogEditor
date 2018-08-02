@@ -1381,6 +1381,8 @@ namespace LeapfrogEditor
                   wjvm = new PrismaticJointViewModel(this, SelectedCompoundObject, (PrismaticJoint)wj);
                }
 
+               wjvm.ConnectToShapes(SelectedCompoundObject.Shapes);
+
                Point parentObjectOrigo = new Point(SelectedCompoundObject.PosX, SelectedCompoundObject.PosY);
 
                // Shape A point
