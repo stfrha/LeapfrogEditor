@@ -372,7 +372,7 @@ namespace LeapfrogEditor
             new CollectionContainer { Collection = new ObservableCollection<LfDynamicCircleViewModel>() },
             new CollectionContainer { Collection = new ObservableCollection<LfDynamicPolygonViewModel>() },
             new CollectionContainer { Collection = new ObservableCollection<LfDynamicBoxedSpritePolygonViewModel>() },
-            new CollectionContainer { Collection = new ObservableCollection<AsteroidFieldViewModel>() },
+            new CollectionContainer { Collection = new ObservableCollection<ObjectFactoryViewModel>() },
          };
 
          foreach (LfSpriteBox sb in co.SpriteBoxes)
@@ -470,9 +470,9 @@ namespace LeapfrogEditor
             shapes.Add(shapevm);
          }
 
-         foreach (AsteroidFieldRef asf in co.AsteroidFields)
+         foreach (ObjectFactoryRef asf in co.ObjectFactories)
          {
-            AsteroidFieldViewModel shapevm = new AsteroidFieldViewModel(MainVm, this, asf);
+            ObjectFactoryViewModel shapevm = new ObjectFactoryViewModel(MainVm, this, asf);
             shapes.Add(shapevm);
          }
 

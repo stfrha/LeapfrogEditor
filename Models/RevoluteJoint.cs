@@ -9,11 +9,11 @@ using System.Xml.Serialization;
 namespace LeapfrogEditor
 {
    [Serializable]
-   public class RevoluteJoint : WeldJoint
+   public class RevoluteJoint : MotorizedJoint
    {
-      // All is inherited in this class except XML element name and view
-
       #region Declarations
+
+      private double _maxMotorTorque;
 
       #endregion
 
@@ -21,12 +21,19 @@ namespace LeapfrogEditor
 
       public RevoluteJoint() : base()
       {
+         _maxMotorTorque = 0;
       }
 
       #endregion
 
       #region Properties
 
+      [XmlAttribute("maxMotorTorque")]
+      public double MaxMotorTorque
+      {
+         get { return _maxMotorTorque; }
+         set { _maxMotorTorque = value; }
+      }
 
       #endregion
 

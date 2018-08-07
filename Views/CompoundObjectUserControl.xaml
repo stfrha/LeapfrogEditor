@@ -1040,7 +1040,7 @@
             </Ellipse>
          </Canvas>
       </DataTemplate>
-      <DataTemplate DataType="{x:Type local:AsteroidFieldViewModel}">
+      <DataTemplate DataType="{x:Type local:ObjectFactoryViewModel}">
          <Canvas>
             <Rectangle
                Width="{Binding Width}"
@@ -1064,15 +1064,17 @@
             </Rectangle>
             <StackPanel               
                Canvas.Left="-50" Canvas.Top="-25">
-               <TextBox 
-                  Text="Asteroid Field" 
+               <TextBlock 
+                  IsHitTestVisible="False"
+                  Text="Object Factory" 
                   TextAlignment="Left"
-                  FontSize="25"
+                  FontSize="15"
                   />
-               <TextBox 
+               <TextBlock 
+                  IsHitTestVisible="False"
                   Text="{Binding Name}" 
                   TextAlignment="Left"
-                  FontSize="25"
+                  FontSize="15"
                   />
             </StackPanel>
             <!-- Below is the lines between the vertices of the polygon. The lines are

@@ -37,7 +37,7 @@ namespace LeapfrogEditor
 
       private ObservableCollection<PlanetActorRef> _planetActors = new ObservableCollection<PlanetActorRef>();
       private ObservableCollection<ClippedWindowRef> _clippedWindows = new ObservableCollection<ClippedWindowRef>();
-      private ObservableCollection<AsteroidFieldRef> _asteroidFields = new ObservableCollection<AsteroidFieldRef>();
+      private ObservableCollection<ObjectFactoryRef> _objectFactories = new ObservableCollection<ObjectFactoryRef>();
 
       private ObservableCollection<CompoundObjectRef> _childObjectRefs = new ObservableCollection<CompoundObjectRef>();
 
@@ -158,11 +158,11 @@ namespace LeapfrogEditor
          set { _planetActors = value; }
       }
 
-      [XmlElement("asteroidField")]
-      public ObservableCollection<AsteroidFieldRef> AsteroidFields
+      [XmlElement("objectFactory")]
+      public ObservableCollection<ObjectFactoryRef> ObjectFactories
       {
-         get { return _asteroidFields; }
-         set { _asteroidFields = value; }
+         get { return _objectFactories; }
+         set { _objectFactories = value; }
       }
 
       // At serialisation of a parent CompoundObject this collection

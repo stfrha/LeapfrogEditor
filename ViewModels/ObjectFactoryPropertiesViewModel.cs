@@ -10,11 +10,11 @@ using System.Windows.Media.Imaging;
 
 namespace LeapfrogEditor
 {
-   class AsteroidFieldPropertiesViewModel : LfShapeViewModel, IWidthHeightInterface, IBoxPointsInterface
+   class ObjectFactoryPropertiesViewModel : LfShapeViewModel, IWidthHeightInterface, IBoxPointsInterface
    {
       #region Declarations
 
-      private new AsteroidFieldProperties ModelObject;
+      private new ObjectFactoryProperties ModelObject;
 
       private ObservableCollection<LfPointViewModel> _points = new ObservableCollection<LfPointViewModel>();
 
@@ -22,7 +22,7 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public AsteroidFieldPropertiesViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, AsteroidFieldProperties modelObject) :
+      public ObjectFactoryPropertiesViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, ObjectFactoryProperties modelObject) :
          base(mainVm, parent)
       {
          ModelObject = modelObject;
@@ -33,9 +33,9 @@ namespace LeapfrogEditor
 
       #region Properties
 
-      public AsteroidFieldProperties LocalModelObject
+      public ObjectFactoryProperties LocalModelObject
       {
-         get { return (AsteroidFieldProperties)ModelObject; }
+         get { return (ObjectFactoryProperties)ModelObject; }
       }
 
       public double Width

@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 namespace LeapfrogEditor
 {
    [Serializable]
-   public class AsteroidFieldProperties
+   public class ObjectFactoryProperties
    {
       #region Declarations
 
@@ -25,7 +25,7 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public AsteroidFieldProperties()
+      public ObjectFactoryProperties()
       {
          _posX = 0;
          _posY = 0;

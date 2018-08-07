@@ -50,15 +50,16 @@ namespace LeapfrogEditor
 
 
 
-      public LfShapeViewModel EditableShape
+
+      public ObservableCollection<WeldJointViewModel> EditableJoints
       {
-         get { return (LfShapeViewModel)GetValue(EditableShapeProperty); }
-         set { SetValue(EditableShapeProperty, value); }
+         get { return (ObservableCollection<WeldJointViewModel>)GetValue(EditableJointsProperty); }
+         set { SetValue(EditableJointsProperty, value); }
       }
 
-      // Using a DependencyProperty as the backing store for EditableShape.  This enables animation, styling, binding, etc...
-      public static readonly DependencyProperty EditableShapeProperty =
-          DependencyProperty.Register("EditableShape", typeof(LfShapeViewModel), typeof(PropertiesEditor), new PropertyMetadata(default(LfShapeViewModel)));
+      // Using a DependencyProperty as the backing store for EditableJoints.  This enables animation, styling, binding, etc...
+      public static readonly DependencyProperty EditableJointsProperty =
+          DependencyProperty.Register("EditableJoints", typeof(ObservableCollection<WeldJointViewModel>), typeof(PropertiesEditor), new PropertyMetadata(default(ObservableCollection<WeldJointViewModel>)));
 
    }
 }

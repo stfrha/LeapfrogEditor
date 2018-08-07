@@ -155,7 +155,13 @@ namespace LeapfrogEditor
 
          foreach (LfDragablePointViewModel dpvm in PointVms)
          {
-            polyVertices[i++] = new GeometryUtility.CPoint2D(dpvm.PosX, dpvm.PosY, dpvm.Id);
+            // Before triangles are generated we must reorder the identities of the 
+            // vertices to make them consequtive
+            dpvm.Id = (uint)(i + 1);
+
+            polyVertices[i] = new GeometryUtility.CPoint2D(dpvm.PosX, dpvm.PosY, dpvm.Id);
+
+            i++;
          }
 
          PolygonCuttingEar.CPolygonShape poly = new PolygonCuttingEar.CPolygonShape(polyVertices);

@@ -54,21 +54,26 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Models\AsteroidFieldRef.cs" />
-    <Compile Include="Models\AsteroidFieldProperties.cs" />
+    <Compile Include="Models\ObjectFactoryRef.cs" />
+    <Compile Include="Models\ObjectFactoryProperties.cs" />
     <Compile Include="Models\CollisionEntity.cs" />
     <Compile Include="Models\LandingSite.cs" />
     <Compile Include="Models\ClippedWindowProperties.cs" />
     <Compile Include="Models\PlanetActorProperties.cs" />
     <Compile Include="Models\ClippedWindowRef.cs" />
     <Compile Include="Models\PlanetActorRef.cs" />
+    <Compile Include="Models\RevoluteJoint.cs" />
     <Compile Include="Models\TStateProperties.cs" />
     <Compile Include="Models\ZLevelItem.cs" />
     <Compile Include="Models\CollisionEntities.cs" />
     <Compile Include="Models\ZLevels.cs" />
     <Compile Include="ValueConverters\BitValueConverter.cs" />
-    <Compile Include="ViewModels\AsteroidFieldPropertiesViewModel.cs" />
-    <Compile Include="ViewModels\AsteroidFieldViewModel.cs" />
+    <Compile Include="ViewModels\ObjectFactoryPropertiesViewModel.cs" />
+    <Compile Include="ViewModels\ObjectFactoryViewModel.cs" />
+    <Compile Include="ViewModels\MotorizedJointViewModel.cs" />
+    <Compile Include="Views\Controls\BoolEditorControl.xaml.cs">
+      <DependentUpon>BoolEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\TexturePickerEditorControl.xaml.cs">
       <DependentUpon>TexturePickerEditorControl.xaml</DependentUpon>
     </Compile>
@@ -114,7 +119,7 @@
     <Compile Include="Models\LfPolygon.cs" />
     <Compile Include="Models\LfDynamicBox.cs" />
     <Compile Include="Models\PrismaticJoint.cs" />
-    <Compile Include="Models\RevoluteJoint.cs" />
+    <Compile Include="Models\MotorizedJoint.cs" />
     <Compile Include="Models\WeldJoint.cs" />
     <Compile Include="Models\LfSpriteBox.cs" />
     <Compile Include="Models\LfStaticCircle.cs" />
@@ -173,6 +178,10 @@
       <DependentUpon>CompoundObjectUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TriangleShape.cs" />
+    <Page Include="Views\Controls\BoolEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\Controls\TexturePickerEditorControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

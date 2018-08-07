@@ -245,11 +245,11 @@
                   </Border>
                </DockPanel>
             </DataTemplate>
-            <DataTemplate DataType="{x:Type local:AsteroidFieldViewModel}">
+            <DataTemplate DataType="{x:Type local:ObjectFactoryViewModel}">
                <DockPanel Margin="2">
                   <Border CornerRadius="5" BorderBrush="DarkGray" BorderThickness="1">
                      <StackPanel Margin="2">
-                        <local:HeadlineControl Headline="Asteroid Field" />
+                        <local:HeadlineControl Headline="Object Factory" />
                         <local:StringEditorControl Headline="Name" MyValue="{Binding Name, Mode=TwoWay}" />
                         <local:CoStateEditorControl Headline="States" />
                         <local:DoubleEditorControl Headline="PosX" MyValue="{Binding PosX, Mode=TwoWay}" />
@@ -259,6 +259,56 @@
                         <local:IntEditorControl Headline="Initally Spawned" MyValue="{Binding SpawnInitial, Mode=TwoWay}" />
                         <local:DoubleEditorControl Headline="Intensity" MyValue="{Binding Intensity, Mode=TwoWay}" />
                         <local:IntEditorControl Headline="Life Time" MyValue="{Binding LifeTime, Mode=TwoWay}" />
+                     </StackPanel>
+                  </Border>
+               </DockPanel>
+            </DataTemplate>
+         </ItemsControl.Resources>
+         <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+               <StackPanel />
+            </ItemsPanelTemplate>
+         </ItemsControl.ItemsPanel>
+      </ItemsControl>
+      <ItemsControl 
+         ItemsSource="{Binding EditableJoints, ElementName=root}"
+         Margin="2"
+         >
+         <ItemsControl.Resources>
+            <DataTemplate DataType="{x:Type local:WeldJointViewModel}">
+               <DockPanel Margin="2">
+                  <Border CornerRadius="5" BorderBrush="DarkGray" BorderThickness="1">
+                     <StackPanel Margin="2">
+                        <local:HeadlineControl Headline="Weld Joint" />
+                        <local:StringEditorControl Headline="Name" MyValue="{Binding Name, Mode=TwoWay}" />
+                     </StackPanel>
+                  </Border>
+               </DockPanel>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type local:RevoluteJointViewModel}">
+               <DockPanel Margin="2">
+                  <Border CornerRadius="5" BorderBrush="DarkGray" BorderThickness="1">
+                     <StackPanel Margin="2">
+                        <local:HeadlineControl Headline="Revolute Joint" />
+                        <local:StringEditorControl Headline="Name" MyValue="{Binding Name, Mode=TwoWay}" />
+                        <local:BoolEditorControl Headline="Lock Joint" MyValue="{Binding LockJoint, Mode=TwoWay}" />
+                        <local:BoolEditorControl Headline="Use Motor" MyValue="{Binding UseMotor, Mode=TwoWay}" />
+                        <local:DoubleEditorControl Headline="Motor Speed" MyValue="{Binding MotorSpeed, Mode=TwoWay}" />
+                        <local:DoubleEditorControl Headline="Max Torque" MyValue="{Binding MaxMotorTorque, Mode=TwoWay}" />
+                     </StackPanel>
+                  </Border>
+               </DockPanel>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type local:PrismaticJointViewModel}">
+               <DockPanel Margin="2">
+                  <Border CornerRadius="5" BorderBrush="DarkGray" BorderThickness="1">
+                     <StackPanel Margin="2">
+                        <local:HeadlineControl Headline="Prismatic Joint" />
+                        <local:StringEditorControl Headline="Name" MyValue="{Binding Name, Mode=TwoWay}" />
+                        <local:BoolEditorControl Headline="Lock Joint" MyValue="{Binding LockJoint, Mode=TwoWay}" />
+                        <local:BoolEditorControl Headline="Use Motor" MyValue="{Binding UseMotor, Mode=TwoWay}" />
+                        <local:DoubleEditorControl Headline="Motor Speed" MyValue="{Binding MotorSpeed, Mode=TwoWay}" />
+                        <local:DoubleEditorControl Headline="Max Force" MyValue="{Binding MaxMotorForce, Mode=TwoWay}" />
                      </StackPanel>
                   </Border>
                </DockPanel>

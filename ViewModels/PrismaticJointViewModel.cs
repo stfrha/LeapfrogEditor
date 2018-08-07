@@ -9,7 +9,7 @@ using System.Windows.Media;
 
 namespace LeapfrogEditor
 {
-   class PrismaticJointViewModel : WeldJointViewModel, IMainVmInterface
+   class PrismaticJointViewModel : MotorizedJointViewModel, IMainVmInterface
    {
       #region Declarations
 
@@ -264,7 +264,22 @@ namespace LeapfrogEditor
          }
       }
 
+      public double MaxMotorForce
+      {
+         get
+         {
+            if (_modelObject == null) return 0;
 
+            return _modelObject.MaxMotorForce;
+         }
+         set
+         {
+            if (_modelObject == null) return;
+
+            _modelObject.MaxMotorForce = value;
+            OnPropertyChanged("MaxMotorForce");
+         }
+      }
 
       #endregion
 

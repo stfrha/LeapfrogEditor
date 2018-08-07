@@ -34,7 +34,7 @@ namespace LeapfrogEditor
       revoluteJoint,
       prismaticJoint,
       addPoint,
-      asteroidField
+      objectFactory
    }
 
    public enum MouseEventObjectType
@@ -190,6 +190,12 @@ namespace LeapfrogEditor
       {
          get { return _selectedShapes; }
          set { _selectedShapes = value; }
+      }
+
+      public ObservableCollection<WeldJointViewModel> SelectedJoints
+      {
+         get { return _selectedJoints; }
+         set { _selectedJoints = value; }
       }
 
       public ObservableCollection<LfDragablePointViewModel> SelectedPoints
@@ -1410,12 +1416,24 @@ namespace LeapfrogEditor
                wjvm.BAnchorY = rotatedBClickPoint.Y;
 
                SelectedCompoundObject.Joints.Add(wjvm);
-               SelectedCompoundObject.ModelObject.WeldJoints.Add(wj);
 
+               if (_LeftClickState == LeftClickState.weldJoint)
+               {
+                  SelectedCompoundObject.ModelObject.WeldJoints.Add(wj);
+               }
+               else if (_LeftClickState == LeftClickState.revoluteJoint)
+               {
+                  SelectedCompoundObject.ModelObject.RevoluteJoints.Add((RevoluteJoint)wj);
+               }
+               else
+               {
+                  SelectedCompoundObject.ModelObject.PrismaticJoints.Add((PrismaticJoint)wj);
+               }
+               
                _LeftClickState = LeftClickState.none;
 
             }
-            else if (_LeftClickState == LeftClickState.asteroidField)
+            else if (_LeftClickState == LeftClickState.objectFactory)
             {
                // The first point of this polygon will be the PosX and PosY of the 
                // new shape, and thus, the first polygon vertex should be at 0,0.
@@ -1423,21 +1441,21 @@ namespace LeapfrogEditor
                Point localClickPoint = new Point();
                localClickPoint = (Point)(clickPoint - parentOrigo);
 
-               AsteroidFieldRef afr = new AsteroidFieldRef();
+               ObjectFactoryRef afr = new ObjectFactoryRef();
 
-               TStateProperties<AsteroidFieldProperties> sp = new TStateProperties<AsteroidFieldProperties>();
+               TStateProperties<ObjectFactoryProperties> sp = new TStateProperties<ObjectFactoryProperties>();
 
                afr.StateProperties.Add(sp);
 
-               AsteroidFieldProperties afp = new AsteroidFieldProperties();
+               ObjectFactoryProperties afp = new ObjectFactoryProperties();
                afp.PosX = localClickPoint.X;
                afp.PosY = localClickPoint.Y;
 
                sp.Properties = afp;
 
-               AsteroidFieldViewModel afvm = new AsteroidFieldViewModel(this, SelectedCompoundObject, afr);
+               ObjectFactoryViewModel afvm = new ObjectFactoryViewModel(this, SelectedCompoundObject, afr);
 
-               SelectedCompoundObject.ModelObject.AsteroidFields.Add(afr);
+               SelectedCompoundObject.ModelObject.ObjectFactories.Add(afr);
 
                SelectedCompoundObject.Shapes.Add(afvm);
 

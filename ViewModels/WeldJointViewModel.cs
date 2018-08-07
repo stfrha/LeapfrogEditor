@@ -10,7 +10,7 @@ using System.Windows.Media;
 
 namespace LeapfrogEditor
 {
-   class WeldJointViewModel : MicroMvvm.ViewModelBase, IMainVmInterface
+   public class WeldJointViewModel : MicroMvvm.ViewModelBase, IMainVmInterface
    {
       #region Declarations
 

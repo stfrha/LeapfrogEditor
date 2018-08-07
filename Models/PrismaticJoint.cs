@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 namespace LeapfrogEditor
 {
    [Serializable]
-   public class PrismaticJoint : WeldJoint
+   public class PrismaticJoint : MotorizedJoint
    {
       #region Declarations
 
@@ -18,6 +18,7 @@ namespace LeapfrogEditor
       private double _refAngle;
       private double _lowerLimit;
       private double _upperLimit;
+      private double _maxMotorForce;
 
       #endregion
 
@@ -69,6 +70,13 @@ namespace LeapfrogEditor
       {
          get { return _upperLimit; }
          set { _upperLimit = value; }
+      }
+
+      [XmlAttribute("maxMotorForce")]
+      public double MaxMotorForce
+      {
+         get { return _maxMotorForce; }
+         set { _maxMotorForce = value; }
       }
 
       #endregion

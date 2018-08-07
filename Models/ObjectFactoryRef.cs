@@ -9,18 +9,18 @@ using System.Xml.Serialization;
 namespace LeapfrogEditor
 {
    [Serializable]
-   public class AsteroidFieldRef
+   public class ObjectFactoryRef
    {
       #region Declarations
 
       private string _name;
-      private ObservableCollection<TStateProperties<AsteroidFieldProperties> > _stateProperties = new ObservableCollection<TStateProperties<AsteroidFieldProperties> >();
+      private ObservableCollection<TStateProperties<ObjectFactoryProperties> > _stateProperties = new ObservableCollection<TStateProperties<ObjectFactoryProperties> >();
 
       #endregion
 
       #region Constructor
 
-      public AsteroidFieldRef()
+      public ObjectFactoryRef()
       {
 
       }
@@ -37,7 +37,7 @@ namespace LeapfrogEditor
       }
 
       [XmlElement("stateProperties")]
-      public ObservableCollection<TStateProperties<AsteroidFieldProperties> > StateProperties
+      public ObservableCollection<TStateProperties<ObjectFactoryProperties> > StateProperties
       {
          get { return _stateProperties; }
          set { _stateProperties = value; }

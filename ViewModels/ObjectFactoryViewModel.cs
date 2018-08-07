@@ -10,16 +10,16 @@ using System.Windows.Media.Imaging;
 
 namespace LeapfrogEditor
 {
-   class AsteroidFieldViewModel : LfShapeViewModel, IWidthHeightInterface, IBoxPointsInterface
+   class ObjectFactoryViewModel : LfShapeViewModel, IWidthHeightInterface, IBoxPointsInterface
    {
       #region Declarations
 
       private int _selectedStateIndex = 0;
 
       // Children collection is two dimensional to accomondate for all State properties
-      private ObservableCollection<ObservableCollection<AsteroidFieldProperties>> _childObjects = new ObservableCollection<ObservableCollection<AsteroidFieldProperties>>();
+      private ObservableCollection<ObservableCollection<ObjectFactoryProperties>> _childObjects = new ObservableCollection<ObservableCollection<ObjectFactoryProperties>>();
 
-      private new AsteroidFieldRef ModelObject;
+      private new ObjectFactoryRef ModelObject;
 
       private ObservableCollection<LfPointViewModel> _points = new ObservableCollection<LfPointViewModel>();
 
@@ -28,7 +28,7 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public AsteroidFieldViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, AsteroidFieldRef modelObject) :
+      public ObjectFactoryViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, ObjectFactoryRef modelObject) :
          base(mainVm, parent)
       {
          ModelObject = modelObject;
@@ -39,9 +39,9 @@ namespace LeapfrogEditor
 
       #region Properties
 
-      public AsteroidFieldRef LocalModelObject
+      public ObjectFactoryRef LocalModelObject
       {
-         get { return (AsteroidFieldRef)ModelObject; }
+         get { return (ObjectFactoryRef)ModelObject; }
       }
 
       public override string Name
@@ -320,7 +320,7 @@ namespace LeapfrogEditor
          {
             ObservableCollection<string> s = new ObservableCollection<string>();
 
-            foreach (TStateProperties<AsteroidFieldProperties> sp in LocalModelObject.StateProperties)
+            foreach (TStateProperties<ObjectFactoryProperties> sp in LocalModelObject.StateProperties)
             {
                s.Add(sp.State);
             }

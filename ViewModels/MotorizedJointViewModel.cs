@@ -9,17 +9,17 @@ using System.Windows.Media;
 
 namespace LeapfrogEditor
 {
-   class RevoluteJointViewModel : MotorizedJointViewModel, IMainVmInterface
+   class MotorizedJointViewModel : WeldJointViewModel, IMainVmInterface
    {
       #region Declarations
 
-      private RevoluteJoint _modelObject;
+      private MotorizedJoint _modelObject;
 
       #endregion
 
       #region Constructors
 
-      public RevoluteJointViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, RevoluteJoint modelObject) 
+      public MotorizedJointViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, MotorizedJoint modelObject) 
          : base(mainVm, parent, modelObject)
       {
          MainVm = mainVm;
@@ -43,7 +43,7 @@ namespace LeapfrogEditor
 
       #region Properties
 
-      public new RevoluteJoint ModelObject
+      public new MotorizedJoint ModelObject
       {
          get
          {
@@ -57,24 +57,56 @@ namespace LeapfrogEditor
          }
       }
 
-      public double MaxMotorTorque
+      public bool LockJoint
       {
          get
          {
-            if (_modelObject == null) return 0;
+            if (_modelObject == null) return false;
 
-            return _modelObject.MaxMotorTorque;
+            return _modelObject.LockJoint;
          }
          set
          {
             if (_modelObject == null) return;
 
-            _modelObject.MaxMotorTorque = value;
-            OnPropertyChanged("MaxMotorTorque");
+            _modelObject.LockJoint = value;
+            OnPropertyChanged("LockJoint");
          }
       }
 
+      public bool UseMotor
+      {
+         get
+         {
+            if (_modelObject == null) return false;
 
+            return _modelObject.UseMotor;
+         }
+         set
+         {
+            if (_modelObject == null) return;
+
+            _modelObject.UseMotor = value;
+            OnPropertyChanged("UseMotor");
+         }
+      }
+
+      public double MotorSpeed
+      {
+         get
+         {
+            if (_modelObject == null) return 0;
+
+            return _modelObject.MotorSpeed;
+         }
+         set
+         {
+            if (_modelObject == null) return;
+
+            _modelObject.MotorSpeed = value;
+            OnPropertyChanged("MotorSpeed");
+         }
+      }
 
       #endregion
 
