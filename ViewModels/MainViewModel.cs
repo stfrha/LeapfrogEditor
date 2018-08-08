@@ -1169,6 +1169,13 @@ namespace LeapfrogEditor
 
       public bool BackgroundMouseUp(Point clickPoint, MouseButton button, bool shift, bool ctrl, bool alt)
       {
+         // Shift click because of CenteredCanvas
+         // How to get size of thGrid?
+         double h = ((MainWindow)System.Windows.Application.Current.MainWindow).theGrid.Height;
+         double w = ((MainWindow)System.Windows.Application.Current.MainWindow).theGrid.Width;
+
+         clickPoint.Offset(-w / 2, -h / 2);
+
          if (MyCpVm == null) return false;
 
          if (button == MouseButton.Left)

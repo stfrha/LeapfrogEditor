@@ -67,6 +67,7 @@
     <Compile Include="Models\ZLevelItem.cs" />
     <Compile Include="Models\CollisionEntities.cs" />
     <Compile Include="Models\ZLevels.cs" />
+    <Compile Include="Utilities\CenteredCanvas.cs" />
     <Compile Include="ValueConverters\BitValueConverter.cs" />
     <Compile Include="ViewModels\ObjectFactoryPropertiesViewModel.cs" />
     <Compile Include="ViewModels\ObjectFactoryViewModel.cs" />

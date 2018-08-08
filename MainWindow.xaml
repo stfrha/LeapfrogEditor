@@ -90,6 +90,7 @@
             CanContentScroll="True"
             VerticalScrollBarVisibility="Visible"
             HorizontalScrollBarVisibility="Visible"
+            
             >
 
                <!--
@@ -109,26 +110,41 @@
 				-->
                   <Grid
                     x:Name="theGrid"
-                    Width="2000"
-                    Height="2000"
+                    Width="4000"
+                    Height="4000"
 					>
                      <!--
             		This Canvas is the main part of the content that is displayed.
 					-->
-                     <Canvas
-						   x:Name="content"
-						   Background="White"
-					      MouseUp="Canvas_MouseUp"
-                     MouseDown="Canvas_MouseDown"
-                     MouseWheel="MouseWheel_Rotate"
-
-                  >
+                     <local:CenteredCanvas
+						      x:Name="content"
+						      Background="White"
+					         MouseUp="Canvas_MouseUp"
+                        MouseDown="Canvas_MouseDown"
+                        MouseWheel="MouseWheel_Rotate"
+                     >
+                        <Line 
+                           Stroke="Pink"
+                           StrokeThickness="1"
+                           X1="-2000"
+                           Y1="0"
+                           X2="2000"
+                           Y2="0"
+                           />
+                        <Line 
+                           Stroke="Pink"
+                           StrokeThickness="1"
+                           X1="0"
+                           Y1="-2000"
+                           X2="0"
+                           Y2="2000"
+                           />
                         <ContentControl 
-                        DataContext="{Binding MyCpVm}"
-                        Canvas.Left="{Binding PosX}"
-                        Canvas.Top="{Binding PosY}"
-                        Content="{Binding}" />
-                     </Canvas>
+                           DataContext="{Binding MyCpVm}"
+                           Canvas.Left="{Binding PosX}"
+                           Canvas.Top="{Binding PosY}"
+                           Content="{Binding}" />
+                     </local:CenteredCanvas>
 
                      <!--
 					This Canvas and Border are used as a very simple way to render a drag rectangle that the user
