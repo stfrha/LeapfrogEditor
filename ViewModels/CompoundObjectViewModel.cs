@@ -350,6 +350,12 @@ namespace LeapfrogEditor
          set
          {
             _isSelected = value;
+
+            if (!_isSelected)
+            {
+               DeselectAllChildren();
+            }
+
             OnPropertyChanged("IsSelected");
          }
       }
@@ -659,7 +665,7 @@ namespace LeapfrogEditor
          {
             foreach (CompoundObjectViewModel child in ChildObjects)
             {
-               child.DeselectAllChildren();
+               // child.DeselectAllChildren();
                child.IsSelected = false;
             }
          }

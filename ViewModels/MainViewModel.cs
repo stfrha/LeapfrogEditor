@@ -1183,7 +1183,7 @@ namespace LeapfrogEditor
             //Debug.WriteLine("Clicked on background");
             if (_LeftClickState == LeftClickState.none)
             {
-               MyCpVm.DeselectAllChildren();
+               ////MyCpVm.DeselectAllChildren(); // Is now done in setter of IsSelected
                MyCpVm.IsSelected = false;
                SelectedCompoundObject = null;
                _selectedShapes.Clear();
@@ -1238,12 +1238,13 @@ namespace LeapfrogEditor
 
                if ((newShape != null) && (newShapeVm != null))
                {
-                  newShape.PosX = localClickPoint.X;
-                  newShape.PosY = localClickPoint.Y;
-
                   SelectedCompoundObject.Shapes.Add(newShapeVm);
 
                   _selectedShapes.Add(newShapeVm);
+
+                  newShapeVm.PosX = localClickPoint.X;
+                  newShapeVm.PosY = localClickPoint.Y;
+
                   newShapeVm.IsSelected = true;
 
                   foreach (LfDragablePointViewModel selpoint in _selectedPoints)
@@ -1379,6 +1380,14 @@ namespace LeapfrogEditor
                wj.AName = _selectedShapes[0].Name;
                wj.BName = _selectedShapes[1].Name;
 
+               if (wj.AName == wj.BName)
+               {
+                  MessageBox.Show("The selected shapes has the same name and thus a unambigous joint can not be created. Rename at least one of the shapes.", "Error Creating Joint", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                  _LeftClickState = LeftClickState.none;
+                  return true;
+               }
+
                WeldJointViewModel wjvm = null;
 
                if (_LeftClickState == LeftClickState.weldJoint)
@@ -1405,7 +1414,8 @@ namespace LeapfrogEditor
                localAClickPoint = (Point)(clickPoint - shapeAOrigo);
 
                // Rotate point to shape rotation
-               Point rotatedAClickPoint = wjvm.AShapeObject.RotatedPointFromLocal(localAClickPoint);
+//               Point rotatedAClickPoint = wjvm.AShapeObject.RotatedPointFromLocal(localAClickPoint);
+               Point rotatedAClickPoint = wjvm.AShapeObject.LocalPointFromRotated(localAClickPoint);
 
                wjvm.AAnchorX = rotatedAClickPoint.X;
                wjvm.AAnchorY = rotatedAClickPoint.Y;
@@ -1417,7 +1427,8 @@ namespace LeapfrogEditor
                localBClickPoint = (Point)(clickPoint - shapeBOrigo);
 
                // Rotate point to shape rotation
-               Point rotatedBClickPoint = wjvm.BShapeObject.RotatedPointFromLocal(localBClickPoint);
+//               Point rotatedBClickPoint = wjvm.BShapeObject.RotatedPointFromLocal(localBClickPoint);
+               Point rotatedBClickPoint = wjvm.BShapeObject.LocalPointFromRotated(localBClickPoint);
 
                wjvm.BAnchorX = rotatedBClickPoint.X;
                wjvm.BAnchorY = rotatedBClickPoint.Y;

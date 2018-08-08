@@ -270,6 +270,13 @@ namespace LeapfrogEditor
          set
          {
             _isSelected = value;
+
+            if (!_isSelected)
+            {
+               DeselectAllChildren();
+            }
+
+
             OnPropertyChanged("IsSelected");
          }
       }
@@ -277,6 +284,11 @@ namespace LeapfrogEditor
       #endregion
 
       #region protected Methods
+
+      protected virtual void DeselectAllChildren()
+      {
+         // Only polygon shapes has children (so far), se we do nothing here
+      }
 
       protected virtual Rect GetBoundingBox()
       {

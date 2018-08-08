@@ -669,7 +669,7 @@
                         <Rectangle
                            Width="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomHandleSizeValueConverter}}"
                            Height="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomHandleSizeValueConverter}}"
-							      Fill="Gray"
+                           Stroke="Black"
                            StrokeThickness="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomThicknessValueConverter}}"
                            MouseDown="DragablePoint_MouseDown"
 					            MouseUp="DragablePoint_MouseUp"
@@ -678,10 +678,10 @@
                            >
                            <Rectangle.Style>
                               <Style TargetType="{x:Type Rectangle}" >
-                                 <Setter Property="Stroke" Value="Gray"/>
+                                 <Setter Property="Fill" Value="White"/>
                                  <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                       <Setter Property="Stroke" Value="Black" />
+                                       <Setter Property="Fill" Value="Gray" />
                                     </DataTrigger>
                                  </Style.Triggers>
                               </Style>
@@ -822,7 +822,7 @@
                         <Rectangle
                            Width="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomHandleSizeValueConverter}}"
                            Height="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomHandleSizeValueConverter}}"
-							      Fill="Gray"
+							      Stroke="Black"
                            StrokeThickness="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomThicknessValueConverter}}"
                            MouseDown="DragablePoint_MouseDown"
 					            MouseUp="DragablePoint_MouseUp"
@@ -831,10 +831,10 @@
                            >
                            <Rectangle.Style>
                               <Style TargetType="{x:Type Rectangle}" >
-                                 <Setter Property="Stroke" Value="Gray"/>
+                                 <Setter Property="Fill" Value="White"/>
                                  <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                       <Setter Property="Stroke" Value="Black" />
+                                       <Setter Property="Fill" Value="Gray" />
                                     </DataTrigger>
                                  </Style.Triggers>
                               </Style>

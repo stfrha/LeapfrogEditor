@@ -67,6 +67,16 @@ namespace LeapfrogEditor
 
       #endregion
 
+      #region protected Methods
+
+      protected override void DeselectAllChildren()
+      {
+         DeselectAllPoints();
+      }
+
+      #endregion
+
+
       #region public Methods
 
       public override void InvalidateAll()
