@@ -328,9 +328,9 @@ namespace LeapfrogEditor
 
       public void RemoveJoint(object shape)
       {
-         if (shape is WeldJoint)
+         if (shape is Rope)
          {
-            WeldJoints.Remove((WeldJoint)shape);
+            Ropes.Remove((Rope)shape);
          }
          else if (shape is RevoluteJoint)
          {
@@ -340,9 +340,9 @@ namespace LeapfrogEditor
          {
             PrismaticJoints.Remove((PrismaticJoint)shape);
          }
-         else if (shape is Rope)
+         else if (shape is WeldJoint)
          {
-            Ropes.Remove((Rope)shape);
+            WeldJoints.Remove((WeldJoint)shape);
          }
       }
 
