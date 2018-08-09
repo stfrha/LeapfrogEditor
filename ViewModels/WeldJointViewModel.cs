@@ -114,6 +114,7 @@ namespace LeapfrogEditor
 
             _modelObject.BName = value;
             OnPropertyChanged("BName");
+            OnPropertyChanged("ShapeBExists");
          }
       }
 

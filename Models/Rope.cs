@@ -9,15 +9,16 @@ using System.Xml.Serialization;
 namespace LeapfrogEditor
 {
    [Serializable]
-   public class LfShape
+   public class Rope : WeldJoint
    {
+      // All is inherited in this class except XML element name and view
+
       #region Declarations
 
-      private string _name;
       private string _texture;
-      private double _posY;
-      private double _posX;
-      private double _angle;
+      private double _length;
+      private double _thickness;
+      private uint _noOfSegments;
       private uint _zLevel;
       private string _collisionEntity;
       private uint _collisionCategory;
@@ -27,15 +28,12 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public LfShape()
+      public Rope() : base()
       {
-         _name = "noName";
          _texture = "default";
-         _posX = 0;
-         _posY = 0;
-         _angle = 0;
-         //_anchorX = 0;
-         //_anchorY = 0;
+         _length = 10;
+         _thickness = 0.5;
+         _noOfSegments = 5;
          _zLevel = 0;
          _collisionEntity = "notApplicable";
          _collisionCategory = 1;
@@ -46,13 +44,6 @@ namespace LeapfrogEditor
 
       #region Properties
 
-      [XmlAttribute("name")]
-      public string Name
-      {
-         get { return _name; }
-         set { _name = value; }
-      }
-
       [XmlAttribute("texture")]
       public string Texture
       {
@@ -60,25 +51,25 @@ namespace LeapfrogEditor
          set { _texture = value; }
       }
 
-      [XmlAttribute("posX")]
-      public double PosX
+      [XmlAttribute("length")]
+      public double Length
       {
-         get { return _posX; }
-         set { _posX = value; }
+         get { return _length; }
+         set { _length = value; }
       }
 
-      [XmlAttribute("posY")]
-      public double PosY
+      [XmlAttribute("thickness")]
+      public double Thickness
       {
-         get { return _posY; }
-         set { _posY = value; }
+         get { return _thickness; }
+         set { _thickness = value; }
       }
 
-      [XmlAttribute("angle")]
-      public double Angle
+      [XmlAttribute("noOfSegments")]
+      public uint NoOfSegments
       {
-         get { return _angle; }
-         set { _angle = value; }
+         get { return _noOfSegments; }
+         set { _noOfSegments = value; }
       }
 
       [XmlAttribute("zLevel")]

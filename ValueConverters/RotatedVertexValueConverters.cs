@@ -333,4 +333,59 @@ namespace LeapfrogEditor
          return DependencyProperty.UnsetValue;
       }
    }
+
+   class ConditionalRotatedJointValueConverter : IMultiValueConverter
+   {
+      public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+      {
+         if (values.Count() == 7)
+         {
+            if ((values[0] is double) && (values[1] is double) && (values[2] != null) && (values[2] is LfShapeViewModel))
+            {
+               // In this case Shape B exists and is used. The conversion is done as in MultiRotatedJointValueConverter
+               Point pos = new Point((double)values[0], (double)values[1]);
+               LfShapeViewModel shape = (LfShapeViewModel)values[2];
+               Point rp = shape.RotatedPointFromLocal(pos);
+               rp.Offset(shape.PosX, shape.PosY);
+
+               if (parameter as string == "x")
+               {
+                  return rp.X;
+               }
+               else
+               {
+                  return rp.Y;
+               }
+            }
+            else if((values[3] is double) && (values[4] is double) && (values[5] is LfShapeViewModel) && (values[6] is double))
+            {
+               // In this case Shape B does not exists, the end point will be as For shape A but a distance Length below
+
+               Point pos = new Point((double)values[3], (double)values[4]);
+               LfShapeViewModel shape = (LfShapeViewModel)values[5];
+               double length = (double)values[6];
+               Point rp = shape.RotatedPointFromLocal(pos);
+               rp.Offset(shape.PosX, shape.PosY);
+
+               rp.Y += length; 
+
+               if (parameter as string == "x")
+               {
+                  return rp.X;
+               }
+               else
+               {
+                  return rp.Y;
+               }
+            }
+         }
+
+         return null;
+      }
+      public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+      {
+         throw new NotImplementedException();
+      }
+   }
+
 }

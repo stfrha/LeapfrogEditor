@@ -54,6 +54,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\Rope.cs" />
     <Compile Include="Models\ObjectFactoryRef.cs" />
     <Compile Include="Models\ObjectFactoryProperties.cs" />
     <Compile Include="Models\CollisionEntity.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Models\ZLevels.cs" />
     <Compile Include="Utilities\CenteredCanvas.cs" />
     <Compile Include="ValueConverters\BitValueConverter.cs" />
+    <Compile Include="ViewModels\RopeViewModel.cs" />
     <Compile Include="ViewModels\ObjectFactoryPropertiesViewModel.cs" />
     <Compile Include="ViewModels\ObjectFactoryViewModel.cs" />
     <Compile Include="ViewModels\MotorizedJointViewModel.cs" />

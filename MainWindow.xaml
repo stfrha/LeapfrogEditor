@@ -54,6 +54,7 @@
                <MenuItem Header="Prismatic Joint" Command="{Binding NewJoint}" CommandParameter="prismaticJoint"  />
                <Separator />
                <MenuItem Header="Object Factory" Command="{Binding NewShape}" CommandParameter="objectFactory"  />
+               <MenuItem Header="Rope" Command="{Binding NewJoint}" CommandParameter="rope"  />
             </MenuItem>
             <MenuItem Header="Import">
                <MenuItem Header="Compound Object" Command="{Binding ImportCompoundObject}" />

@@ -34,7 +34,8 @@ namespace LeapfrogEditor
       revoluteJoint,
       prismaticJoint,
       addPoint,
-      objectFactory
+      objectFactory,
+      rope
    }
 
    public enum MouseEventObjectType
@@ -645,7 +646,21 @@ namespace LeapfrogEditor
 
       bool CanNewJointExecute(Object parameter)
       {
-         return ((SelectedCompoundObject != null) && (_selectedShapes.Count == 2) && (parameter is string));
+         if (parameter is string)
+         {
+            string p = (string)parameter;
+
+            if (p == "rope")
+            {
+               return ((SelectedCompoundObject != null) && (_selectedShapes.Count > 0) && (_selectedShapes.Count < 3));
+            }
+            else
+            {
+               return ((SelectedCompoundObject != null) && (_selectedShapes.Count == 2));
+            }
+         }
+
+         return false;
       }
 
       public ICommand NewJoint
@@ -1420,7 +1435,7 @@ namespace LeapfrogEditor
                wjvm.AAnchorX = rotatedAClickPoint.X;
                wjvm.AAnchorY = rotatedAClickPoint.Y;
 
-               // Shape A point
+               // Shape B point
                Point shapeBOrigo = new Point(wjvm.BShapeObject.PosX, wjvm.BShapeObject.PosY);
                shapeBOrigo.Offset(parentObjectOrigo.X, parentObjectOrigo.Y);
                Point localBClickPoint = new Point();
@@ -1447,7 +1462,67 @@ namespace LeapfrogEditor
                {
                   SelectedCompoundObject.ModelObject.PrismaticJoints.Add((PrismaticJoint)wj);
                }
-               
+
+               _LeftClickState = LeftClickState.none;
+
+            }
+            else if (_LeftClickState == LeftClickState.rope)
+            {
+               Rope rp = new Rope();
+
+               rp.AName = _selectedShapes[0].Name;
+
+               if (_selectedShapes.Count == 2)
+               {
+                  rp.BName = _selectedShapes[1].Name;
+
+                  if (rp.AName == rp.BName)
+                  {
+                     MessageBox.Show("The selected shapes has the same name and thus a unambigous joint can not be created. Rename at least one of the shapes.", "Error Creating Joint", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                     _LeftClickState = LeftClickState.none;
+                     return true;
+                  }
+               }
+
+               // If there is no shape B, the rp.BName should be default "notDef"
+
+               RopeViewModel rpvm = new RopeViewModel(this, SelectedCompoundObject, rp);
+
+               rpvm.ConnectToShapes(SelectedCompoundObject.Shapes);
+
+               Point parentObjectOrigo = new Point(SelectedCompoundObject.PosX, SelectedCompoundObject.PosY);
+
+               // Shape A point
+               Point shapeAOrigo = new Point(rpvm.AShapeObject.PosX, rpvm.AShapeObject.PosY);
+               shapeAOrigo.Offset(parentObjectOrigo.X, parentObjectOrigo.Y);
+               Point localAClickPoint = new Point();
+               localAClickPoint = (Point)(clickPoint - shapeAOrigo);
+
+               // Rotate point to shape rotation
+               Point rotatedAClickPoint = rpvm.AShapeObject.LocalPointFromRotated(localAClickPoint);
+
+               rpvm.AAnchorX = rotatedAClickPoint.X;
+               rpvm.AAnchorY = rotatedAClickPoint.Y;
+
+               if (_selectedShapes.Count == 2)
+               {
+                  // Shape B point
+                  Point shapeBOrigo = new Point(rpvm.BShapeObject.PosX, rpvm.BShapeObject.PosY);
+                  shapeBOrigo.Offset(parentObjectOrigo.X, parentObjectOrigo.Y);
+                  Point localBClickPoint = new Point();
+                  localBClickPoint = (Point)(clickPoint - shapeBOrigo);
+
+                  // Rotate point to shape rotation
+                  Point rotatedBClickPoint = rpvm.BShapeObject.LocalPointFromRotated(localBClickPoint);
+
+                  rpvm.BAnchorX = rotatedBClickPoint.X;
+                  rpvm.BAnchorY = rotatedBClickPoint.Y;
+               }
+
+               SelectedCompoundObject.Joints.Add(rpvm);
+               SelectedCompoundObject.ModelObject.Ropes.Add(rp);
+
                _LeftClickState = LeftClickState.none;
 
             }

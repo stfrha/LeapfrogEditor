@@ -493,6 +493,7 @@ namespace LeapfrogEditor
             new CollectionContainer { Collection = new ObservableCollection<WeldJointViewModel>() },
             new CollectionContainer { Collection = new ObservableCollection<RevoluteJointViewModel>() },
             new CollectionContainer { Collection = new ObservableCollection<PrismaticJointViewModel>() },
+            new CollectionContainer { Collection = new ObservableCollection<RopeViewModel>() },
          };
 
          foreach (WeldJoint wj in co.WeldJoints)
@@ -511,6 +512,12 @@ namespace LeapfrogEditor
          {
             PrismaticJointViewModel pjvm = new PrismaticJointViewModel(MainVm, this, pj);
             joints.Add(pjvm);
+         }
+
+         foreach (Rope r in co.Ropes)
+         {
+            RopeViewModel rvm = new RopeViewModel(MainVm, this, r);
+            joints.Add(rvm);
          }
 
          return joints;
@@ -625,9 +632,18 @@ namespace LeapfrogEditor
             {
                if (o is WeldJointViewModel)
                {
-                  WeldJointViewModel joint = (WeldJointViewModel)o;
+                  if (o is RopeViewModel)
+                  {
+                     RopeViewModel joint = (RopeViewModel)o;
 
-                  joint.ConnectToShapes(sc);
+                     joint.ConnectToShapes(sc);
+                  }
+                  else
+                  {
+                     WeldJointViewModel joint = (WeldJointViewModel)o;
+
+                     joint.ConnectToShapes(sc);
+                  }
                }
             }
          }

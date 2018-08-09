@@ -35,6 +35,8 @@ namespace LeapfrogEditor
       private ObservableCollection<RevoluteJoint> _revoluteJoints = new ObservableCollection<RevoluteJoint>();
       private ObservableCollection<PrismaticJoint> _prismaticJoints = new ObservableCollection<PrismaticJoint>();
 
+      private ObservableCollection<Rope> _ropes= new ObservableCollection<Rope>();
+
       private ObservableCollection<PlanetActorRef> _planetActors = new ObservableCollection<PlanetActorRef>();
       private ObservableCollection<ClippedWindowRef> _clippedWindows = new ObservableCollection<ClippedWindowRef>();
       private ObservableCollection<ObjectFactoryRef> _objectFactories = new ObservableCollection<ObjectFactoryRef>();
@@ -149,6 +151,13 @@ namespace LeapfrogEditor
       {
          get { return _prismaticJoints; }
          set { _prismaticJoints = value; }
+      }
+
+      [XmlElement("rope")]
+      public ObservableCollection<Rope> Ropes
+      {
+         get { return _ropes; }
+         set { _ropes = value; }
       }
 
       [XmlElement("planetActor")]
@@ -330,6 +339,10 @@ namespace LeapfrogEditor
          else if (shape is PrismaticJoint)
          {
             PrismaticJoints.Remove((PrismaticJoint)shape);
+         }
+         else if (shape is Rope)
+         {
+            Ropes.Remove((Rope)shape);
          }
       }
 
