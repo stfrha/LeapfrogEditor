@@ -827,6 +827,22 @@
                                  Y="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomHandleTranslateValueConverter}}"
                               />
                            </Rectangle.RenderTransform>
+                           <Rectangle.ToolTip>
+                              <StackPanel>
+                                 <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="ID:" />
+                                    <TextBlock Text="{Binding Id}" />
+                                 </StackPanel>
+                                 <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Posx:" />
+                                    <TextBlock Text="{Binding PosX}" />
+                                 </StackPanel>
+                                 <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="PosY:" />
+                                    <TextBlock Text="{Binding PosY}" />
+                                 </StackPanel>
+                              </StackPanel>
+                           </Rectangle.ToolTip>
                         </Rectangle>
                      </Canvas>
                   </DataTemplate>
