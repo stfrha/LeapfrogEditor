@@ -38,18 +38,18 @@
          </Rectangle.RenderTransform>
       </Rectangle>
       <StackPanel               
-               Canvas.Left="-50" Canvas.Top="-25">
+               Canvas.Left="-5" Canvas.Top="-2.5">
          <TextBlock 
                   IsHitTestVisible="False"
                   Text="Object Factory" 
                   TextAlignment="Left"
-                  FontSize="15"
+                  FontSize="5"
                   />
          <TextBlock 
                   IsHitTestVisible="False"
                   Text="{Binding Name}" 
                   TextAlignment="Left"
-                  FontSize="15"
+                  FontSize="5"
                   />
       </StackPanel>
       <!-- Below is the lines between the vertices of the polygon. The lines are

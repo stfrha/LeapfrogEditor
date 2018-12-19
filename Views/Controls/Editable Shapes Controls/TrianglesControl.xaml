@@ -10,20 +10,16 @@
              d:DesignHeight="450" d:DesignWidth="800">
    <UserControl.Resources>
       <local:ZoomThicknessValueConverter x:Key="ZoomThicknessValueConverter" />
+      <local:MultiRotatedVertexValueConverter x:Key="MultiRotatedVertexValueConverter" />
       <local:PreviousMultiRotatedVertexValueConverter x:Key="PreviousMultiRotatedVertexValueConverter" />
       <local:PreviousMultiRotatedTriangleVertexValueConverter x:Key="PreviousMultiRotatedTriangleVertexValueConverter" />
    </UserControl.Resources>
    <Canvas>
       <Line
-                        StrokeThickness="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomThicknessValueConverter}}"
-                        Stroke="Red"
-                        MouseDown="ShapeBorder_MouseDown"
-			               MouseUp="ShapeBorder_MouseUp"
-			               MouseMove="ShapeBorder_MouseMove"
-                        Cursor="ScrollAll"
-                        KeyDown="LineCursorKeyDown"
-                        KeyUp="LineCursorKeyUp"
-                        >
+         StrokeThickness="{Binding ContentScale, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}, Converter={StaticResource ZoomThicknessValueConverter}}"
+         Stroke="Red"
+         Cursor="ScrollAll"
+         >
          <Line.X1>
             <MultiBinding Converter="{StaticResource MultiRotatedVertexValueConverter}" ConverterParameter="x">
                <Binding Path="PosX" />

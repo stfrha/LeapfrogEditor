@@ -72,28 +72,6 @@ namespace LeapfrogEditor
 
 
 
-      private void Shape_Rotate(object sender, MouseWheelEventArgs e)
-      {
-         if (sender is FrameworkElement)
-         {
-            FrameworkElement fwe = (FrameworkElement)sender;
-
-            if (fwe.DataContext is LfShapeViewModel)
-            {
-               LfShapeViewModel svm = (LfShapeViewModel)fwe.DataContext;
-
-               bool ctrl = ((Keyboard.Modifiers & ModifierKeys.Control) != 0);
-               bool shift = ((Keyboard.Modifiers & ModifierKeys.Shift) != 0);
-
-               if (ctrl)
-               {
-                  svm.RotateShape(e.Delta, shift);
-                  e.Handled = true;
-               }
-            }
-         }
-      }
-
       public void GeneralMouse<T>(bool down, MouseEventObjectType type, object sender, MouseButtonEventArgs e)
       {
          // We want access to the parent Canvas above the "content" Canvas. 
@@ -220,31 +198,6 @@ namespace LeapfrogEditor
          }
       }
 
-      private void Shape_MouseDown(object sender, MouseButtonEventArgs e)
-      {
-         GeneralMouse<LfShapeViewModel>(true, MouseEventObjectType.shape, sender, e);
-      }
-
-      private void Shape_MouseUp(object sender, MouseButtonEventArgs e)
-      {
-         GeneralMouse<LfShapeViewModel>(false, MouseEventObjectType.shape, sender, e);
-      }
-
-      private void PolygonBorder_MouseDown(object sender, MouseButtonEventArgs e)
-      {
-         GeneralMouse<LfDragablePointViewModel>(true, MouseEventObjectType.dragablePolygonBorder, sender, e);
-      }
-
-      private void PolygonBorder_MouseUp(object sender, MouseButtonEventArgs e)
-      {
-         GeneralMouse<LfDragablePointViewModel>(false, MouseEventObjectType.dragablePolygonBorder, sender, e);
-      }
-
-      private void PolygonBorder_MouseMove(object sender, MouseEventArgs e)
-      {
-         GeneralMouseMove<IPositionInterface>(MouseEventObjectType.dragablePolygonBorder, sender, e);
-      }
-
       private void ShapeBorder_MouseDown(object sender, MouseButtonEventArgs e)
       {
          GeneralMouse<LfPointViewModel>(true, MouseEventObjectType.dragableBorder, sender, e);
@@ -258,36 +211,6 @@ namespace LeapfrogEditor
       private void ShapeBorder_MouseMove(object sender, MouseEventArgs e)
       {
          GeneralMouseMove<IPositionInterface>(MouseEventObjectType.dragableBorder, sender, e);
-      }
-
-      private void EllipseBorder_MouseDown(object sender, MouseButtonEventArgs e)
-      {
-         GeneralMouse<LfStaticCircleViewModel>(true, MouseEventObjectType.dragableBorder, sender, e);
-      }
-
-      private void EllipseBorder_MouseUp(object sender, MouseButtonEventArgs e)
-      {
-         GeneralMouse<LfStaticCircleViewModel>(false, MouseEventObjectType.dragableBorder, sender, e);
-      }
-
-      private void EllipseBorder_MouseMove(object sender, MouseEventArgs e)
-      {
-         GeneralMouseMove<IPositionInterface>(MouseEventObjectType.dragableBorder, sender, e);
-      }
-
-      private void DragablePoint_MouseDown(object sender, MouseButtonEventArgs e)
-      {
-         GeneralMouse<LfDragablePointViewModel>(true, MouseEventObjectType.dragablePoint, sender, e);
-      }
-
-      private void DragablePoint_MouseUp(object sender, MouseButtonEventArgs e)
-      {
-         GeneralMouse<LfDragablePointViewModel>(false, MouseEventObjectType.dragablePoint, sender, e);
-      }
-
-      private void DragablePoint_MouseMove(object sender, MouseEventArgs e)
-      {
-         GeneralMouseMove<IPositionInterface>(MouseEventObjectType.dragablePoint, sender, e);
       }
 
       private void CompoundObject_MouseDown(object sender, MouseButtonEventArgs e)
@@ -305,89 +228,5 @@ namespace LeapfrogEditor
          GeneralMouseMove<IPositionInterface>(MouseEventObjectType.compoundObjectBoundaryBox, sender, e);
       }
 
-      private void AnchorA_MouseDown(object sender, MouseButtonEventArgs e)
-      {
-         GeneralMouse<WeldJointViewModel>(true, MouseEventObjectType.jointAnchorA, sender, e);
-      }
-
-      private void AnchorA_MouseUp(object sender, MouseButtonEventArgs e)
-      {
-         GeneralMouse<WeldJointViewModel>(false, MouseEventObjectType.jointAnchorA, sender, e);
-      }
-
-      private void AnchorA_MouseMove(object sender, MouseEventArgs e)
-      {
-         GeneralMouseMove<WeldJointViewModel>(MouseEventObjectType.jointAnchorA, sender, e);
-      }
-
-      private void AnchorB_MouseDown(object sender, MouseButtonEventArgs e)
-      {
-         GeneralMouse<WeldJointViewModel>(true, MouseEventObjectType.jointAnchorB, sender, e);
-      }
-
-      private void AnchorB_MouseUp(object sender, MouseButtonEventArgs e)
-      {
-         GeneralMouse<WeldJointViewModel>(false, MouseEventObjectType.jointAnchorB, sender, e);
-      }
-
-      private void AnchorB_MouseMove(object sender, MouseEventArgs e)
-      {
-         GeneralMouseMove<WeldJointViewModel>(MouseEventObjectType.jointAnchorB, sender, e);
-      }
-
-      private void UpperLimit_MouseDown(object sender, MouseButtonEventArgs e)
-      {
-         GeneralMouse<PrismaticJointViewModel>(true, MouseEventObjectType.prismJointUpperLimit, sender, e);
-      }
-
-      private void UpperLimit_MouseUp(object sender, MouseButtonEventArgs e)
-      {
-         GeneralMouse<PrismaticJointViewModel>(false, MouseEventObjectType.prismJointUpperLimit, sender, e);
-      }
-
-      private void UpperLimit_MouseMove(object sender, MouseEventArgs e)
-      {
-         GeneralMouseMove<PrismaticJointViewModel>(MouseEventObjectType.prismJointUpperLimit, sender, e);
-      }
-
-      private void LowerLimit_MouseDown(object sender, MouseButtonEventArgs e)
-      {
-         GeneralMouse<PrismaticJointViewModel>(true, MouseEventObjectType.prismJointLowerLimit, sender, e);
-      }
-
-      private void LowerLimit_MouseUp(object sender, MouseButtonEventArgs e)
-      {
-         GeneralMouse<PrismaticJointViewModel>(false, MouseEventObjectType.prismJointLowerLimit, sender, e);
-      }
-
-      private void LowerLimit_MouseMove(object sender, MouseEventArgs e)
-      {
-         GeneralMouseMove<PrismaticJointViewModel>(MouseEventObjectType.prismJointLowerLimit, sender, e);
-      }
-
-      private void LineCursorKeyDown(object sender, KeyEventArgs e)
-      {
-         if (sender is FrameworkElement)
-         {
-            FrameworkElement el = (FrameworkElement)sender;
-
-            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
-               el.Cursor = Cursors.Pen;
-
-            e.Handled = true;
-         }
-      }
-
-      private void LineCursorKeyUp(object sender, KeyEventArgs e)
-      {
-         if (sender is FrameworkElement)
-         {
-            FrameworkElement el = (FrameworkElement)sender;
-
-            el.Cursor = null;
-
-            e.Handled = true;
-         }
-      }
    }
 }

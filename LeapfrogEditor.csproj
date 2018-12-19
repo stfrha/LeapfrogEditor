@@ -84,6 +84,9 @@
     <Compile Include="Views\Controls\Editable Shapes Controls\LabeledBoxControl.xaml.cs">
       <DependentUpon>LabeledBoxControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\Editable Shapes Controls\PolygonBorderControl.xaml.cs">
+      <DependentUpon>PolygonBorderControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\Editable Shapes Controls\PrismaticJointControl.xaml.cs">
       <DependentUpon>PrismaticJointControl.xaml</DependentUpon>
     </Compile>
@@ -238,6 +241,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Controls\Editable Shapes Controls\LabeledBoxControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\Editable Shapes Controls\PolygonBorderControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
