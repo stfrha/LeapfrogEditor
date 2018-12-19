@@ -72,23 +72,6 @@ namespace LeapfrogEditor
 
 
 
-      public static T FindParent<T>(DependencyObject child) where T : DependencyObject
-         // From: https://www.infragistics.com/community/blogs/b/blagunas/posts/find-the-parent-control-of-a-specific-type-in-wpf-and-silverlight
-      {
-         //get parent item
-         DependencyObject parentObject = VisualTreeHelper.GetParent(child);
-
-         //we've reached the end of the tree
-         if (parentObject == null) return null;
-
-         //check if the parent matches the type we're looking for
-         T parent = parentObject as T;
-         if (parent != null)
-            return parent;
-         else
-            return FindParent<T>(parentObject);
-      }
-
       private void Shape_Rotate(object sender, MouseWheelEventArgs e)
       {
          if (sender is FrameworkElement)
@@ -111,9 +94,23 @@ namespace LeapfrogEditor
          }
       }
 
-      private void GeneralMouse<T>(bool down, MouseEventObjectType type, object sender, MouseButtonEventArgs e)
+      public void GeneralMouse<T>(bool down, MouseEventObjectType type, object sender, MouseButtonEventArgs e)
       {
-         UIElement parentCanvas = FindParent<Canvas>(content);
+         // We want access to the parent Canvas above the "content" Canvas. 
+         // The "content" (content it is it's name) Canvas, is the top Canvas of the 
+         // CompoundObjectUserControl, so the parent canvas is the one above
+         // it. We need it to set the focus (why?) and to get the mouse point
+         // expressed in the parent coordinate system.
+         // Hence, we are not seeking the top most canvas, i.e. the CenteredCanvas
+         // specialised Canvas of the main window. 
+         // By getting access to the "content" Canvas which is the top most canvas
+         // of this object, we search immediatly above it to make sure that the found
+         // canvas is the one above it. 
+         // Now, can this be done without knowledge of the content Canvas?
+         // Can it, for instance, be assumed that the content Canvas is the first 
+         // Parent Canvas and the sought Canvas is the second found?
+         // 
+         UIElement parentCanvas = ParentalFinder.FindParent<Canvas>(myCoUserControl);
          parentCanvas.Focus();
          Keyboard.Focus(parentCanvas);
 
@@ -170,14 +167,14 @@ namespace LeapfrogEditor
 
                if (down)
                {
-                  if (obj.MainVm.MouseDown(type, obj, e.ChangedButton, e.GetPosition(content), e.ClickCount, shift, ctrl, alt))
+                  if (obj.MainVm.MouseDown(type, obj, e.ChangedButton, e.GetPosition(myCoUserControl), e.ClickCount, shift, ctrl, alt))
                   {
                      e.Handled = true;
                   }
                }
                else
                {
-                  if (obj.MainVm.MouseUp(type, obj, e.ChangedButton, e.GetPosition(content), e.ClickCount, shift, ctrl, alt))
+                  if (obj.MainVm.MouseUp(type, obj, e.ChangedButton, e.GetPosition(myCoUserControl), e.ClickCount, shift, ctrl, alt))
                   {
                      e.Handled = true;
                   }
@@ -186,13 +183,13 @@ namespace LeapfrogEditor
          }
       }
 
-      private void GeneralMouseMove<T>(MouseEventObjectType type, object sender, MouseEventArgs e)
+      public void GeneralMouseMove<T>(MouseEventObjectType type, object sender, MouseEventArgs e)
       {
          if (mouseHandlingMode == ZoomAndPan.MouseHandlingMode.DraggingObjects)
          {
             if (mouseButtonDown == MouseButton.Left)
             {
-               UIElement parentCanvas = FindParent<Canvas>(content);
+               UIElement parentCanvas = ParentalFinder.FindParent<Canvas>(myCoUserControl);
 
                Point curContentPoint = e.GetPosition(parentCanvas);
                Vector rectangleDragVector = curContentPoint - origContentMouseDownPoint;

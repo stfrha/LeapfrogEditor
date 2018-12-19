@@ -54,6 +54,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Views\Controls\Editable Properties Controls\SpritePolygonPropEditor.xaml.cs">
+      <DependentUpon>SpritePolygonPropEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Editable Properties Controls\SpriteBoxPropEditor.xaml.cs">
+      <DependentUpon>SpriteBoxPropEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Editable Properties Controls\CompoundObjectPropEditor.xaml.cs">
+      <DependentUpon>CompoundObjectPropEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Models\Rope.cs" />
     <Compile Include="Models\ObjectFactoryRef.cs" />
     <Compile Include="Models\ObjectFactoryProperties.cs" />
@@ -68,49 +77,80 @@
     <Compile Include="Models\ZLevelItem.cs" />
     <Compile Include="Models\CollisionEntities.cs" />
     <Compile Include="Models\ZLevels.cs" />
+    <Compile Include="Utilities\ParentalFinder.cs" />
+    <Compile Include="Views\Controls\Editable Shapes Controls\BoxedSpritePolygonControl.xaml.cs">
+      <DependentUpon>BoxedSpritePolygonControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Editable Shapes Controls\LabeledBoxControl.xaml.cs">
+      <DependentUpon>LabeledBoxControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Editable Shapes Controls\PrismaticJointControl.xaml.cs">
+      <DependentUpon>PrismaticJointControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Editable Shapes Controls\RevoluteJointControl.xaml.cs">
+      <DependentUpon>RevoluteJointControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Editable Shapes Controls\RopeControl.xaml.cs">
+      <DependentUpon>RopeControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Editable Shapes Controls\TrianglesControl.xaml.cs">
+      <DependentUpon>TrianglesControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Editable Shapes Controls\WeldJointControl.xaml.cs">
+      <DependentUpon>WeldJointControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Editable Shapes Controls\ScalableTexturePolygonControl.xaml.cs">
+      <DependentUpon>ScalableTexturePolygonControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Editable Shapes Controls\RotatableCircleControl.xaml.cs">
+      <DependentUpon>RotatableCircleControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Editable Shapes Controls\RotatableBoxControl.xaml.cs">
+      <DependentUpon>RotatableBoxControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\CenteredCanvas.cs" />
     <Compile Include="ValueConverters\BitValueConverter.cs" />
     <Compile Include="ViewModels\RopeViewModel.cs" />
     <Compile Include="ViewModels\ObjectFactoryPropertiesViewModel.cs" />
     <Compile Include="ViewModels\ObjectFactoryViewModel.cs" />
     <Compile Include="ViewModels\MotorizedJointViewModel.cs" />
-    <Compile Include="Views\Controls\BoolEditorControl.xaml.cs">
+    <Compile Include="Views\Controls\Editable Properties Controls\Primitives\BoolEditorControl.xaml.cs">
       <DependentUpon>BoolEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Controls\TexturePickerEditorControl.xaml.cs">
+    <Compile Include="Views\Controls\Editable Properties Controls\Primitives\TexturePickerEditorControl.xaml.cs">
       <DependentUpon>TexturePickerEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Controls\HeightEditorControl.xaml.cs">
+    <Compile Include="Views\Controls\Editable Properties Controls\Primitives\HeightEditorControl.xaml.cs">
       <DependentUpon>HeightEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Controls\CoStateEditorControl.xaml.cs">
+    <Compile Include="Views\Controls\Editable Properties Controls\Primitives\CoStateEditorControl.xaml.cs">
       <DependentUpon>CoStateEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Controls\WidthEditorControl.xaml.cs">
+    <Compile Include="Views\Controls\Editable Properties Controls\Primitives\WidthEditorControl.xaml.cs">
       <DependentUpon>WidthEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Controls\CollisionEntityEditorControl.xaml.cs">
+    <Compile Include="Views\Controls\Editable Properties Controls\Primitives\CollisionEntityEditorControl.xaml.cs">
       <DependentUpon>CollisionEntityEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Controls\CollisionCategoryEditorControl.xaml.cs">
+    <Compile Include="Views\Controls\Editable Properties Controls\Primitives\CollisionCategoryEditorControl.xaml.cs">
       <DependentUpon>CollisionCategoryEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Controls\ZLevelEditorControl.xaml.cs">
+    <Compile Include="Views\Controls\Editable Properties Controls\Primitives\ZLevelEditorControl.xaml.cs">
       <DependentUpon>ZLevelEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Controls\IntEditorControl.xaml.cs">
+    <Compile Include="Views\Controls\Editable Properties Controls\Primitives\IntEditorControl.xaml.cs">
       <DependentUpon>IntEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Controls\HeadlineControl.xaml.cs">
+    <Compile Include="Views\Controls\Editable Properties Controls\Primitives\HeadlineControl.xaml.cs">
       <DependentUpon>HeadlineControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Controls\StringEditorControl.xaml.cs">
+    <Compile Include="Views\Controls\Editable Properties Controls\Primitives\StringEditorControl.xaml.cs">
       <DependentUpon>StringEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\PropertiesEditor.xaml.cs">
       <DependentUpon>PropertiesEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Controls\DoubleEditorControl.xaml.cs">
+    <Compile Include="Views\Controls\Editable Properties Controls\Primitives\DoubleEditorControl.xaml.cs">
       <DependentUpon>DoubleEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\CompoundObject.cs" />
@@ -177,51 +217,103 @@
     <Compile Include="ViewModels\LfStaticPolygonViewModel.cs" />
     <Compile Include="ViewModels\TriangleViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
-    <Compile Include="Views\CompoundObjectUserControl.xaml.cs">
+    <Compile Include="Views\Controls\CompoundObjectUserControl.xaml.cs">
       <DependentUpon>CompoundObjectUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\TriangleShape.cs" />
-    <Page Include="Views\Controls\BoolEditorControl.xaml">
+    <Compile Include="Views\Controls\Editable Shapes Controls\TriangleShape.cs" />
+    <Page Include="Views\Controls\Editable Properties Controls\SpritePolygonPropEditor.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Controls\TexturePickerEditorControl.xaml">
+    <Page Include="Views\Controls\Editable Properties Controls\SpriteBoxPropEditor.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Controls\HeightEditorControl.xaml">
+    <Page Include="Views\Controls\Editable Properties Controls\CompoundObjectPropEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Controls\Editable Shapes Controls\BoxedSpritePolygonControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Controls\CoStateEditorControl.xaml">
+    <Page Include="Views\Controls\Editable Shapes Controls\LabeledBoxControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Controls\WidthEditorControl.xaml">
+    <Page Include="Views\Controls\Editable Shapes Controls\PrismaticJointControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Controls\CollisionEntityEditorControl.xaml">
+    <Page Include="Views\Controls\Editable Shapes Controls\RevoluteJointControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Controls\CollisionCategoryEditorControl.xaml">
+    <Page Include="Views\Controls\Editable Shapes Controls\RopeControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Controls\ZLevelEditorControl.xaml">
+    <Page Include="Views\Controls\Editable Shapes Controls\TrianglesControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Controls\IntEditorControl.xaml">
+    <Page Include="Views\Controls\Editable Shapes Controls\WeldJointControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Controls\HeadlineControl.xaml">
+    <Page Include="Views\Controls\Editable Shapes Controls\ScalableTexturePolygonControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Controls\StringEditorControl.xaml">
+    <Page Include="Views\Controls\Editable Shapes Controls\RotatableCircleControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\Editable Shapes Controls\RotatableBoxControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Controls\Editable Properties Controls\Primitives\BoolEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\Editable Properties Controls\Primitives\TexturePickerEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\Editable Properties Controls\Primitives\HeightEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\Editable Properties Controls\Primitives\CoStateEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\Editable Properties Controls\Primitives\WidthEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\Editable Properties Controls\Primitives\CollisionEntityEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\Editable Properties Controls\Primitives\CollisionCategoryEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\Editable Properties Controls\Primitives\ZLevelEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\Editable Properties Controls\Primitives\IntEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\Editable Properties Controls\Primitives\HeadlineControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\Editable Properties Controls\Primitives\StringEditorControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -229,7 +321,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Controls\DoubleEditorControl.xaml">
+    <Page Include="Views\Controls\Editable Properties Controls\Primitives\DoubleEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -245,7 +337,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\CompoundObjectUserControl.xaml">
+    <Page Include="Views\Controls\CompoundObjectUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

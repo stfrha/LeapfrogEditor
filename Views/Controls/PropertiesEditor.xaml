@@ -20,17 +20,7 @@
       >
          <ContentControl.Resources>
             <DataTemplate DataType="{x:Type local:CompoundObjectViewModel}">
-               <DockPanel Margin="2">
-                  <Border CornerRadius="5" BorderBrush="DarkGray" BorderThickness="2">
-                     <StackPanel Margin="2">
-                        <local:HeadlineControl Headline="Compound Object" />
-                        <local:StringEditorControl Headline="Name" MyValue="{Binding Name, Mode=TwoWay}" />
-                        <local:CoStateEditorControl Headline="States" />
-                        <local:DoubleEditorControl Headline="PosX" MyValue="{Binding PosX, Mode=TwoWay}" />
-                        <local:DoubleEditorControl Headline="PosY" MyValue="{Binding PosY, Mode=TwoWay}" />
-                     </StackPanel>
-                  </Border>
-               </DockPanel>
+               <local:CompoundObjectPropEditor />
             </DataTemplate>
          </ContentControl.Resources>
       </ContentControl>
@@ -40,40 +30,10 @@
          >
          <ItemsControl.Resources>
             <DataTemplate DataType="{x:Type local:LfSpriteBoxViewModel}">
-               <DockPanel Margin="2">
-                  <Border CornerRadius="5" BorderBrush="DarkGray" BorderThickness="1">
-                     <StackPanel Margin="2">
-                        <local:HeadlineControl Headline="Sprite Box" />
-                        <local:StringEditorControl Headline="Name" MyValue="{Binding Name, Mode=TwoWay}" />
-                        <local:TexturePickerEditorControl Headline="Texture" MyValue="{Binding Texture, Mode=TwoWay}" />
-                        <local:DoubleEditorControl Headline="PosX" MyValue="{Binding PosX, Mode=TwoWay}" />
-                        <local:DoubleEditorControl Headline="PosY" MyValue="{Binding PosY, Mode=TwoWay}" />
-                        <local:WidthEditorControl Headline="Width" MyValue="{Binding Width, Mode=TwoWay}" />
-                        <local:HeightEditorControl Headline="Height" MyValue="{Binding Height, Mode=TwoWay}" />
-                        <local:DoubleEditorControl Headline="Angle" MyValue="{Binding Angle, Mode=TwoWay}" />
-                        <local:ZLevelEditorControl Headline="Z-level" MyValue="{Binding ZLevel, Mode=TwoWay}" />
-                     </StackPanel>
-                  </Border>
-               </DockPanel>
+               <local:SpriteBoxPropEditor />
             </DataTemplate>
             <DataTemplate DataType="{x:Type local:LfSpritePolygonViewModel}">
-               <DockPanel Margin="2">
-                  <Border CornerRadius="5" BorderBrush="DarkGray" BorderThickness="1">
-                     <StackPanel Margin="2">
-                        <local:HeadlineControl Headline="Sprite Polygon" />
-                        <local:StringEditorControl Headline="Name" MyValue="{Binding Name, Mode=TwoWay}" />
-                        <local:TexturePickerEditorControl Headline="Texture" MyValue="{Binding Texture, Mode=TwoWay}" />
-                        <local:DoubleEditorControl Headline="PosX" MyValue="{Binding PosX, Mode=TwoWay}" />
-                        <local:DoubleEditorControl Headline="PosY" MyValue="{Binding PosY, Mode=TwoWay}" />
-                        <local:DoubleEditorControl Headline="Angle" MyValue="{Binding Angle, Mode=TwoWay}" />
-                        <local:DoubleEditorControl Headline="Texture Width" MyValue="{Binding TextureWidth, Mode=TwoWay}" />
-                        <local:DoubleEditorControl Headline="Texture Height" MyValue="{Binding TextureHeight, Mode=TwoWay}" />
-                        <local:DoubleEditorControl Headline="Texture Offset X" MyValue="{Binding TextureOffsetX, Mode=TwoWay}" />
-                        <local:DoubleEditorControl Headline="Texture Offset Y" MyValue="{Binding TextureOffsetY, Mode=TwoWay}" />
-                        <local:ZLevelEditorControl Headline="Z-level" MyValue="{Binding ZLevel, Mode=TwoWay}" />
-                     </StackPanel>
-                  </Border>
-               </DockPanel>
+               <local:SpritePolygonPropEditor />
             </DataTemplate>
             <DataTemplate DataType="{x:Type local:LfStaticCircleViewModel}">
                <DockPanel Margin="2">

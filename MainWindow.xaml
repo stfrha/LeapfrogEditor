@@ -81,11 +81,12 @@
       </Menu>
       <Grid Grid.Row="1">
          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="250" />
 
          </Grid.ColumnDefinitions>
-         <DockPanel Grid.Column="0">
+         <DockPanel Grid.Column="1">
             <ScrollViewer
 			x:Name="scroller"
             CanContentScroll="True"
@@ -168,7 +169,7 @@
                </ZoomAndPan:ZoomAndPanControl>
             </ScrollViewer>
          </DockPanel>
-         <ScrollViewer Grid.Column="1">
+         <ScrollViewer Grid.Column="2">
             <local:PropertiesEditor 
             EditableCompoundObject="{Binding SelectedCompoundObject}"
             EditableShapes="{Binding SelectedShapes}"
