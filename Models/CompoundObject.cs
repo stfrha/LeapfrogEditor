@@ -20,6 +20,10 @@ namespace LeapfrogEditor
 
       private string _type;
 
+      //Behaviour
+      private CoBehaviour _behaviour;
+
+      // Shapes
       private ObservableCollection<LfSpriteBox> _spriteBoxes = new ObservableCollection<LfSpriteBox>();
       private ObservableCollection<LfSpritePolygon> _spritePolygons = new ObservableCollection<LfSpritePolygon>();
       private ObservableCollection<LfStaticCircle> _staticCircles = new ObservableCollection<LfStaticCircle>();
@@ -31,17 +35,23 @@ namespace LeapfrogEditor
       private ObservableCollection<LfStaticBoxedSpritePolygon> _staticBoxedSpritePolygons = new ObservableCollection<LfStaticBoxedSpritePolygon>();
       private ObservableCollection<LfDynamicBoxedSpritePolygon> _dynamicBoxedSpritePolygons = new ObservableCollection<LfDynamicBoxedSpritePolygon>();
 
+      // Joints
       private ObservableCollection<WeldJoint> _weldJoints = new ObservableCollection<WeldJoint>();
       private ObservableCollection<RevoluteJoint> _revoluteJoints = new ObservableCollection<RevoluteJoint>();
       private ObservableCollection<PrismaticJoint> _prismaticJoints = new ObservableCollection<PrismaticJoint>();
-
       private ObservableCollection<Rope> _ropes= new ObservableCollection<Rope>();
 
+      // Systems
+      private ObservableCollection<CoSystem> _systems = new ObservableCollection<CoSystem>();
+
+      // Child objects
+      private ObservableCollection<ChildObject> _childObjects = new ObservableCollection<ChildObject>();
+
+
+      // Following is special cases for landing scenes. Maybe these will be specialised 
+      // xml files with specialised format. Or behaviours of a CompoundObject
       private ObservableCollection<PlanetActorRef> _planetActors = new ObservableCollection<PlanetActorRef>();
       private ObservableCollection<ClippedWindowRef> _clippedWindows = new ObservableCollection<ClippedWindowRef>();
-      private ObservableCollection<ObjectFactoryRef> _objectFactories = new ObservableCollection<ObjectFactoryRef>();
-
-      private ObservableCollection<CompoundObjectRef> _childObjectRefs = new ObservableCollection<CompoundObjectRef>();
 
       #endregion
 
@@ -54,6 +64,14 @@ namespace LeapfrogEditor
       #endregion
 
       #region Properties
+
+      [XmlAttribute("behaviour")]
+      public CoBehaviour Behaviour
+      {
+         get { return _behaviour; }
+         set { _behaviour = value; }
+      }
+
 
       [XmlAttribute("type")]
       public string Type
@@ -160,18 +178,21 @@ namespace LeapfrogEditor
          set { _ropes = value; }
       }
 
+      [XmlElement("system")]
+      public ObservableCollection<CoSystem> Systems
+      {
+         get { return _systems; }
+         set { _systems = value; }
+      }
+
+      // Following is special cases for landing scenes. Maybe these will be specialised 
+      // xml files with specialised format.
+
       [XmlElement("planetActor")]
       public ObservableCollection<PlanetActorRef> PlanetActors
       {
          get { return _planetActors; }
          set { _planetActors = value; }
-      }
-
-      [XmlElement("objectFactory")]
-      public ObservableCollection<ObjectFactoryRef> ObjectFactories
-      {
-         get { return _objectFactories; }
-         set { _objectFactories = value; }
       }
 
       // At serialisation of a parent CompoundObject this collection
@@ -182,16 +203,6 @@ namespace LeapfrogEditor
       {
          get { return _clippedWindows; }
          set { _clippedWindows = value; }
-      }
-
-      // At serialisation of a parent CompoundObject this collection
-      // is read. Once read, it is used to create CompoundObjects as 
-      // children.
-      [XmlElement("ChildCompoundObjectRef")]
-      public ObservableCollection<CompoundObjectRef> ChildObjectRefs
-      {
-         get { return _childObjectRefs; }
-         set { _childObjectRefs = value; }
       }
 
       #endregion

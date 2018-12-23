@@ -20,6 +20,7 @@ namespace LeapfrogEditor
       private int _spawnInitial;
       private double _intensity;
       private int _lifeTime;
+      private ObservableCollection<SpawnObject> _spawnObjects = new ObservableCollection<SpawnObject>();
 
       #endregion
 
@@ -88,6 +89,14 @@ namespace LeapfrogEditor
          get { return _lifeTime; }
          set { _lifeTime = value; }
       }
+
+      [XmlElement("spawnObject")]
+      public ObservableCollection<SpawnObject> SpawnObjects
+      {
+         get { return _spawnObjects; }
+         set { _spawnObjects = value; }
+      }
+
 
       #endregion
 

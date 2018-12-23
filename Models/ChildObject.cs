@@ -9,18 +9,19 @@ using System.Xml.Serialization;
 namespace LeapfrogEditor
 {
    [Serializable]
-   public class CompoundObjectRef
+   public class ChildObject
    {
       #region Declarations
 
       private string _name;
-      private ObservableCollection<ObjectRefStateProperties> _stateProperties = new ObservableCollection<ObjectRefStateProperties>();
+      private string _type;
+      private TStateProperties<ChildObjectStateProperties> _stateProperties = new TStateProperties<ChildObjectStateProperties>();
 
       #endregion
 
       #region Constructor
 
-      public CompoundObjectRef()
+      public ChildObject()
       {
 
       }
@@ -36,8 +37,15 @@ namespace LeapfrogEditor
          set { _name = value; }
       }
 
+      [XmlAttribute("type")]
+      public string Type
+      {
+         get { return _type; }
+         set { _type = value; }
+      }
+
       [XmlElement("stateProperties")]
-      public ObservableCollection<ObjectRefStateProperties> StateProperties
+      public TStateProperties<ChildObjectStateProperties> StateProperties
       {
          get { return _stateProperties; }
          set { _stateProperties = value; }

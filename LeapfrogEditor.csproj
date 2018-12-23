@@ -54,6 +54,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\Behaviours\BreakableObjectProperties.cs" />
+    <Compile Include="Models\Behaviours\CoBehaviour.cs" />
+    <Compile Include="Models\Behaviours\SteerableObjectProperties.cs" />
+    <Compile Include="Models\ChildObject.cs" />
+    <Compile Include="Models\Systems\CoSystem.cs" />
+    <Compile Include="Models\Systems\FlameEmitterProperties.cs" />
+    <Compile Include="Models\SpawnObject.cs" />
+    <Compile Include="Models\Systems\ShieldProperties.cs" />
+    <Compile Include="Models\Systems\GunProperties.cs" />
     <Compile Include="Views\Controls\Editable Properties Controls\SpritePolygonPropEditor.xaml.cs">
       <DependentUpon>SpritePolygonPropEditor.xaml</DependentUpon>
     </Compile>
@@ -63,16 +72,16 @@
     <Compile Include="Views\Controls\Editable Properties Controls\CompoundObjectPropEditor.xaml.cs">
       <DependentUpon>CompoundObjectPropEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Models\Rope.cs" />
-    <Compile Include="Models\ObjectFactoryRef.cs" />
-    <Compile Include="Models\ObjectFactoryProperties.cs" />
+    <Compile Include="Models\Joints\Rope.cs" />
+    <Compile Include="Models\Systems\ObjectFactoryRef.cs" />
+    <Compile Include="Models\Systems\ObjectFactoryProperties.cs" />
     <Compile Include="Models\CollisionEntity.cs" />
-    <Compile Include="Models\LandingSite.cs" />
+    <Compile Include="Models\Scenes\LandingSite.cs" />
     <Compile Include="Models\ClippedWindowProperties.cs" />
-    <Compile Include="Models\PlanetActorProperties.cs" />
+    <Compile Include="Models\Scenes\PlanetActorProperties.cs" />
     <Compile Include="Models\ClippedWindowRef.cs" />
-    <Compile Include="Models\PlanetActorRef.cs" />
-    <Compile Include="Models\RevoluteJoint.cs" />
+    <Compile Include="Models\Scenes\PlanetActorRef.cs" />
+    <Compile Include="Models\Joints\RevoluteJoint.cs" />
     <Compile Include="Models\TStateProperties.cs" />
     <Compile Include="Models\ZLevelItem.cs" />
     <Compile Include="Models\CollisionEntities.cs" />
@@ -157,25 +166,24 @@
       <DependentUpon>DoubleEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\CompoundObject.cs" />
-    <Compile Include="Models\CompoundObjectRef.cs" />
     <Compile Include="Models\LfDragablePoint.cs" />
-    <Compile Include="Models\LfDynamicCircle.cs" />
-    <Compile Include="Models\LfDynamicBoxedSpritePolygon.cs" />
-    <Compile Include="Models\LfDynamicPolygon.cs" />
-    <Compile Include="Models\LfPolygon.cs" />
-    <Compile Include="Models\LfDynamicBox.cs" />
-    <Compile Include="Models\PrismaticJoint.cs" />
-    <Compile Include="Models\MotorizedJoint.cs" />
-    <Compile Include="Models\WeldJoint.cs" />
-    <Compile Include="Models\LfSpriteBox.cs" />
-    <Compile Include="Models\LfStaticCircle.cs" />
-    <Compile Include="Models\LfStaticBoxedSpritePolygon.cs" />
-    <Compile Include="Models\LfSpritePolygon.cs" />
-    <Compile Include="Models\ObjectRefStateProperties.cs" />
-    <Compile Include="Models\LfScalableTexturePolygon.cs" />
-    <Compile Include="Models\LfShape.cs" />
-    <Compile Include="Models\LfStaticBox.cs" />
-    <Compile Include="Models\LfStaticPolygon.cs" />
+    <Compile Include="Models\Shape and bodies\LfDynamicCircle.cs" />
+    <Compile Include="Models\Shape and bodies\LfDynamicBoxedSpritePolygon.cs" />
+    <Compile Include="Models\Shape and bodies\LfDynamicPolygon.cs" />
+    <Compile Include="Models\Shape and bodies\LfPolygon.cs" />
+    <Compile Include="Models\Shape and bodies\LfDynamicBox.cs" />
+    <Compile Include="Models\Joints\PrismaticJoint.cs" />
+    <Compile Include="Models\Joints\MotorizedJoint.cs" />
+    <Compile Include="Models\Joints\WeldJoint.cs" />
+    <Compile Include="Models\Shape and bodies\LfSpriteBox.cs" />
+    <Compile Include="Models\Shape and bodies\LfStaticCircle.cs" />
+    <Compile Include="Models\Shape and bodies\LfStaticBoxedSpritePolygon.cs" />
+    <Compile Include="Models\Shape and bodies\LfSpritePolygon.cs" />
+    <Compile Include="Models\ChildObjectStateProperties.cs" />
+    <Compile Include="Models\Shape and bodies\LfScalableTexturePolygon.cs" />
+    <Compile Include="Models\Shape and bodies\LfShape.cs" />
+    <Compile Include="Models\Shape and bodies\LfStaticBox.cs" />
+    <Compile Include="Models\Shape and bodies\LfStaticPolygon.cs" />
     <Compile Include="Models\Triangle.cs" />
     <Compile Include="MouseHandlingMode.cs" />
     <Compile Include="ScaleToPercentConverter.cs" />
