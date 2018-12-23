@@ -14,8 +14,8 @@ namespace LeapfrogEditor
       #region Declarations
 
       private string _type;
-      private SteerableObjectProperties _steerableObjProps;
-      private BreakableObjectProperties _breakableObjProps;
+      private SteerableObjectProperties _steerableObjProps = new SteerableObjectProperties();
+      private BreakableObjectProperties _breakableObjProps = new BreakableObjectProperties();
 
       #endregion
 
@@ -23,7 +23,6 @@ namespace LeapfrogEditor
 
       public CoBehaviour()
       {
-         _name = "notDefined";
          _type = "notDefined";
       }
 

@@ -37,7 +37,7 @@ namespace LeapfrogEditor
       }
 
       [XmlAttribute("childObject")]
-      public ChildObject ChildObject
+      public ChildObject MyChildObject
       {
          get { return _childObject; }
          set { _childObject = value; }
