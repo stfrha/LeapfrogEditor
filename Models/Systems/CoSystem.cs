@@ -15,10 +15,10 @@ namespace LeapfrogEditor
 
       private string _name;
       private string _type;
-      private ObservableCollection<ObjectFactoryProperties> _objFactStateProperties = new ObservableCollection<ObjectFactoryProperties>();
-      private ObservableCollection<GunProperties> _gunStateProperties = new ObservableCollection<GunProperties>();
-      private ObservableCollection<ShieldProperties> _shieldStateProperties = new ObservableCollection<ShieldProperties>();
-      private ObservableCollection<FlameEmitterProperties> _flameEmitterStateProperties = new ObservableCollection<FlameEmitterProperties>();
+      private ObjectFactoryProperties _objFactStateProperties;
+      private GunProperties _gunStateProperties;
+      private ShieldProperties _shieldStateProperties;
+      private FlameEmitterProperties _flameEmitterStateProperties;
 
       #endregion
 
@@ -48,41 +48,55 @@ namespace LeapfrogEditor
          set { _type = value; }
       }
 
-      [XmlElement("stateProperties")]
-      public ObservableCollection<ObjectFactoryProperties> ObjFactStateProperties
+      [XmlElement("properties")]
+      public ObjectFactoryProperties ObjFactStateProperties
       {
          get { return _objFactStateProperties; }
          set { _objFactStateProperties = value; }
       }
 
-      // TODO: Serialize above on condition that _type == "objectFactory"
+      public bool ShouldSerializeObjFactStateProperties()
+      {
+         return (Type == "objectFactory");
+      }
 
-      [XmlElement("stateProperties")]
-      public ObservableCollection<GunProperties> GunStateProperties
+      [XmlElement("properties")]
+      public GunProperties GunStateProperties
       {
          get { return _gunStateProperties; }
          set { _gunStateProperties = value; }
       }
 
-      // TODO: Serialize above on condition that _type == "gun"
+      public bool ShouldSerializeGunStateProperties()
+      {
+         return (Type == "gun");
+      }
 
-      [XmlElement("stateProperties")]
-      public ObservableCollection<ShieldProperties> ShieldStateProperties
+      [XmlElement("properties")]
+      public ShieldProperties ShieldStateProperties
       {
          get { return _shieldStateProperties; }
          set { _shieldStateProperties = value; }
       }
 
-      // TODO: Serialize above on condition that _type == "shield"
+      public bool ShouldSerializeShieldStateProperties()
+      {
+         return (Type == "shield");
+      }
 
-      [XmlElement("stateProperties")]
-      public ObservableCollection<FlameEmitterProperties> FlameEmitterStateProperties
+
+      [XmlElement("properties")]
+      public FlameEmitterProperties FlameEmitterStateProperties
       {
          get { return _flameEmitterStateProperties; }
          set { _flameEmitterStateProperties = value; }
       }
 
-      // TODO: Serialize above on condition that _type == "flameEmitter"
+      public bool ShouldSerializeFlameEmitterStateProperties()
+      {
+         return (Type == "flameEmitter");
+      }
+
 
 
       #endregion

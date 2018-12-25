@@ -10,7 +10,7 @@ using System.Windows.Media.Imaging;
 
 namespace LeapfrogEditor
 {
-   class BreakableObjectPropertiesViewModel : MicroMvvm.ViewModelBase
+   class BreakableObjectPropertiesViewModel : BehaviourViewModelBase
    {
       #region Declarations
 

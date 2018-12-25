@@ -44,7 +44,10 @@ namespace LeapfrogEditor
          set { _steerableObjProps = value; }
       }
 
-      // TODO: Serialize above on condition that _type == "steerableObject"
+      public bool ShouldSerializeSteerableObjProps()
+      {
+         return (Type == "steerableObject");
+      }
 
       [XmlElement("properties")]
       public BreakableObjectProperties BreakableObjProps
@@ -53,7 +56,10 @@ namespace LeapfrogEditor
          set { _breakableObjProps = value; }
       }
 
-      // TODO: Serialize above on condition that _type == "breakableObject"
+      public bool ShouldSerializeBreakableObjProps()
+      {
+         return (Type == "breakableObject");
+      }
 
       #endregion
 

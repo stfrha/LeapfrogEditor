@@ -38,9 +38,11 @@
       <DataTemplate DataType="{x:Type local:LfStaticCircleViewModel}">
          <local:RotatableCircleControl />
       </DataTemplate>
+      <!--
       <DataTemplate DataType="{x:Type local:ObjectFactoryViewModel}">
          <local:LabeledBoxControl />
       </DataTemplate>
+      -->
    </UserControl.Resources>
    <Canvas
       x:Name="myCoUserControl" 

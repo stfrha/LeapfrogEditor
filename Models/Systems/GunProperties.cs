@@ -28,13 +28,14 @@ namespace LeapfrogEditor
 
       public GunProperties()
       {
-         _posX = 0;
-         _posY = 0;
-         _width = 100;
-         _height = 100;
-         _spawnInitial = 150;
-         _intensity = 0.4;
-         _lifeTime = 60000;
+         _bodyName = "notDefined";
+         _emitterOriginX = 0;
+         _emitterOriginY = 0;
+         _angle = 0;
+         _fireRate = 0;
+         _lifeTime = 0;
+         _impulseMagnitude = 0;
+         _bouncy = false;
       }
 
       #endregion

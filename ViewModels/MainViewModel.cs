@@ -58,8 +58,8 @@ namespace LeapfrogEditor
 
       #region Declarations
 
-      private CompoundObjectRef _myCpRef = new CompoundObjectRef();
-      private ObjectRefStateProperties _myStateProp = new ObjectRefStateProperties();
+      private ChildObject _myChildObject = new ChildObject();
+      private TStateProperties<ChildObjectStateProperties> _myStateProp = new TStateProperties<ChildObjectStateProperties>();
       private CompoundObject _myCP;
       private CompoundObjectViewModel _myCpVm;
 
@@ -107,10 +107,10 @@ namespace LeapfrogEditor
          //MyCP = CompoundObject.ReadFromFile(fullFileName);
 
          //MyStateProp.CompObj = MyCP;
-         //MyCpRef.StateProperties.Add(MyStateProp);
+         //MyChildObject.StateProperties.Add(MyStateProp);
 
-         //MyCpVm = new CompoundObjectViewModel(this, null, MyCpRef);
-         //MyCpVm.BuildViewModel(MyCpRef);
+         //MyCpVm = new CompoundObjectViewModel(this, null, MyChildObject);
+         //MyCpVm.BuildViewModel(MyChildObject);
 
          // Build collections of texture names
          // Process the list of files found in the directory.
@@ -134,13 +134,13 @@ namespace LeapfrogEditor
 
       #region Properties
 
-      public CompoundObjectRef MyCpRef
+      public ChildObject MyChildObject
       {
-         get { return _myCpRef; }
-         set { _myCpRef = value; }
+         get { return _myChildObject; }
+         set { _myChildObject = value; }
       }
 
-      public ObjectRefStateProperties MyStateProp
+      public TStateProperties<ChildObjectStateProperties> MyStateProp
       {
          get { return _myStateProp; }
          set { _myStateProp = value; }
@@ -171,7 +171,7 @@ namespace LeapfrogEditor
                return "Leapfrog Editor - No file loaded";
             }
 
-            string fileName = System.IO.Path.GetFileName(MyCpVm.File);
+            string fileName = System.IO.Path.GetFileName(MyChildObject.StateProperties[0].Properties.File);
 
             return "Leapfrog Editor - " + fileName;
          }
@@ -275,25 +275,28 @@ namespace LeapfrogEditor
                string fullPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
                string fullFileName = System.IO.Path.Combine(fullPath, s);
 
-               MyStateProp = new ObjectRefStateProperties();
-               MyStateProp.File = fullFileName;
+               ChildObjectStateProperties cosp = new ChildObjectStateProperties();
+               cosp.File = fullFileName;
+               
+               MyStateProp = new TStateProperties<ChildObjectStateProperties>();
+               MyStateProp.Properties = cosp;
 
                MyCP = new CompoundObject();
 
-               MyStateProp.CompObj = MyCP;
+               MyStateProp.Properties.CompObj = MyCP;
 
-               MyCpRef = new CompoundObjectRef();
+               MyChildObject = new ChildObject();
 
-               MyCpRef.StateProperties.Add(MyStateProp);
+               MyChildObject.StateProperties.Add(MyStateProp);
 
-               MyCpVm = new CompoundObjectViewModel(this, null, MyCpRef);
+               MyCpVm = new CompoundObjectViewModel(this, null, MyChildObject);
 
                // To get a handle to the new CompoundObject we need a shape
                // to select. Lets place a default Sprite Box at coordinate 0,0
                LfStaticCircle defShape = new LfStaticCircle();
                MyCP.StaticCircles.Add(defShape);
                LfStaticCircleViewModel defShapeVM = new LfStaticCircleViewModel(this, null, defShape);
-               MyCpVm.BuildViewModel(MyCpRef);
+               MyCpVm.BuildViewModel(MyChildObject);
                MyCpVm.OnPropertyChanged("");
                OnPropertyChanged("");
             }
@@ -329,15 +332,18 @@ namespace LeapfrogEditor
                string fullPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
                string fullFileName = System.IO.Path.Combine(fullPath, s);
 
-               MyStateProp.File = fullFileName;
+               ChildObjectStateProperties cosp = new ChildObjectStateProperties();
+               cosp.File = fullFileName;
+
+               MyStateProp.Properties = cosp;
 
                MyCP = CompoundObject.ReadFromFile(fullFileName);
 
-               MyStateProp.CompObj = MyCP;
-               MyCpRef.StateProperties.Add(MyStateProp);
+               MyStateProp.Properties.CompObj = MyCP;
+               MyChildObject.StateProperties.Add(MyStateProp);
 
-               MyCpVm = new CompoundObjectViewModel(this, null, MyCpRef);
-               MyCpVm.BuildViewModel(MyCpRef);
+               MyCpVm = new CompoundObjectViewModel(this, null, MyChildObject);
+               MyCpVm.BuildViewModel(MyChildObject);
                MyCpVm.OnPropertyChanged("");
                OnPropertyChanged("");
             }
@@ -362,7 +368,7 @@ namespace LeapfrogEditor
          // Generate Triangles before saving
          MyCpVm.GenerateTriangles();
 
-         MyCpVm.ModelObject.WriteToFile(MyStateProp.File);
+         MyCpVm.ModelObject.WriteToFile(MyStateProp.Properties.File);
       }
 
       bool CanSaveExecute(Object parameter)
@@ -386,8 +392,8 @@ namespace LeapfrogEditor
          {
             MyCpVm.GenerateTriangles();
 
-            MyStateProp.File = sfd.FileName;
-            MyCpVm.ModelObject.WriteToFile(MyStateProp.File);
+            MyStateProp.Properties.File = sfd.FileName;
+            MyCpVm.ModelObject.WriteToFile(MyStateProp.Properties.File);
          }
       }
 
@@ -420,22 +426,26 @@ namespace LeapfrogEditor
 
             // Fortsätt här!!!!!
 
-            ObjectRefStateProperties newStateProp = new ObjectRefStateProperties();
+            ChildObjectStateProperties childProps = new ChildObjectStateProperties();
+
+            childProps.File = fullFileName;
+
+            TStateProperties<ChildObjectStateProperties> newStateProp = new TStateProperties<ChildObjectStateProperties>();
             newStateProp.State = "default";
-            newStateProp.File = fullFileName;
+            newStateProp.Properties = childProps;
 
             CompoundObject newCp = CompoundObject.ReadFromFile(fullFileName);
 
-            newStateProp.CompObj = newCp;
+            newStateProp.Properties.CompObj = newCp;
 
-            CompoundObjectRef newCpRef = new CompoundObjectRef();
+            ChildObject newChildObject = new ChildObject();
 
-            newCpRef.StateProperties.Add(newStateProp);
+            newChildObject.StateProperties.Add(newStateProp);
 
-            CompoundObjectViewModel newCpVm = new CompoundObjectViewModel(this, null, newCpRef);
-            newCpVm.BuildViewModel(newCpRef);
+            CompoundObjectViewModel newCpVm = new CompoundObjectViewModel(this, null, newChildObject);
+            newCpVm.BuildViewModel(newChildObject);
 
-            SelectedCompoundObject.ModelObject.ChildObjectRefs.Add(newCpRef);
+            SelectedCompoundObject.ModelObject.ChildObjects.Add(newChildObject);
             SelectedCompoundObject.ChildObjects.Add(newCpVm);
 
             MyCpVm.OnPropertyChanged("");
@@ -1526,6 +1536,7 @@ namespace LeapfrogEditor
                _LeftClickState = LeftClickState.none;
 
             }
+/*
             else if (_LeftClickState == LeftClickState.objectFactory)
             {
                // The first point of this polygon will be the PosX and PosY of the 
@@ -1558,6 +1569,7 @@ namespace LeapfrogEditor
                _LeftClickState = LeftClickState.none;
 
             }
+            */
             else if (_LeftClickState == LeftClickState.addPoint)
             {
                // When adding points to new polygon we require that the

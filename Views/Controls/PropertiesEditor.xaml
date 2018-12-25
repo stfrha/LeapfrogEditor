@@ -205,6 +205,7 @@
                   </Border>
                </DockPanel>
             </DataTemplate>
+            <!--
             <DataTemplate DataType="{x:Type local:ObjectFactoryViewModel}">
                <DockPanel Margin="2">
                   <Border CornerRadius="5" BorderBrush="DarkGray" BorderThickness="1">
@@ -223,6 +224,7 @@
                   </Border>
                </DockPanel>
             </DataTemplate>
+            -->
          </ItemsControl.Resources>
          <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>

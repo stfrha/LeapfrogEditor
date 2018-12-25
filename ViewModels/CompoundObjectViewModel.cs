@@ -15,16 +15,20 @@ namespace LeapfrogEditor
    {
       #region Declarations
 
-      private CompoundObjectRef _refObject;
+      private ChildObject _childObjectOfParent;
       private CompoundObjectViewModel _parent;
       private MainViewModel _mainVm;
 
       private int _selectedStateIndex = 0;
 
+      private CoBehaviourViewModel _behaviour;
       private ObservableCollection<CompositeCollection> _shapes = new ObservableCollection<CompositeCollection>();
       private ObservableCollection<CompositeCollection> _joints = new ObservableCollection<CompositeCollection>();
+      private ObservableCollection<CoSystemViewModel> _systems = new ObservableCollection<CoSystemViewModel>();
 
       // Children collection is two dimensional to accomondate for all State properties
+      // The outher collection is all ChildObjects and the inner collection
+      // is the states of that child
       private ObservableCollection<ObservableCollection<CompoundObjectViewModel>> _childObjects = new ObservableCollection<ObservableCollection<CompoundObjectViewModel>>();
 
       private bool _isSelected;
@@ -34,11 +38,11 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public CompoundObjectViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, CompoundObjectRef refObject)
+      public CompoundObjectViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, ChildObject childObjectOfParent)
       {
          MainVm = mainVm;
          Parent = parent;
-         RefObject = refObject;
+         ChildObjectOfParent = childObjectOfParent;
          SelectedStateIndex = 0;
       }
 
@@ -52,12 +56,12 @@ namespace LeapfrogEditor
          set { _mainVm = value; }
       }
 
-      public CompoundObjectRef RefObject
+      public ChildObject ChildObjectOfParent
       {
-         get { return _refObject; }
+         get { return _childObjectOfParent; }
          set
          {
-            _refObject = value;
+            _childObjectOfParent = value;
             OnPropertyChanged("");
          }
       }
@@ -66,11 +70,11 @@ namespace LeapfrogEditor
       {
          get
          {
-            if (_refObject != null)
+            if (_childObjectOfParent != null)
             {
-               if (_refObject.StateProperties.Count > 0)
+               if (_childObjectOfParent.StateProperties.Count > 0)
                {
-                  return _refObject.StateProperties[_selectedStateIndex].CompObj;
+                  return _childObjectOfParent.StateProperties[_selectedStateIndex].Properties.CompObj;
                }
             }
             return null;
@@ -87,41 +91,24 @@ namespace LeapfrogEditor
             OnPropertyChanged("");
          }
       }
+      
+      public CoBehaviourViewModel Behaviour
+      {
+         get { return _behaviour; }
+         set
+         {
+            _behaviour = value;
+            OnPropertyChanged("Behaviour");
+         }
+      }
 
       public string Name
       {
-         get { return _refObject.Name; }
+         get { return _childObjectOfParent.Name; }
          set
          {
-            _refObject.Name = value;
+            _childObjectOfParent.Name = value;
             OnPropertyChanged("Name");
-         }
-      }
-
-      public string Type
-      {
-         get { return ModelObject.Type; }
-         set
-         {
-            ModelObject.Type = value;
-            OnPropertyChanged("Type");
-         }
-      }
-
-      public string File
-      {
-         get
-         {
-            if ((_selectedStateIndex >= 0) && _refObject.StateProperties.Count > 0)
-            {
-               return _refObject.StateProperties[_selectedStateIndex].File;
-            }
-            return "";
-         }
-         set
-         {
-            _refObject.StateProperties[_selectedStateIndex].File = value;
-            OnPropertyChanged("File");
          }
       }
 
@@ -129,22 +116,22 @@ namespace LeapfrogEditor
       {
          get
          {
-            if (_refObject != null)
+            if (_childObjectOfParent != null)
             {
-               if ((_selectedStateIndex >= 0) && (_refObject.StateProperties.Count > 0))
+               if ((_selectedStateIndex >= 0) && (_childObjectOfParent.StateProperties.Count > 0))
                {
-                  return _refObject.StateProperties[_selectedStateIndex].PosX;
+                  return _childObjectOfParent.StateProperties[_selectedStateIndex].Properties.PosX;
                }
             }
             return 0;
          }
          set
          {
-            if (_refObject != null)
+            if (_childObjectOfParent != null)
             {
-               if ((_selectedStateIndex >= 0) && (_refObject.StateProperties.Count > 0))
+               if ((_selectedStateIndex >= 0) && (_childObjectOfParent.StateProperties.Count > 0))
                {
-                  _refObject.StateProperties[_selectedStateIndex].PosX = value;
+                  _childObjectOfParent.StateProperties[_selectedStateIndex].Properties.PosX = value;
 
                   OnPropertyChanged("PosX");
                   OnPropertyChanged("BoundingBox");
@@ -165,22 +152,22 @@ namespace LeapfrogEditor
       {
          get
          {
-            if (_refObject != null)
+            if (_childObjectOfParent != null)
             {
-               if ((_selectedStateIndex >= 0) && (_refObject.StateProperties.Count > _selectedStateIndex))
+               if ((_selectedStateIndex >= 0) && (_childObjectOfParent.StateProperties.Count > _selectedStateIndex))
                {
-                  return _refObject.StateProperties[_selectedStateIndex].PosY;
+                  return _childObjectOfParent.StateProperties[_selectedStateIndex].Properties.PosY;
                }
             }
             return 0;
          }
          set
          {
-            if (_refObject != null)
+            if (_childObjectOfParent != null)
             {
-               if ((_selectedStateIndex >= 0) && (_refObject.StateProperties.Count > 0))
+               if ((_selectedStateIndex >= 0) && (_childObjectOfParent.StateProperties.Count > 0))
                {
-                  _refObject.StateProperties[_selectedStateIndex].PosY = value;
+                  _childObjectOfParent.StateProperties[_selectedStateIndex].Properties.PosY = value;
 
                   OnPropertyChanged("PosY");
                   OnPropertyChanged("BoundingBox");
@@ -233,7 +220,7 @@ namespace LeapfrogEditor
          {
             ObservableCollection<string> s = new ObservableCollection<string>();
 
-            foreach (ObjectRefStateProperties sp in _refObject.StateProperties)
+            foreach (TStateProperties<ChildObjectStateProperties> sp in _childObjectOfParent.StateProperties)
             {
                s.Add(sp.State);
             }            
@@ -378,7 +365,6 @@ namespace LeapfrogEditor
             new CollectionContainer { Collection = new ObservableCollection<LfDynamicCircleViewModel>() },
             new CollectionContainer { Collection = new ObservableCollection<LfDynamicPolygonViewModel>() },
             new CollectionContainer { Collection = new ObservableCollection<LfDynamicBoxedSpritePolygonViewModel>() },
-            new CollectionContainer { Collection = new ObservableCollection<ObjectFactoryViewModel>() },
          };
 
          foreach (LfSpriteBox sb in co.SpriteBoxes)
@@ -476,12 +462,6 @@ namespace LeapfrogEditor
             shapes.Add(shapevm);
          }
 
-         foreach (ObjectFactoryRef asf in co.ObjectFactories)
-         {
-            ObjectFactoryViewModel shapevm = new ObjectFactoryViewModel(MainVm, this, asf);
-            shapes.Add(shapevm);
-         }
-
          return shapes;
 
       }
@@ -523,14 +503,28 @@ namespace LeapfrogEditor
          return joints;
       }
 
+      private ObservableCollection<CoSystemViewModel> SetSystems(CompoundObject co)
+      {
+         ObservableCollection<CoSystemViewModel> systems = new ObservableCollection<CoSystemViewModel>();
+
+         foreach (CoSystem s in co.Systems)
+         {
+            CoSystemViewModel svm = new CoSystemViewModel(MainVm, this, s);
+            systems.Add(svm);
+         }
+
+         return systems;
+      }
+
+
       private ObservableCollection<CompoundObjectViewModel> SetChildren(CompoundObject co)
       {
          ObservableCollection<CompoundObjectViewModel> tempChildren = new ObservableCollection<CompoundObjectViewModel>();
 
-         foreach (CompoundObjectRef tco in co.ChildObjectRefs)
+         foreach (ChildObject cho in co.ChildObjects)
          {
-            CompoundObjectViewModel covm = new CompoundObjectViewModel(MainVm, this, tco);
-            covm.BuildViewModel(tco);
+            CompoundObjectViewModel covm = new CompoundObjectViewModel(MainVm, this, cho);
+            covm.BuildViewModel(cho);
             tempChildren.Add(covm);
          }
 
@@ -572,7 +566,7 @@ namespace LeapfrogEditor
          if (Shapes.Count == 0)
          {
             //Parent.ChildObjects.Remove(this);
-            //Parent.ModelObject.ChildObjectRefs(this.RefObject)
+            //Parent.ModelObject.ChildObjectRefs(this.ChildObjectOfParent)
          }
 
          OnPropertyChanged("");
@@ -611,21 +605,25 @@ namespace LeapfrogEditor
          return null;
       }
 
-      public void BuildViewModel(CompoundObjectRef cor)
+
+      public void BuildViewModel(ChildObject cor)
       {
          _shapes.Clear();
          _joints.Clear();
+         _systems.Clear();
          _childObjects.Clear();
 
-         foreach (ObjectRefStateProperties sp in cor.StateProperties)
+         foreach (TStateProperties<ChildObjectStateProperties> sp in cor.StateProperties)
          {
-            CompositeCollection sc = SetShapes(sp.CompObj);
+            CompositeCollection sc = SetShapes(sp.Properties.CompObj);
             _shapes.Add(sc);
 
-            CompositeCollection jc = SetJoints(sp.CompObj);
+            CompositeCollection jc = SetJoints(sp.Properties.CompObj);
             _joints.Add(jc);
 
-            _childObjects.Add(SetChildren(sp.CompObj));
+            _systems = SetSystems(sp.Properties.CompObj);
+
+            _childObjects.Add(SetChildren(sp.Properties.CompObj));
 
             // Only now is the Joints property valid for this state
             foreach (object o in jc)

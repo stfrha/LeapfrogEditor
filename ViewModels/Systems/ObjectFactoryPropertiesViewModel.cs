@@ -10,32 +10,104 @@ using System.Windows.Media.Imaging;
 
 namespace LeapfrogEditor
 {
-   class ObjectFactoryPropertiesViewModel : LfShapeViewModel, IWidthHeightInterface, IBoxPointsInterface
+   // TODO: The object factory has a position, width and height
+   class ObjectFactoryPropertiesViewModel : SystemViewModelBase, IPositionInterface, IBoxPointsInterface
    {
       #region Declarations
 
-      private new ObjectFactoryProperties ModelObject;
-
+      private MainViewModel _mainVm;
+      private ObjectFactoryProperties _modelObject;
+      private CompoundObjectViewModel _parent;
       private ObservableCollection<LfPointViewModel> _points = new ObservableCollection<LfPointViewModel>();
 
       #endregion
 
       #region Constructors
 
-      public ObjectFactoryPropertiesViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, ObjectFactoryProperties modelObject) :
-         base(mainVm, parent)
+      public ObjectFactoryPropertiesViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, ObjectFactoryProperties modelObject)
       {
-         ModelObject = modelObject;
-         UpdateCornerPoints();
+         _modelObject = modelObject;
       }
 
       #endregion
 
       #region Properties
 
+      public MainViewModel MainVm
+      {
+         get { return _mainVm; }
+         set { _mainVm = value; }
+      }
+
       public ObjectFactoryProperties LocalModelObject
       {
-         get { return (ObjectFactoryProperties)ModelObject; }
+         get { return (ObjectFactoryProperties)_modelObject; }
+      }
+
+      public CompoundObjectViewModel Parent
+      {
+         get { return _parent; }
+         set
+         {
+            _parent = value;
+            OnPropertyChanged("");
+         }
+      }
+
+
+      public double PosX
+      {
+         get
+         {
+            if (_modelObject == null) return 0;
+
+            return _modelObject.PosX;
+         }
+         set
+         {
+            if (_modelObject == null) return;
+
+            _modelObject.PosX = value;
+            OnPropertyChanged("PosX");
+            OnPropertyChanged("BoundingBox");
+
+            CompoundObjectViewModel p = Parent;
+
+            while (p != null)
+            {
+               p.OnPropertyChanged("BoundingBox");
+               p.InvalidateJoints();
+               p = p.Parent;
+            }
+         }
+      }
+
+
+      public double PosY
+      {
+         get
+         {
+            if (_modelObject == null) return 0;
+
+            return _modelObject.PosY;
+         }
+         set
+         {
+            if (_modelObject == null) return;
+
+            _modelObject.PosY = value;
+            OnPropertyChanged("PosY");
+            OnPropertyChanged("BoundingBox");
+
+            CompoundObjectViewModel p = Parent;
+
+            while (p != null)
+            {
+               p.OnPropertyChanged("BoundingBox");
+               p.InvalidateJoints();
+               p = p.Parent;
+            }
+         }
       }
 
       public double Width
@@ -165,90 +237,15 @@ namespace LeapfrogEditor
          OnPropertyChanged("PointVms");
       }
 
-
       #endregion
 
       #region protected Methods
 
-      protected override Rect GetBoundingBox()
-      {
-         double l = double.MaxValue;
-         double r = double.MinValue;
-         double t = double.MaxValue;
-         double b = double.MinValue;
-
-         foreach (LfPointViewModel p in PointVms)
-         {
-            // Convert point according to angle
-            Point rtp = RotatedPointFromLocal(new Point(p.PosX, p.PosY));
-
-
-            if (rtp.X < l)
-            {
-               l = rtp.X;
-            }
-
-            if (rtp.X > r)
-            {
-               r = rtp.X;
-            }
-
-            if (rtp.Y < t)
-            {
-               t = rtp.Y;
-            }
-
-            if (rtp.Y > b)
-            {
-               b = rtp.Y;
-            }
-         }
-         Rect tr = new Rect(new Point(l, t), new Point(r, b));
-
-         return tr;
-      }
 
       #endregion
 
       #region public Methods
 
-      public void SetWidthToTextureAspectRatio()
-      {
-         //   // Get bitmap file and path
-         //   string s = @".\..\..\..\leapfrog\data\images\" + Texture + ".png";
-         //   string fullPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-         //   string fullFileName = System.IO.Path.Combine(fullPath, s);
-
-         //   // Get Bitmap width and height
-         //   Uri u = new Uri(fullFileName);
-         //   BitmapImage bi = new BitmapImage(u);
-
-         //   // Set width
-         //   Width = bi.Width / bi.Height * Height;
-
-      }
-
-      public void SetHeightToTextureAspectRatio()
-      {
-         //   // Get bitmap file and path
-         //   string s = @".\..\..\..\leapfrog\data\images\" + Texture + ".png";
-         //   string fullPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-         //   string fullFileName = System.IO.Path.Combine(fullPath, s);
-
-         //   // Get Bitmap width and height
-         //   Uri u = new Uri(fullFileName);
-         //   BitmapImage bi = new BitmapImage(u);
-
-         //   // Set width
-         //   Height = bi.Height / bi.Width * Width;
-      }
-
-      public override void InvalidateAll()
-      {
-         UpdateCornerPoints();
-         OnPropertyChanged("");
-
-      }
 
       #endregion
    }

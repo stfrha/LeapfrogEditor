@@ -36,53 +36,39 @@ namespace LeapfrogEditor
 
       #region Properties
 
-      [XmlAttribute("posX")]
-      public double PosX
+      [XmlAttribute("body")]
+      public string BodyName
       {
-         get { return _posX; }
-         set { _posX = value; }
+         get { return _bodyName; }
+         set { _bodyName = value; }
       }
 
-      [XmlAttribute("posY")]
-      public double PosY
+      [XmlAttribute("bodyAnchorX")]
+      public double BodyAnchorX
       {
-         get { return _posY; }
-         set { _posY = value; }
+         get { return _bodyAnchorX; }
+         set { _bodyAnchorX = value; }
       }
 
-      [XmlAttribute("width")]
-      public double Width
+      [XmlAttribute("bodyAnchorY")]
+      public double BodyAnchorY
       {
-         get { return _width; }
-         set { _width = value; }
+         get { return _bodyAnchorY; }
+         set { _bodyAnchorY = value; }
       }
 
-      [XmlAttribute("height")]
-      public double Height
+      [XmlAttribute("radius")]
+      public double Radius
       {
-         get { return _height; }
-         set { _height = value; }
+         get { return _radius; }
+         set { _radius = value; }
       }
 
-      [XmlAttribute("spawnInitial")]
-      public int SpawnInitial
+      [XmlAttribute("zLevel")]
+      public int ZLevel
       {
-         get { return _spawnInitial; }
-         set { _spawnInitial = value; }
-      }
-      
-      [XmlAttribute("intensity")]
-      public double Intensity
-      {
-         get { return _intensity; }
-         set { _intensity = value; }
-      }
-
-      [XmlAttribute("lifeTime")]
-      public int LifeTime
-      {
-         get { return _lifeTime; }
-         set { _lifeTime = value; }
+         get { return _zLevel; }
+         set { _zLevel = value; }
       }
 
       #endregion

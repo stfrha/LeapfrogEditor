@@ -63,10 +63,16 @@
     <Compile Include="Models\SpawnObject.cs" />
     <Compile Include="Models\Systems\ShieldProperties.cs" />
     <Compile Include="Models\Systems\GunProperties.cs" />
+    <Compile Include="ViewModels\Behvaiours\BehaviourViewModelBase.cs" />
     <Compile Include="ViewModels\Behvaiours\SteerableObjectPropertiesViewModel.cs" />
     <Compile Include="ViewModels\Behvaiours\BreakableObjectPropertiesViewModel.cs" />
     <Compile Include="ViewModels\Behvaiours\CoBehaviourViewModel.cs" />
     <Compile Include="ViewModels\SpawnObjectViewModel.cs" />
+    <Compile Include="ViewModels\Systems\SystemViewModelBase.cs" />
+    <Compile Include="ViewModels\Systems\CoSystemViewModel.cs" />
+    <Compile Include="ViewModels\Systems\ShieldPropertiesViewModel.cs" />
+    <Compile Include="ViewModels\Systems\GunPropertiesViewModel.cs" />
+    <Compile Include="ViewModels\Systems\FlameEmitterPropertiesViewModel.cs" />
     <Compile Include="Views\Controls\Editable Properties Controls\SpritePolygonPropEditor.xaml.cs">
       <DependentUpon>SpritePolygonPropEditor.xaml</DependentUpon>
     </Compile>
@@ -128,7 +134,6 @@
     <Compile Include="ValueConverters\BitValueConverter.cs" />
     <Compile Include="ViewModels\Joints\RopeViewModel.cs" />
     <Compile Include="ViewModels\Systems\ObjectFactoryPropertiesViewModel.cs" />
-    <Compile Include="ViewModels\Systems\ObjectFactoryViewModel.cs" />
     <Compile Include="ViewModels\Joints\MotorizedJointViewModel.cs" />
     <Compile Include="Views\Controls\Editable Properties Controls\Primitives\BoolEditorControl.xaml.cs">
       <DependentUpon>BoolEditorControl.xaml</DependentUpon>

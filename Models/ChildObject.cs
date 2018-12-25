@@ -15,7 +15,7 @@ namespace LeapfrogEditor
 
       private string _name;
       private string _type;
-      private TStateProperties<ChildObjectStateProperties> _stateProperties = new TStateProperties<ChildObjectStateProperties>();
+      private ObservableCollection<TStateProperties<ChildObjectStateProperties>> _stateProperties = new ObservableCollection<TStateProperties<ChildObjectStateProperties>>();
 
       #endregion
 
@@ -45,7 +45,7 @@ namespace LeapfrogEditor
       }
 
       [XmlElement("stateProperties")]
-      public TStateProperties<ChildObjectStateProperties> StateProperties
+      public ObservableCollection<TStateProperties<ChildObjectStateProperties>> StateProperties
       {
          get { return _stateProperties; }
          set { _stateProperties = value; }

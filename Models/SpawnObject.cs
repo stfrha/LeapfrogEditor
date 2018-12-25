@@ -36,7 +36,7 @@ namespace LeapfrogEditor
          set { _probabilityFactor = value; }
       }
 
-      [XmlAttribute("childObject")]
+      [XmlElement("childObject")]
       public ChildObject MyChildObject
       {
          get { return _childObject; }

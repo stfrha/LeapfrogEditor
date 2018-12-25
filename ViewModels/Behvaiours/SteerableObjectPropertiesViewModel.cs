@@ -10,7 +10,7 @@ using System.Windows.Media.Imaging;
 
 namespace LeapfrogEditor
 {
-   class SteerableObjectPropertiesViewModel : MicroMvvm.ViewModelBase
+   class SteerableObjectPropertiesViewModel : BehaviourViewModelBase
    {
       #region Declarations
 

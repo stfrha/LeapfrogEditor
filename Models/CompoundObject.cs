@@ -18,8 +18,6 @@ namespace LeapfrogEditor
    {
       #region Declarations
 
-      private string _type;
-
       //Behaviour
       private CoBehaviour _behaviour;
 
@@ -65,19 +63,11 @@ namespace LeapfrogEditor
 
       #region Properties
 
-      [XmlAttribute("behaviour")]
+      [XmlElement("behaviour")]
       public CoBehaviour Behaviour
       {
          get { return _behaviour; }
          set { _behaviour = value; }
-      }
-
-
-      [XmlAttribute("type")]
-      public string Type
-      {
-         get { return _type; }
-         set { _type = value; }
       }
 
       [XmlElement("spriteBox")]
@@ -185,6 +175,13 @@ namespace LeapfrogEditor
          set { _systems = value; }
       }
 
+      [XmlElement("childObject")]
+      public ObservableCollection<ChildObject> ChildObjects
+      {
+         get { return _childObjects; }
+         set { _childObjects = value; }
+      }
+
       // Following is special cases for landing scenes. Maybe these will be specialised 
       // xml files with specialised format.
 
@@ -218,17 +215,24 @@ namespace LeapfrogEditor
          XmlReader reader = XmlReader.Create(fs);
          CompoundObject co = (CompoundObject)ser.Deserialize(reader);
 
-         // Iterate CompounfObjectRefs to load all child objects
-         foreach (CompoundObjectRef cor in co.ChildObjectRefs)
+         // Iterate ChildObjects to load all child objects
+         foreach (ChildObject cor in co.ChildObjects)
          {
             // Iterate all state properties
-            foreach (ObjectRefStateProperties sp in cor.StateProperties)
+            foreach (TStateProperties<ChildObjectStateProperties> sp in cor.StateProperties)
             {
-               string newFile = System.IO.Path.Combine(path, sp.File);
+               // Only read files if the child object is referenced from a 
+               // separate file, otherwise the serialization will already have
+               // populated the child object.
+               if ((sp.Properties.File != "") && (sp.Properties.CompObj == null))
+               {
+                  string newFile = System.IO.Path.Combine(path, sp.Properties.File);
 
-               CompoundObject childCo = CompoundObject.ReadFromFile(newFile);
+                  CompoundObject childCo = CompoundObject.ReadFromFile(newFile);
 
-               sp.CompObj = childCo;
+                  sp.Properties.CompObj = childCo;
+
+               }
             }
          }
 
@@ -267,15 +271,17 @@ namespace LeapfrogEditor
          XmlWriter writer = XmlWriter.Create(fs, settings);
          ser.Serialize(writer, this, ns);
 
-         // Iterate ChildObjectRefs to save all child objects
-         foreach (CompoundObjectRef co in ChildObjectRefs)
+         // Iterate ChildObjects to save all child objects
+         foreach (ChildObject co in ChildObjects)
          {
-            foreach (ObjectRefStateProperties sp in co.StateProperties)
+            foreach (TStateProperties<ChildObjectStateProperties> sp in co.StateProperties)
             {
-               string newFile = System.IO.Path.Combine(path, sp.File);
+               if (sp.Properties.File != "")
+               {
+                  string newFile = System.IO.Path.Combine(path, sp.Properties.File);
 
-               sp.CompObj.WriteToFile(newFile);
-
+                  sp.Properties.CompObj.WriteToFile(newFile);
+               }
             }
          }
 
