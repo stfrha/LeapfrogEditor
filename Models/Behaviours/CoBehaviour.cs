@@ -37,7 +37,7 @@ namespace LeapfrogEditor
          set { _type = value; }
       }
 
-      [XmlElement("properties")]
+      [XmlElement("steerableObjectProperties")]
       public SteerableObjectProperties SteerableObjProps
       {
          get { return _steerableObjProps; }
@@ -49,7 +49,7 @@ namespace LeapfrogEditor
          return (Type == "steerableObject");
       }
 
-      [XmlElement("properties")]
+      [XmlElement("breakableObjectProperties")]
       public BreakableObjectProperties BreakableObjProps
       {
          get { return _breakableObjProps; }

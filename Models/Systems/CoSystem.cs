@@ -48,7 +48,7 @@ namespace LeapfrogEditor
          set { _type = value; }
       }
 
-      [XmlElement("properties")]
+      [XmlElement("objectFactoryProperties")]
       public ObjectFactoryProperties ObjFactStateProperties
       {
          get { return _objFactStateProperties; }
@@ -60,7 +60,7 @@ namespace LeapfrogEditor
          return (Type == "objectFactory");
       }
 
-      [XmlElement("properties")]
+      [XmlElement("gunProperties")]
       public GunProperties GunStateProperties
       {
          get { return _gunStateProperties; }
@@ -72,7 +72,7 @@ namespace LeapfrogEditor
          return (Type == "gun");
       }
 
-      [XmlElement("properties")]
+      [XmlElement("shieldProperties")]
       public ShieldProperties ShieldStateProperties
       {
          get { return _shieldStateProperties; }
@@ -85,7 +85,7 @@ namespace LeapfrogEditor
       }
 
 
-      [XmlElement("properties")]
+      [XmlElement("flameEmitterProperties")]
       public FlameEmitterProperties FlameEmitterStateProperties
       {
          get { return _flameEmitterStateProperties; }
