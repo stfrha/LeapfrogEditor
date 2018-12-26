@@ -86,6 +86,10 @@
             <ColumnDefinition Width="250" />
 
          </Grid.ColumnDefinitions>
+         <Grid Grid.Column="0"
+               Background="Blue">
+            
+         </Grid>
          <DockPanel Grid.Column="1">
             <ScrollViewer
 			x:Name="scroller"
