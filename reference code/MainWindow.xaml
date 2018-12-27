@@ -1,0 +1,823 @@
+﻿<Window x:Class="ModestyGE.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:ModestyGE"
+    xmlns:ZoomAndPan="clr-namespace:ZoomAndPan;assembly=ZoomAndPan"
+    Title="Modesty Graphical Environment" 
+    FocusManager.FocusedElement="{Binding ElementName=scroller}"
+    WindowStartupLocation="CenterScreen" 
+    WindowState="Maximized"        
+    Loaded="Window_loaded"
+    x:Name="root">
+   <Window.DataContext>
+      <local:ModestyGeViewModel x:Name="MyViewModel"/>
+   </Window.DataContext>
+   <Window.Resources>
+      <RoutedUICommand x:Key="Commands.ZoomOut" />
+      <RoutedUICommand x:Key="Commands.ZoomIn" />
+      <local:BindingProxy x:Key="DataContextProxy" Data="{Binding}" />
+      <local:NavToDispValueXConverter x:Key="XConverter" />
+      <local:NavToDispValueYConverter x:Key="YConverter" />
+      <local:PosRotFixVisabilityConverter x:Key="FixVisabilityConverter" />
+      <local:PosRotSyntheticVisabilityConverter x:Key="SyntheticVisabilityConverter" />
+      <local:PosRotNonFixedConverter x:Key="PosRotNonFixedConverter" />
+      <local:TimeSliderConverter x:Key="TimeSliderConverter" />
+      <local:StateColorConverter x:Key="StateColorConverter" />
+      <local:StateToVisibilityonverter x:Key="StateToVisibilityonverter" />
+      <local:TimeIndexConverter x:Key="TimeIndexConverter" />
+      <local:BoolToVisabilityConverter x:Key="BoolToVisabilityConverter" />
+   </Window.Resources>
+   <Window.InputBindings>
+      <KeyBinding
+			Key="Minus"
+			Command="{StaticResource Commands.ZoomOut}"
+			/>
+      <KeyBinding
+			Key="Plus"
+			Command="{StaticResource Commands.ZoomIn}"
+			/>
+   </Window.InputBindings>
+   <Window.CommandBindings>
+      <CommandBinding 
+            Command="{StaticResource Commands.ZoomOut}" 
+            Executed="ZoomOut_Executed" 
+            />
+      <CommandBinding 
+            Command="{StaticResource Commands.ZoomIn}" 
+            Executed="ZoomIn_Executed" 
+            />
+   </Window.CommandBindings>
+   <Grid>
+      <Grid.RowDefinitions>
+         <RowDefinition Height="25" />
+         <RowDefinition Height="50" />
+         <RowDefinition Height="*" />
+      </Grid.RowDefinitions>
+      <Menu Grid.Row="0">
+         <MenuItem Header="File">
+            <MenuItem Header="New Simulation..." Command="{Binding NewSimulation}" />
+            <MenuItem Header="Open Simulation..." Command="{Binding OpenSimulation}" />
+            <MenuItem Header="Save Simulation" Command="{Binding SaveSimulation}" />
+            <Separator />
+            <MenuItem Header="Exit" Click="Exit_Click"/>
+         </MenuItem>
+         <MenuItem Header="View">
+            <MenuItem Header="Fit view to flight path" Command="{Binding FitView}" />
+            <MenuItem Header="Fit whole map" Command="{Binding FitMap}" />
+            <MenuItem Header="Zoom In" Command="{Binding ZoomIn}" />
+            <MenuItem Header="Zoom Out" Command="{Binding ZoomOut}" />
+         </MenuItem>
+         <MenuItem Header="Application State">
+            <MenuItem Header="Set State" >
+               <MenuItem Header="Editing" Command="{Binding SetMainStateEditing}" />
+               <MenuItem Header="Preview" Command="{Binding SetMainStatePreview}" />
+               <MenuItem Header="Simulation running" Command="{Binding SetMainStateRunning}" />
+               <MenuItem Header="Recording Analysis" Command="{Binding SetMainStateAnalysing}" />
+            </MenuItem>
+         </MenuItem>
+      </Menu>
+      <StackPanel Grid.Row="1" Orientation="Horizontal">
+         <Border Height="45" BorderThickness="2" 
+                 BorderBrush="{Binding MainState, Converter={StaticResource StateColorConverter}, ConverterParameter='edit'}"  >
+            <StackPanel Orientation="Horizontal">
+               <Button Margin="2"  Height="36" Width="55" Content="Edit" 
+                 Command="{Binding SetMainStateEditing}" />
+               <Button Margin="2"  Height="25" Width="50" Content="Cancel"
+                     Visibility="{Binding PendingRightClick, Converter={StaticResource BoolToVisabilityConverter}}"  
+                     Command="{Binding CancelRightClick}" />
+            </StackPanel>
+         </Border>
+         <Border Height="45" BorderThickness="2" 
+                 BorderBrush="{Binding MainState, Converter={StaticResource StateColorConverter}, ConverterParameter='preview'}"  >
+            <Button Margin="2"  Height="36" Width="55" Content="Preview" 
+                 Command="{Binding SetMainStatePreview}" />
+         </Border>
+         <Border Height="45" BorderThickness="2" 
+                 BorderBrush="{Binding MainState, Converter={StaticResource StateColorConverter}, ConverterParameter='run'}"  >
+            <StackPanel Orientation="Horizontal">
+               <Button Margin="2"  Height="36" Width="55" Content="Simulate" 
+                 Command="{Binding SetMainStateRunning}" />
+               <Button Margin="2"  Height="25" Width="50" Content="Cancel"
+                     Visibility="{Binding MainState, Converter={StaticResource StateToVisibilityonverter}, ConverterParameter='run'}"  
+                     Command="{Binding TerminateSimulation}" />
+               <Button Margin="2"  Height="25" Width="50" Content="Re-Run"
+                     Visibility="{Binding MainState, Converter={StaticResource StateToVisibilityonverter}, ConverterParameter='run'}"  
+                     Command="{Binding RerunSimulation}" />
+            </StackPanel>
+         </Border>
+         <Border Height="45" BorderThickness="2" 
+                 BorderBrush="{Binding MainState, Converter={StaticResource StateColorConverter}, ConverterParameter='analyse'}"  >
+            <Button Margin="2"  Height="36" Width="55" Content="Analyse" 
+                 Command="{Binding SetMainStateAnalysing}" />
+         </Border>
+         <Label FontSize="20" FontStyle="Italic" Foreground="Blue" Content="{Binding StatusMessage}" VerticalAlignment="Center" />
+      </StackPanel>
+      <Grid Grid.Row="2">
+         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="150" />
+         </Grid.ColumnDefinitions>
+         <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+               <RowDefinition Height="25" />
+               <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal">
+               <Button Margin="2" Width="70" Content="Move up" Command="{Binding MoveItemUp}" />
+               <Button Margin="2" Width="70" Content="Move down" Command="{Binding MoveItemDown}" />
+            </StackPanel>
+            <TreeView x:Name="TheTreeView" Grid.Row="1" ItemsSource="{Binding TreeTopViewModel.Children}" >
+               <TreeView.ItemContainerStyle>
+                  <Style TargetType="{x:Type TreeViewItem}">
+                     <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                     <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                     <Setter Property="FontWeight" Value="Normal" />
+                     <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                           <Setter Property="FontWeight" Value="Bold" />
+                        </Trigger>
+                     </Style.Triggers>
+                  </Style>
+               </TreeView.ItemContainerStyle>
+               <TreeView.Resources>
+                  <HierarchicalDataTemplate DataType="{x:Type local:TreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}" />
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:SignalModeTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:AntennaScanModeTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}" ToolTipService.ShowDuration="60000">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                        <Label.ToolTip>
+                           <local:ToolTipControl Legend="{Binding ToolTipLegend}" Details="{Binding ToolTipDetails}" />
+                        </Label.ToolTip>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:SimulationControlTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:LibrarySetTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:ConfigLibraryTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:LmhbrxLibraryTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:RecLibraryTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:WaypointTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}" ToolTipService.ShowDuration="60000">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                              <Separator />
+                              <MenuItem Header="Remove" 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.RemoveItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                        <Label.ToolTip>
+                           <local:ToolTipControl Legend="{Binding ToolTipLegend}" Details="{Binding ToolTipDetails}" />
+                        </Label.ToolTip>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:RadarEmitterModeTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                              <Separator />
+                              <MenuItem Header="Remove" 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.RemoveItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:PositionRotationTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                              <Separator />
+                              <MenuItem Header="Add Waypoint..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.AddItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:RfEmitterTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                              <Separator />
+                              <MenuItem Header="Add mode..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.AddItem, Source={StaticResource DataContextProxy}}" />
+                              <MenuItem Header="Remove" 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.RemoveItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:EmitterListTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Add Emitter..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.AddItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:OwnRadarTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                              <Separator />
+                              <MenuItem Header="Add mode..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.AddItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:EmitterModeTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                              <Separator />
+                              <MenuItem Header="Remove" 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.RemoveItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:SignalModesTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Add Signal Mode Group..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.AddItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:SignalModeGroupTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit Signal Mode Group..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                              <Separator />
+                              <MenuItem Header="Add Signal Mode..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.AddItem, Source={StaticResource DataContextProxy}}" />
+                              <Separator />
+                              <MenuItem Header="Remove Group" 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.RemoveItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:ScanModesTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Add Scan Mode Group..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.AddItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:ScanModeGroupTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit Scan Mode Group..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                              <Separator />
+                              <MenuItem Header="Add Scan Mode..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.AddItem, Source={StaticResource DataContextProxy}}" />
+                              <Separator />
+                              <MenuItem Header="Remove Group" 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.RemoveItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:ModesLibraryTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Reload Library" 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.ReloadLibrary, Source={StaticResource DataContextProxy}}" />
+                              <MenuItem Header="Save Library" 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.SaveLibrary, Source={StaticResource DataContextProxy}}" />
+                              <Separator />
+                              <MenuItem Header="Export Library..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.ExportLibrary, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+               </TreeView.Resources>
+            </TreeView>
+         </Grid>
+         <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+         <ScrollViewer
+              x:Name="scroller"
+              CanContentScroll="True"
+              VerticalScrollBarVisibility="Visible"
+              HorizontalScrollBarVisibility="Visible"
+              Grid.Column="2"
+              >
+            <ZoomAndPan:ZoomAndPanControl                
+            x:Name="zoomAndPanControl"
+            Background="LightGray"
+            MouseDown="zoomAndPanControl_MouseDown"
+            MouseUp="zoomAndPanControl_MouseUp"
+            MouseMove="zoomAndPanControl_MouseMove"
+            MouseWheel="zoomAndPanControl_MouseWheel" >
+               <Canvas
+                x:Name="content"
+                Width="36000"
+                Height="18000"
+                Background="LightBlue"
+                  MouseRightButtonDown="RightClick" >
+                  <ItemsControl ItemsSource="{Binding Path=MapImages}">
+                     <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                           <Canvas />
+                        </ItemsPanelTemplate>
+                     </ItemsControl.ItemsPanel>
+                     <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="ContentPresenter">
+                           <Setter Property="Canvas.Left" Value="{Binding DispCoordX}"/>
+                           <Setter Property="Canvas.Top" Value="{Binding DispCoordY}"/>
+                           <Setter Property="ContentTemplate">
+                              <Setter.Value>
+                                 <DataTemplate>
+                                    <!--<Rectangle 
+                                        Fill="DarkSeaGreen"
+                                       Width="{Binding DispWidth}" 
+                                       Height="{Binding DispHeight}" />-->
+                                    <Image 
+                                       Source="{Binding Source}" 
+                                       Width="{Binding DispWidth}" 
+                                       Height="{Binding DispHeight}"
+                                        Stretch="Fill">
+                                    </Image>
+                                 </DataTemplate>
+                              </Setter.Value>
+                           </Setter>
+                        </Style>
+                     </ItemsControl.ItemContainerStyle>
+                  </ItemsControl>
+                  <local:MapGrid />
+                  <!-- One ItemsControl for lines between all synthetic WayPpoints-->
+                  <ItemsControl ItemsSource="{Binding Path=Platforms}">
+                     <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                           <Canvas/>
+                        </ItemsPanelTemplate>
+                     </ItemsControl.ItemsPanel>
+                     <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                           <ItemsControl x:Name="lineItemSource" ItemsSource="{Binding Path=Children}"
+                                 Visibility="{Binding Type, Converter={StaticResource SyntheticVisabilityConverter}}"
+                                 AlternationCount="{Binding Children.Count}">
+                              <ItemsControl.ItemsPanel>
+                                 <ItemsPanelTemplate>
+                                    <Canvas/>
+                                 </ItemsPanelTemplate>
+                              </ItemsControl.ItemsPanel>
+                              <ItemsControl.ItemTemplate>
+                                 <DataTemplate DataType="local:PositionRotationTreeViewViewModel">
+                                    <Line StrokeThickness="0.3" StrokeEndLineCap="Round"
+                                          X1="{Binding Longitude, Converter={StaticResource XConverter}}"
+                                          Y1="{Binding Latitude, Converter={StaticResource YConverter}}"
+                                          X2="{Binding Path=Longitude, RelativeSource={RelativeSource PreviousData}, Converter={StaticResource XConverter}}"
+                                          Y2="{Binding Path=Latitude, RelativeSource={RelativeSource PreviousData}, Converter={StaticResource YConverter}}">
+                                       <Line.Style>
+                                          <Style TargetType="{x:Type Line}">
+                                             <Style.Triggers>
+                                                <DataTrigger 
+                                                      Binding="{Binding 
+                                                      RelativeSource={RelativeSource AncestorType={x:Type ContentPresenter}}, 
+                                                      Path=(ItemsControl.AlternationIndex)}" Value="0">
+                                                   <Setter Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+                                                <DataTrigger 
+                                                      Binding="{Binding Path=DataContext.Platform.IsSut, ElementName=lineItemSource}" Value="True">
+                                                   <Setter Property="Stroke" Value="DodgerBlue"/>
+                                                </DataTrigger>
+                                                <DataTrigger 
+                                                      Binding="{Binding Path=DataContext.Platform.IsSut, ElementName=lineItemSource}" Value="False">
+                                                   <Setter Property="Stroke" Value="Violet"/>
+                                                </DataTrigger>
+                                             </Style.Triggers>
+                                          </Style>
+                                       </Line.Style>
+                                    </Line>
+                                 </DataTemplate>
+                              </ItemsControl.ItemTemplate>
+                           </ItemsControl>
+                        </DataTemplate>
+                     </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                  <!-- One ItemsControl for all synthetic WayPpoints-->
+                  <ItemsControl ItemsSource="{Binding Path=Platforms}">
+                     <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                           <Canvas/>
+                        </ItemsPanelTemplate>
+                     </ItemsControl.ItemsPanel>
+                     <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                           <ItemsControl x:Name="wpItemSource" ItemsSource="{Binding Path=Children}"
+                                 Visibility="{Binding Type, Converter={StaticResource SyntheticVisabilityConverter}}"
+                                 AlternationCount="{Binding Children.Count}">
+                              <ItemsControl.ItemsPanel>
+                                 <ItemsPanelTemplate>
+                                    <Canvas/>
+                                 </ItemsPanelTemplate>
+                              </ItemsControl.ItemsPanel>
+                              <ItemsControl.ItemContainerStyle>
+                                 <Style TargetType="ContentPresenter">
+                                    <Setter Property="Canvas.Left" Value="{Binding Longitude, Converter={StaticResource XConverter}}"/>
+                                    <Setter Property="Canvas.Top" Value="{Binding Latitude, Converter={StaticResource YConverter}}"/>
+                                 </Style>
+                              </ItemsControl.ItemContainerStyle>
+                              <ItemsControl.ItemTemplate >
+                                 <DataTemplate DataType="local:PositionRotationTreeViewViewModel">
+                                    <local:NavPointCntrl RenderTransformOrigin="0.5,0.5" 
+                                       PointIndex="{Binding 
+                                             RelativeSource={RelativeSource AncestorType={x:Type ContentPresenter}}, 
+                                             Path=(ItemsControl.AlternationIndex)}" >
+                                       <local:NavPointCntrl.RenderTransform>
+                                          <TransformGroup>
+                                             <ScaleTransform ScaleX="{Binding Path=ScaleRatio, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}}" />
+                                             <TranslateTransform X="-0.5" Y="-0.5" />
+                                          </TransformGroup>
+                                       </local:NavPointCntrl.RenderTransform>
+                                       <local:NavPointCntrl.Style>
+                                          <Style TargetType="{x:Type local:NavPointCntrl}">
+                                             <Style.Triggers>
+                                                <DataTrigger 
+                                                      Binding="{Binding Path=DataContext.Platform.IsSut, ElementName=wpItemSource}" Value="True">
+                                                   <Setter Property="PointColor" Value="Blue"/>
+                                                </DataTrigger>
+                                                <DataTrigger 
+                                                      Binding="{Binding Path=DataContext.Platform.IsSut, ElementName=wpItemSource}" Value="False">
+                                                   <Setter Property="PointColor" Value="Red"/>
+                                                </DataTrigger>
+                                             </Style.Triggers>
+                                          </Style>
+                                       </local:NavPointCntrl.Style>
+                                       <local:NavPointCntrl.ToolTip>
+                                          <local:ToolTipControl Legend="{Binding ToolTipLegend}" Details="{Binding ToolTipDetails}" />
+                                       </local:NavPointCntrl.ToolTip>
+                                    </local:NavPointCntrl>
+                                 </DataTemplate>
+                              </ItemsControl.ItemTemplate>
+                           </ItemsControl>
+                        </DataTemplate>
+                     </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                  <!-- One ItemsControl for all fix WayPpoints-->
+                  <ItemsControl x:Name="fixWpItemSource" ItemsSource="{Binding Platforms}">
+                     <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                           <Canvas IsItemsHost="True" />
+                        </ItemsPanelTemplate>
+                     </ItemsControl.ItemsPanel>
+                     <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="FrameworkElement">
+                           <Setter Property="Canvas.Left" Value="{Binding  FixLongitude, Converter={StaticResource XConverter}}"/>
+                           <Setter Property="Canvas.Top" Value="{Binding  FixLatitude, Converter={StaticResource YConverter}}"/>
+                        </Style>
+                     </ItemsControl.ItemContainerStyle>
+                     <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="local:PositionRotationTreeViewViewModel">
+                           <local:NavPointCntrl RenderTransformOrigin="0.5,0.5" Visibility="{Binding Type, Converter={StaticResource FixVisabilityConverter}}" >
+                              <local:NavPointCntrl.RenderTransform>
+                                 <TransformGroup>
+                                    <ScaleTransform ScaleX="{Binding Path=ScaleRatio, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}}" />
+                                    <TranslateTransform X="-0.5" Y="-0.5" />
+                                 </TransformGroup>
+                              </local:NavPointCntrl.RenderTransform>
+                              <local:NavPointCntrl.Style>
+                                 <Style TargetType="{x:Type local:NavPointCntrl}">
+                                    <Style.Triggers>
+                                       <DataTrigger 
+                                             Binding="{Binding Path=Platform.IsSut}" Value="True">
+                                          <Setter Property="PointColor" Value="Blue"/>
+                                       </DataTrigger>
+                                       <DataTrigger 
+                                             Binding="{Binding Path=Platform.IsSut}" Value="False">
+                                          <Setter Property="PointColor" Value="Red"/>
+                                       </DataTrigger>
+                                    </Style.Triggers>
+                                 </Style>
+                              </local:NavPointCntrl.Style>
+                           </local:NavPointCntrl>
+                        </DataTemplate>
+                     </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                  <!-- One ItemsControl for all moving Platforms -->
+                  <ItemsControl ItemsSource="{Binding Platforms}" >
+                     <ItemsControl.Resources>
+                        <DataTemplate x:Key="sutPlatformTemplate" DataType="local:PositionRotationTreeViewViewModel">
+                           <local:AircraftCntrl 
+                                 Heading="{Binding Platform.CurrentPoint.Heading}"
+                                 Headline="{Binding PlatformName}"
+                                 RenderTransformOrigin="0.5,0.5">
+                              <local:AircraftCntrl.RenderTransform>
+                                 <ScaleTransform ScaleX="{Binding Path=ScaleRatio, RelativeSource={RelativeSource Mode=FindAncestor, AncestorLevel=1, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}}" />
+                              </local:AircraftCntrl.RenderTransform>
+                           </local:AircraftCntrl>
+                        </DataTemplate>
+                        <DataTemplate x:Key="threatPlatformTemplate" DataType="local:PositionRotationTreeViewViewModel">
+                           <local:ThreatCntrl 
+                                 Heading="{Binding Platform.CurrentPoint.Heading}"
+                                 Headline="{Binding PlatformName}"
+                                 RenderTransformOrigin="0.5,0.5">
+                              <local:ThreatCntrl.RenderTransform>
+                                 <ScaleTransform ScaleX="{Binding Path=ScaleRatio, RelativeSource={RelativeSource Mode=FindAncestor, AncestorLevel=1, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}}" />
+                              </local:ThreatCntrl.RenderTransform>
+                           </local:ThreatCntrl>
+                        </DataTemplate>
+                     </ItemsControl.Resources>
+                     <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                           <Canvas IsItemsHost="True" />
+                        </ItemsPanelTemplate>
+                     </ItemsControl.ItemsPanel>
+                     <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="FrameworkElement">
+                           <Setter Property="Canvas.Left" Value="{Binding  Platform.CurrentPoint.Longitude, Converter={StaticResource XConverter}}"/>
+                           <Setter Property="Canvas.Top" Value="{Binding  Platform.CurrentPoint.Latitude, Converter={StaticResource YConverter}}"/>
+                        </Style>
+                     </ItemsControl.ItemContainerStyle>
+                     <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type local:PositionRotationTreeViewViewModel}">
+                           <ContentControl Content="{Binding }"
+                                    Visibility="{Binding Type, Converter={StaticResource SyntheticVisabilityConverter}}" >
+                              <ContentControl.Style>
+                                 <Style TargetType="{x:Type ContentControl}">
+                                    <Setter Property="ContentTemplate" Value="{StaticResource threatPlatformTemplate}" />
+                                    <Style.Triggers>
+                                       <DataTrigger Binding="{Binding Platform.IsSut}" Value="True">
+                                          <Setter Property="ContentTemplate" Value="{StaticResource sutPlatformTemplate}" />
+                                       </DataTrigger>
+                                    </Style.Triggers>
+                                 </Style>
+                              </ContentControl.Style>
+                           </ContentControl>
+                        </DataTemplate>
+                     </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                  <!-- One ItemsControl for all Fix SUT/SAM Platforms -->
+                  <ItemsControl ItemsSource="{Binding Platforms}" >
+                     <ItemsControl.Resources>
+                        <DataTemplate x:Key="sutPlatformTemplate" DataType="local:PositionRotationTreeViewViewModel">
+                           <local:AircraftCntrl 
+                                 Heading="{Binding Platform.CurrentPoint.Heading}"
+                                 Headline="{Binding PlatformName}"
+                                 RenderTransformOrigin="0.5,0.5">
+                              <local:AircraftCntrl.RenderTransform>
+                                 <ScaleTransform ScaleX="{Binding Path=ScaleRatio, RelativeSource={RelativeSource Mode=FindAncestor, AncestorLevel=1, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}}" />
+                              </local:AircraftCntrl.RenderTransform>
+                           </local:AircraftCntrl>
+                        </DataTemplate>
+                        <DataTemplate x:Key="samPlatformTemplate" DataType="local:PositionRotationTreeViewViewModel">
+                           <local:SamThreatCntrl 
+                                 Heading="{Binding Platform.CurrentPoint.Heading}"
+                                 Headline="{Binding PlatformName}"
+                                 RenderTransformOrigin="0.5,0.5" >
+                              <local:SamThreatCntrl.RenderTransform>
+                                 <ScaleTransform ScaleX="{Binding Path=ScaleRatio, RelativeSource={RelativeSource Mode=FindAncestor, AncestorLevel=1, AncestorType={x:Type ZoomAndPan:ZoomAndPanControl}}}" />
+                              </local:SamThreatCntrl.RenderTransform>
+                           </local:SamThreatCntrl>
+                        </DataTemplate>
+                     </ItemsControl.Resources>
+                     <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                           <Canvas IsItemsHost="True" />
+                        </ItemsPanelTemplate>
+                     </ItemsControl.ItemsPanel>
+                     <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="FrameworkElement">
+                           <Setter Property="Canvas.Left" Value="{Binding  Platform.CurrentPoint.Longitude, Converter={StaticResource XConverter}}"/>
+                           <Setter Property="Canvas.Top" Value="{Binding  Platform.CurrentPoint.Latitude, Converter={StaticResource YConverter}}"/>
+                        </Style>
+                     </ItemsControl.ItemContainerStyle>
+                     <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type local:PositionRotationTreeViewViewModel}">
+                           <ContentControl Content="{Binding }"
+                                    Visibility="{Binding Type, Converter={StaticResource FixVisabilityConverter}}" >
+                              <ContentControl.Style>
+                                 <Style TargetType="{x:Type ContentControl}">
+                                    <Setter Property="ContentTemplate" Value="{StaticResource samPlatformTemplate}" />
+                                    <Style.Triggers>
+                                       <DataTrigger Binding="{Binding Platform.IsSut}" Value="True">
+                                          <Setter Property="ContentTemplate" Value="{StaticResource sutPlatformTemplate}" />
+                                       </DataTrigger>
+                                    </Style.Triggers>
+                                 </Style>
+                              </ContentControl.Style>
+                           </ContentControl>
+                        </DataTemplate>
+                     </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                  <!--<ItemsControl ItemsSource="{Binding Path=TrackPathPoints}">
+                     <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                           <Canvas/>
+                        </ItemsPanelTemplate>
+                     </ItemsControl.ItemsPanel>
+                     <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="ContentPresenter">
+                           <Setter Property="Canvas.Left" Value="{Binding DispCoordX}"/>
+                           <Setter Property="Canvas.Top" Value="{Binding DispCoordY}"/>
+                        </Style>
+                     </ItemsControl.ItemContainerStyle>
+                     <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                           <local:PathPointCntrl />
+                        </DataTemplate>
+                     </ItemsControl.ItemTemplate>
+                  </ItemsControl>-->
+               </Canvas>
+            </ZoomAndPan:ZoomAndPanControl>
+         </ScrollViewer>
+         <Grid Grid.Column="3" >
+            <Grid.RowDefinitions>
+               <RowDefinition Height="45" />
+               <RowDefinition Height="25" />
+               <RowDefinition Height="25" />
+               <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+               <Grid.RowDefinitions>
+                  <RowDefinition Height="20" />
+                  <RowDefinition Height="20" />
+               </Grid.RowDefinitions>
+               <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="40" />
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="25" />
+               </Grid.ColumnDefinitions>
+               <Label Margin="-2" Grid.Column="0" Grid.Row="0" Content="Time:" />
+               <Label Margin="-2" Grid.Column="1" Grid.Row="0" 
+                      Content="{Binding PathIndex, Converter={StaticResource TimeIndexConverter}}" />
+               <Label Margin="-2" Grid.Column="2" Grid.Row="0" Content="sec" />
+               <Label Margin="-2" Grid.Column="0" Grid.Row="1" Content="Total:" />
+               <Label Margin="-2" Grid.Column="1" Grid.Row="1" 
+                      Content="{Binding SimControlViewModel.SimTime}" />
+               <Label Margin="-2" Grid.Column="2" Grid.Row="1" Content="sec" />
+            </Grid>
+            <Slider Grid.Row="1" TickPlacement="BottomRight" 
+                    Maximum="{Binding SimControlViewModel.SimTime, Converter={StaticResource TimeSliderConverter}}"
+                    Value="{Binding PathIndex, Mode=TwoWay}" />
+            <Grid Grid.Row="2">
+               <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="*" />
+               </Grid.ColumnDefinitions>
+               <Button Margin="2" Grid.Column="0" Content="Play" Command="{Binding Play}" />
+               <Button Margin="2" Grid.Column="1" Content="Pause" Command="{Binding Pause}" />
+               <Button Margin="2" Grid.Column="2" Content="Rewind" Command="{Binding Rewind}" />
+            </Grid>
+            <ItemsControl Grid.Row="3" ItemsSource="{Binding Platforms}">
+               <ItemsControl.Resources>
+                  <DataTemplate x:Key="sutBankTemplate" DataType="local:PositionRotationTreeViewViewModel" >
+                     <local:BankIndicatorCntrl 
+                        BankAngle="{Binding Platform.CurBank}" 
+                        Headline="{Binding PlatformName}"
+                        Visibility="{Binding Type, Converter={StaticResource PosRotNonFixedConverter}}"/>
+                  </DataTemplate>
+                  <DataTemplate x:Key="threatBankTemplate" DataType="local:PositionRotationTreeViewViewModel" >
+                     <local:ThreatBankIndicatorCntrl 
+                        BankAngle="{Binding Platform.CurBank}" 
+                        Headline="{Binding PlatformName}"
+                        Visibility="{Binding Type, Converter={StaticResource PosRotNonFixedConverter}}"/>
+                  </DataTemplate>
+               </ItemsControl.Resources>
+               <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                     <StackPanel IsItemsHost="True" />
+                  </ItemsPanelTemplate>
+               </ItemsControl.ItemsPanel>
+               <ItemsControl.ItemTemplate>
+                  <DataTemplate DataType="{x:Type local:PositionRotationTreeViewViewModel}">
+                     <ContentControl Content="{Binding }">
+                        <ContentControl.Style>
+                           <Style TargetType="{x:Type ContentControl}">
+                              <Setter Property="ContentTemplate" Value="{StaticResource threatBankTemplate}" />
+                              <Style.Triggers>
+                                 <DataTrigger Binding="{Binding Platform.IsSut}" Value="True">
+                                    <Setter Property="ContentTemplate" Value="{StaticResource sutBankTemplate}" />
+                                 </DataTrigger>
+                              </Style.Triggers>
+                           </Style>
+                        </ContentControl.Style>
+                     </ContentControl>
+                  </DataTemplate>
+               </ItemsControl.ItemTemplate>
+            </ItemsControl>
+         </Grid>
+      </Grid>
+   </Grid>
+</Window>
