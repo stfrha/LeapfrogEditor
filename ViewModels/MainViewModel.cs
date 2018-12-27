@@ -62,6 +62,7 @@ namespace LeapfrogEditor
       private TStateProperties<ChildObjectStateProperties> _myStateProp = new TStateProperties<ChildObjectStateProperties>();
       private CompoundObject _myCP;
       private CompoundObjectViewModel _myCpVm;
+      private TreeViewViewModel _topTreeViewViewModel = new TreeViewViewModel();
 
       private CompoundObjectViewModel _selectedCompoundObject = null;
       private ObservableCollection<LfShapeViewModel> _selectedShapes = new ObservableCollection<LfShapeViewModel>();
@@ -98,19 +99,6 @@ namespace LeapfrogEditor
 
          CollEnts = CollisionEntities.ReadFromFile(fullFileName);
 
-         //fileName = "landing_scene.xml";
-         //s = @"..\..\..\leapfrog\data\" + fileName;
-         //fullPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-         //fullFileName = System.IO.Path.Combine(fullPath, s);
-
-         //MyStateProp.File = fullFileName;
-         //MyCP = CompoundObject.ReadFromFile(fullFileName);
-
-         //MyStateProp.CompObj = MyCP;
-         //MyChildObject.StateProperties.Add(MyStateProp);
-
-         //MyCpVm = new CompoundObjectViewModel(this, null, MyChildObject);
-         //MyCpVm.BuildViewModel(MyChildObject);
 
          // Build collections of texture names
          // Process the list of files found in the directory.
@@ -133,6 +121,12 @@ namespace LeapfrogEditor
       #endregion
 
       #region Properties
+
+      public TreeViewViewModel TopTreeViewViewModel
+      {
+         get { return _topTreeViewViewModel; }
+         set { _topTreeViewViewModel = value; }
+      }
 
       public ChildObject MyChildObject
       {
@@ -297,6 +291,13 @@ namespace LeapfrogEditor
                MyCP.StaticCircles.Add(defShape);
                LfStaticCircleViewModel defShapeVM = new LfStaticCircleViewModel(this, null, defShape);
                MyCpVm.BuildViewModel(MyChildObject);
+
+               // All the regular data is now set. Lets build the tree view which
+               // is a little bit different.
+               MyCpVm.BuildTreeViewModel();
+
+               TopTreeViewViewModel.TreeChildren.Add(MyCpVm);
+
                MyCpVm.OnPropertyChanged("");
                OnPropertyChanged("");
             }
@@ -344,6 +345,12 @@ namespace LeapfrogEditor
 
                MyCpVm = new CompoundObjectViewModel(this, null, MyChildObject);
                MyCpVm.BuildViewModel(MyChildObject);
+
+               // All the regular data is now set. Lets build the tree view which
+               // is a little bit different.
+               MyCpVm.BuildTreeViewModel();
+               TopTreeViewViewModel.TreeChildren.Add(MyCpVm);
+
                MyCpVm.OnPropertyChanged("");
                OnPropertyChanged("");
             }

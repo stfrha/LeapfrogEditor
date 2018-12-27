@@ -34,5 +34,8 @@ namespace LeapfrogEditor
 
       #endregion
 
+      #region public methods
+
+      #endregion
    }
 }

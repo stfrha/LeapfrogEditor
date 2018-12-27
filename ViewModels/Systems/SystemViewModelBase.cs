@@ -13,7 +13,7 @@ namespace LeapfrogEditor
    // This class is a common base for all system properties
    // view models so that we can return something common when 
    // a system properties view model is requested.
-   public class SystemViewModelBase : MicroMvvm.ViewModelBase
+   public class SystemViewModelBase : TreeViewViewModel
    {
       #region Declarations
 

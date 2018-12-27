@@ -11,13 +11,12 @@ using System.Windows.Media;
 
 namespace LeapfrogEditor
 {
-   public class CompoundObjectViewModel : MicroMvvm.ViewModelBase, IPositionInterface
+   public class CompoundObjectViewModel : TreeViewViewModel, IPositionInterface
    {
       #region Declarations
 
       private ChildObject _childObjectOfParent;
       private CompoundObjectViewModel _parent;
-      private MainViewModel _mainVm;
 
       private int _selectedStateIndex = 0;
 
@@ -30,9 +29,6 @@ namespace LeapfrogEditor
       // The outher collection is all ChildObjects and the inner collection
       // is the states of that child
       private ObservableCollection<ObservableCollection<CompoundObjectViewModel>> _childObjects = new ObservableCollection<ObservableCollection<CompoundObjectViewModel>>();
-
-      private bool _isSelected;
-
 
       #endregion
 
@@ -49,12 +45,6 @@ namespace LeapfrogEditor
       #endregion
 
       #region Properties
-
-      public MainViewModel MainVm
-      {
-         get { return _mainVm; }
-         set { _mainVm = value; }
-      }
 
       public ChildObject ChildObjectOfParent
       {
@@ -331,7 +321,9 @@ namespace LeapfrogEditor
          { }
       }
 
-      public bool IsSelected
+      // We override the IsSelected since we want to unselect all 
+      // if this is a newly selected CO
+      public new bool IsSelected
       {
          get { return _isSelected; }
          set
@@ -645,6 +637,57 @@ namespace LeapfrogEditor
                }
             }
          }
+      }
+
+      public void BuildTreeViewModel()
+      {
+         TreeViewViewModel tvvm = new TreeViewViewModel("Shapes", null, this, MainVm);
+
+         foreach (Object obj in Shapes)
+         {
+            if (obj is LfShapeViewModel)
+            {
+               LfShapeViewModel stvvm = obj as LfShapeViewModel;
+               stvvm.BuildTreeViewModel();
+               tvvm.TreeChildren.Add(stvvm);
+            }
+         }
+
+         TreeChildren.Add(tvvm);
+
+         tvvm = new TreeViewViewModel("Joints", null, this, MainVm);
+
+         foreach (Object obj in Joints)
+         {
+            if (obj is WeldJointViewModel)
+            {
+               WeldJointViewModel jtvvm = obj as WeldJointViewModel;
+               jtvvm.BuildTreeViewModel();
+               tvvm.TreeChildren.Add(jtvvm);
+            }
+         }
+
+         TreeChildren.Add(tvvm);
+
+         tvvm = new TreeViewViewModel("Systems", null, this, MainVm);
+
+         foreach (CoSystemViewModel csvm in _systems)
+         {
+            csvm.BuildTreeViewModel();
+            tvvm.TreeChildren.Add(csvm.Properties);
+         }
+
+         TreeChildren.Add(tvvm);
+
+         tvvm = new TreeViewViewModel("Children", null, this, MainVm);
+
+         foreach (CompoundObjectViewModel covm in ChildObjects)
+         {
+            covm.BuildTreeViewModel();
+            tvvm.TreeChildren.Add(covm);
+         }
+
+         TreeChildren.Add(tvvm);
       }
 
       public void DeselectAllChildren()

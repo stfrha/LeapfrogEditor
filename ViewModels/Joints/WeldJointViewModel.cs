@@ -10,16 +10,14 @@ using System.Windows.Media;
 
 namespace LeapfrogEditor
 {
-   public class WeldJointViewModel : MicroMvvm.ViewModelBase, IMainVmInterface
+   public class WeldJointViewModel : TreeViewViewModel, IMainVmInterface
    {
       #region Declarations
 
-      private MainViewModel _mainVm;
       private WeldJoint _modelObject;
       private CompoundObjectViewModel _parent;
       protected LfShapeViewModel _aVm;
       protected LfShapeViewModel _bVm;
-      private bool _isSelected;
 
       #endregion
 
@@ -35,12 +33,6 @@ namespace LeapfrogEditor
       #endregion
 
       #region Properties
-
-      public MainViewModel MainVm
-      {
-         get { return _mainVm; }
-         set { _mainVm = value; }
-      }
 
       public WeldJoint ModelObject
       {
@@ -202,16 +194,6 @@ namespace LeapfrogEditor
          }
       }
 
-      public bool IsSelected
-      {
-         get { return _isSelected; }
-         set
-         {
-            _isSelected = value;
-            OnPropertyChanged("IsSelected");
-         }
-      }
-
       #endregion
 
       #region public Methods
@@ -229,6 +211,11 @@ namespace LeapfrogEditor
          {
             MessageBox.Show("The shape B pointed to by " + ModelObject.Name + " does not exists in CO " + Parent.Name, "Error parsing file", MessageBoxButton.OK, MessageBoxImage.Error);
          }
+      }
+
+      virtual public void BuildTreeViewModel()
+      {
+         TreeName = Name;
       }
 
       #endregion

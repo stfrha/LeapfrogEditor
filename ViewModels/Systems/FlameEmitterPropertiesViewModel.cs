@@ -31,7 +31,7 @@ namespace LeapfrogEditor
 
       public FlameEmitterProperties LocalModelObject
       {
-         get { return (FlameEmitterProperties)ModelObject; }
+         get { return ModelObject; }
       }
 
       public string BodyName

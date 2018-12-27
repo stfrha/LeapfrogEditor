@@ -207,6 +207,14 @@ namespace LeapfrogEditor
          return null;
       }
 
+      override public void BuildTreeViewModel()
+      {
+         TreeName = "Polygon - " + Name;
+      }
+
+      #endregion
+
+
       #region private Methods
 
       private uint GetFreeVertexIndex()
@@ -237,8 +245,6 @@ namespace LeapfrogEditor
 
 
 
-
-      #endregion
 
       #region protected Methods
 

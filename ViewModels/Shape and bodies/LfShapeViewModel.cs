@@ -9,14 +9,12 @@ using System.Windows.Media;
 
 namespace LeapfrogEditor
 {
-   public class LfShapeViewModel : MicroMvvm.ViewModelBase, IPositionInterface
+   public class LfShapeViewModel : TreeViewViewModel, IPositionInterface
    {
       #region Declarations
 
-      private MainViewModel _mainVm;
       private LfShape _modelObject;
       private CompoundObjectViewModel _parent;
-      private bool _isSelected;
 
       #endregion
 
@@ -32,12 +30,6 @@ namespace LeapfrogEditor
       #endregion
 
       #region Properties
-
-      public MainViewModel MainVm
-      {
-         get { return _mainVm; }
-         set { _mainVm = value; }
-      }
 
       public LfShape ModelObject
       {
@@ -264,7 +256,7 @@ namespace LeapfrogEditor
          { }
       }
 
-      public bool IsSelected
+      public new bool IsSelected
       {
          get { return _isSelected; }
          set
@@ -379,6 +371,11 @@ namespace LeapfrogEditor
          Point coPoint = Parent.GetCoPointFromScenePoint(scenePoint);
 
          return Parent.CoPointInShape(coPoint, this);
+      }
+
+      virtual public void BuildTreeViewModel()
+      {
+         TreeName = Name;
       }
 
       #endregion

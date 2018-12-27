@@ -13,7 +13,7 @@ namespace LeapfrogEditor
    // This class is a common base for all Behvaiour properties
    // view models so that we can return something common when 
    // a behaviour properties view model is requested.
-   public class BehaviourViewModelBase : MicroMvvm.ViewModelBase
+   public class BehaviourViewModelBase : TreeViewViewModel
    {
       #region Declarations
 

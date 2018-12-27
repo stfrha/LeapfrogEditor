@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace LeapfrogEditor
 {
-    class LfPointViewModel : MicroMvvm.ViewModelBase, IPositionInterface
+    class LfPointViewModel : TreeViewViewModel, IPositionInterface
    {
       #region Declarations
 
@@ -16,9 +16,6 @@ namespace LeapfrogEditor
 
       private MainViewModel _mainVm;
       private IBoxPointsInterface _parent;
-
-      private bool _isSelected;
-
 
       #endregion
 
@@ -36,12 +33,6 @@ namespace LeapfrogEditor
       #endregion
 
       #region Properties
-
-      public MainViewModel MainVm
-      {
-         get { return _mainVm; }
-         set { _mainVm = value; }
-      }
 
       public IBoxPointsInterface Parent
       {
@@ -77,16 +68,6 @@ namespace LeapfrogEditor
          {
             _posY = value;
             OnPropertyChanged("PosY");
-         }
-      }
-
-      public bool IsSelected
-      {
-         get { return _isSelected; }
-         set
-         {
-            _isSelected = value;
-            OnPropertyChanged("IsSelected");
          }
       }
 

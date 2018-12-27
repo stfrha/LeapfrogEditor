@@ -88,7 +88,291 @@
          </Grid.ColumnDefinitions>
          <Grid Grid.Column="0"
                Background="Blue">
-            
+            <TreeView x:Name="TheTreeView" Grid.Row="1" ItemsSource="{Binding MyCpVm.TreeChildren}" >
+               <TreeView.ItemContainerStyle>
+                  <Style TargetType="{x:Type TreeViewItem}">
+                     <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                     <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                     <Setter Property="FontWeight" Value="Normal" />
+                     <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                           <Setter Property="FontWeight" Value="Bold" />
+                        </Trigger>
+                     </Style.Triggers>
+                  </Style>
+               </TreeView.ItemContainerStyle>
+               <TreeView.Resources>
+                  <HierarchicalDataTemplate DataType="{x:Type local:TreeViewViewModel}" ItemsSource="{Binding TreeChildren}">
+                     <Label Margin="-2"  Content="{Binding TreeName}" />
+                  </HierarchicalDataTemplate>
+                  <!--<HierarchicalDataTemplate DataType="{x:Type local:SignalModeTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:AntennaScanModeTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}" ToolTipService.ShowDuration="60000">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                        <Label.ToolTip>
+                           <local:ToolTipControl Legend="{Binding ToolTipLegend}" Details="{Binding ToolTipDetails}" />
+                        </Label.ToolTip>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:SimulationControlTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:LibrarySetTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:ConfigLibraryTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:LmhbrxLibraryTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:RecLibraryTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:WaypointTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}" ToolTipService.ShowDuration="60000">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                              <Separator />
+                              <MenuItem Header="Remove" 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.RemoveItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                        <Label.ToolTip>
+                           <local:ToolTipControl Legend="{Binding ToolTipLegend}" Details="{Binding ToolTipDetails}" />
+                        </Label.ToolTip>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:RadarEmitterModeTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                              <Separator />
+                              <MenuItem Header="Remove" 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.RemoveItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:PositionRotationTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                              <Separator />
+                              <MenuItem Header="Add Waypoint..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.AddItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:RfEmitterTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                              <Separator />
+                              <MenuItem Header="Add mode..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.AddItem, Source={StaticResource DataContextProxy}}" />
+                              <MenuItem Header="Remove" 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.RemoveItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:EmitterListTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Add Emitter..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.AddItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:OwnRadarTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                              <Separator />
+                              <MenuItem Header="Add mode..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.AddItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:EmitterModeTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                              <Separator />
+                              <MenuItem Header="Remove" 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.RemoveItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:SignalModesTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Add Signal Mode Group..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.AddItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:SignalModeGroupTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit Signal Mode Group..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                              <Separator />
+                              <MenuItem Header="Add Signal Mode..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.AddItem, Source={StaticResource DataContextProxy}}" />
+                              <Separator />
+                              <MenuItem Header="Remove Group" 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.RemoveItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:ScanModesTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Add Scan Mode Group..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.AddItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:ScanModeGroupTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit Scan Mode Group..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.EditItem, Source={StaticResource DataContextProxy}}" />
+                              <Separator />
+                              <MenuItem Header="Add Scan Mode..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.AddItem, Source={StaticResource DataContextProxy}}" />
+                              <Separator />
+                              <MenuItem Header="Remove Group" 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.RemoveItem, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:ModesLibraryTreeViewViewModel}" ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="{Binding Name}">
+                        <Label.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Reload Library" 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.ReloadLibrary, Source={StaticResource DataContextProxy}}" />
+                              <MenuItem Header="Save Library" 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.SaveLibrary, Source={StaticResource DataContextProxy}}" />
+                              <Separator />
+                              <MenuItem Header="Export Library..." 
+                              CommandParameter="{Binding}"
+                              Command="{Binding Path=Data.ExportLibrary, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </Label.ContextMenu>
+                     </Label>
+                  </HierarchicalDataTemplate>-->
+               </TreeView.Resources>
+            </TreeView>
+
          </Grid>
          <DockPanel Grid.Column="1">
             <ScrollViewer

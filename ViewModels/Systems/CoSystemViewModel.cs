@@ -10,7 +10,7 @@ using System.Windows.Media.Imaging;
 
 namespace LeapfrogEditor
 {
-   class CoSystemViewModel : MicroMvvm.ViewModelBase
+   class CoSystemViewModel : TreeViewViewModel
    {
       #region Declarations
 
@@ -84,6 +84,25 @@ namespace LeapfrogEditor
 
             return null;
          }
+         set
+         {
+            if (Type == "objectFactory")
+            {
+               _objFactStatesProps = (ObjectFactoryPropertiesViewModel)value;
+            }
+            else if (Type == "flameEmitter")
+            {
+               _flameEmitterStatesProps = (FlameEmitterPropertiesViewModel)value;
+            }
+            else if (Type == "gun")
+            {
+               _gunStatesProps = (GunPropertiesViewModel)value;
+            }
+            else if (Type == "shield")
+            {
+               _shieldStatesProps = (ShieldPropertiesViewModel)value;
+            }
+         }
       }
 
 
@@ -98,6 +117,11 @@ namespace LeapfrogEditor
       #endregion
 
       #region public Methods
+
+      virtual public void BuildTreeViewModel()
+      {
+         TreeName = Name;
+      }
 
       #endregion
    }
