@@ -9,6 +9,28 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 
+
+
+/*
+ *  How about a new set of view model classes: StateShapes, StateJoints, StateSystems and StateChildren
+ * 
+ * This class would have one ObservableCollection for each state and for each such class
+ * Each such class would have one CompositeCollection (or ObservableCollection) for each 
+ * object of each class.
+ * There can be a HierarchicalDataTemplate for each State-class. The CompoundObjectViewModel
+ * will have one CompositeCollection of all State-classes which will group each object type
+ * into one level of the TreeView. 
+ * 
+ * Lets try it
+ * 
+ * 
+ * 
+ */
+
+
+
+
+
 namespace LeapfrogEditor
 {
    public class CompoundObjectViewModel : TreeViewViewModel, IPositionInterface
@@ -21,15 +43,16 @@ namespace LeapfrogEditor
       private int _selectedStateIndex = 0;
 
       private CoBehaviourViewModel _behaviour;
-      private ObservableCollection<CompositeCollection> _shapes = new ObservableCollection<CompositeCollection>();
-      private ObservableCollection<CompositeCollection> _joints = new ObservableCollection<CompositeCollection>();
-      private ObservableCollection<CoSystemViewModel> _systems = new ObservableCollection<CoSystemViewModel>();
 
-      // Children collection is two dimensional to accomondate for all State properties
-      // The outher collection is all ChildObjects and the inner collection
+      // Collections below is two dimensional to accomondate for all State properties
+      // The outher collection is all StateChildObjects and the inner collection
       // is the states of that child
-      private ObservableCollection<ObservableCollection<CompoundObjectViewModel>> _childObjects = new ObservableCollection<ObservableCollection<CompoundObjectViewModel>>();
+      private ObservableCollection<StateShapeCollectionViewModel> _shapes = new ObservableCollection<StateShapeCollectionViewModel>();
+      private ObservableCollection<StateJointCollectionViewModel> _joints = new ObservableCollection<StateJointCollectionViewModel>();
+      private ObservableCollection<StateSystemCollectionViewModel> _systems = new ObservableCollection<StateSystemCollectionViewModel>();
+      private ObservableCollection<StateChildCollectionViewModel> _childObjects = new ObservableCollection<StateChildCollectionViewModel>();
 
+      private ObservableCollection<StateCollectionViewModelBase> _treeCollection = new ObservableCollection<StateCollectionViewModelBase>();
       #endregion
 
       #region Constructors
@@ -40,6 +63,7 @@ namespace LeapfrogEditor
          Parent = parent;
          ChildObjectOfParent = childObjectOfParent;
          SelectedStateIndex = 0;
+         BuildTreeViewCollection();
       }
 
       #endregion
@@ -193,6 +217,7 @@ namespace LeapfrogEditor
 
             DeselectAllChildren();
             OnPropertyChanged("");
+            BuildTreeViewCollection();
 
             CompoundObjectViewModel p = Parent;
 
@@ -220,7 +245,7 @@ namespace LeapfrogEditor
          set { }
       }
 
-      public CompositeCollection Shapes
+      public StateShapeCollectionViewModel StateShapes
       {
          get
          {
@@ -239,7 +264,7 @@ namespace LeapfrogEditor
          }
       }
 
-      public CompositeCollection Joints
+      public StateJointCollectionViewModel StateJoints
       {
          get
          {
@@ -258,7 +283,26 @@ namespace LeapfrogEditor
          }
       }
 
-      public ObservableCollection<CompoundObjectViewModel> ChildObjects
+      public StateSystemCollectionViewModel StateSystems
+      {
+         get
+         {
+            if ((_selectedStateIndex >= 0) && (_shapes.Count > _selectedStateIndex))
+            {
+               return _systems[_selectedStateIndex];
+            }
+            return null;
+         }
+         set
+         {
+            if ((_selectedStateIndex >= 0) && (_shapes.Count > _selectedStateIndex))
+            {
+               _systems[_selectedStateIndex] = value;
+            }
+         }
+      }
+
+      public StateChildCollectionViewModel StateChildObjects
       {
          get
          {
@@ -277,22 +321,28 @@ namespace LeapfrogEditor
          }
       }
 
+      public ObservableCollection<StateCollectionViewModelBase> TreeCollection
+      {
+         get { return _treeCollection; }
+         set { _treeCollection = value; }
+      }
+
       public Rect BoundingBox
       {
          get
          {
-            if (Shapes == null) return new Rect(0, 0, 0, 0);
+            if (StateShapes == null) return new Rect(0, 0, 0, 0);
 
-            if ((Shapes.Count == 0) && (ChildObjects.Count == 0))
+            if ((StateShapes.Shapes.Count == 0) && (StateChildObjects.Children.Count == 0))
             {
                return new Rect(0,0,0,0);
             }
 
             BoundingBoxRect bbr = new BoundingBoxRect();
 
-            if (Shapes.Count > 0)
+            if (StateShapes.Shapes.Count > 0)
             {
-               foreach (object o in Shapes)
+               foreach (object o in StateShapes.Shapes)
                {
                   if (o is LfShapeViewModel)
                   {
@@ -305,9 +355,9 @@ namespace LeapfrogEditor
                }
             }
 
-            if (ChildObjects.Count > 0)
+            if (StateChildObjects.Children.Count > 0)
             {
-               foreach (CompoundObjectViewModel child in ChildObjects)
+               foreach (CompoundObjectViewModel child in StateChildObjects.Children)
                {
                   Rect cb = child.BoundingBox;
                   cb.Offset(new Vector(child.PosX, child.PosY));
@@ -343,26 +393,23 @@ namespace LeapfrogEditor
 
       #region Private Methods
 
-      private CompositeCollection SetShapes(CompoundObject co)
+      private void BuildTreeViewCollection()
       {
-         CompositeCollection shapes = new CompositeCollection()
-         {
-            new CollectionContainer { Collection = new ObservableCollection<LfSpriteBoxViewModel>() },
-            new CollectionContainer { Collection = new ObservableCollection<LfSpritePolygonViewModel>() },
-            new CollectionContainer { Collection = new ObservableCollection<LfStaticBoxViewModel>() },
-            new CollectionContainer { Collection = new ObservableCollection<LfStaticCircleViewModel>() },
-            new CollectionContainer { Collection = new ObservableCollection<LfStaticPolygonViewModel>() },
-            new CollectionContainer { Collection = new ObservableCollection<LfStaticBoxedSpritePolygonViewModel>() },
-            new CollectionContainer { Collection = new ObservableCollection<LfDynamicBoxViewModel>() },
-            new CollectionContainer { Collection = new ObservableCollection<LfDynamicCircleViewModel>() },
-            new CollectionContainer { Collection = new ObservableCollection<LfDynamicPolygonViewModel>() },
-            new CollectionContainer { Collection = new ObservableCollection<LfDynamicBoxedSpritePolygonViewModel>() },
-         };
+         _treeCollection.Clear();
+         _treeCollection.Add(StateShapes);
+         _treeCollection.Add(StateJoints);
+         _treeCollection.Add(StateSystems);
+         _treeCollection.Add(StateChildObjects);
+      }
+
+      private StateShapeCollectionViewModel SetShapes(CompoundObject co)
+      {
+         StateShapeCollectionViewModel shapes = new StateShapeCollectionViewModel(this);
 
          foreach (LfSpriteBox sb in co.SpriteBoxes)
          {
             LfSpriteBoxViewModel shapevm = new LfSpriteBoxViewModel(MainVm, this, sb);
-            shapes.Add(shapevm);
+            shapes.Shapes.Add(shapevm);
          }
 
          foreach (LfSpritePolygon sp in co.SpritePolygons)
@@ -375,19 +422,19 @@ namespace LeapfrogEditor
                shapevm.PointVms.Add(dragPointVm);
             }
 
-            shapes.Add(shapevm);
+            shapes.Shapes.Add(shapevm);
          }
 
          foreach (LfStaticBox sb in co.StaticBoxes)
          {
             LfStaticBoxViewModel shapevm = new LfStaticBoxViewModel(MainVm, this, sb);
-            shapes.Add(shapevm);
+            shapes.Shapes.Add(shapevm);
          }
 
          foreach (LfStaticCircle sb in co.StaticCircles)
          {
             LfStaticCircleViewModel shapevm = new LfStaticCircleViewModel(MainVm, this, sb);
-            shapes.Add(shapevm);
+            shapes.Shapes.Add(shapevm);
          }
 
          foreach (LfStaticPolygon sp in co.StaticPolygons)
@@ -400,19 +447,19 @@ namespace LeapfrogEditor
                shapevm.PointVms.Add(dragPointVm);
             }
 
-            shapes.Add(shapevm);
+            shapes.Shapes.Add(shapevm);
          }
 
          foreach (LfDynamicBox db in co.DynamicBoxes)
          {
             LfDynamicBoxViewModel shapevm = new LfDynamicBoxViewModel(MainVm, this, db);
-            shapes.Add(shapevm);
+            shapes.Shapes.Add(shapevm);
          }
 
          foreach (LfDynamicCircle db in co.DynamicCircles)
          {
             LfDynamicCircleViewModel shapevm = new LfDynamicCircleViewModel(MainVm, this, db);
-            shapes.Add(shapevm);
+            shapes.Shapes.Add(shapevm);
          }
 
          foreach (LfDynamicPolygon dp in co.DynamicPolygons)
@@ -425,7 +472,7 @@ namespace LeapfrogEditor
                shapevm.PointVms.Add(dragPointVm);
             }
 
-            shapes.Add(shapevm);
+            shapes.Shapes.Add(shapevm);
          }
 
          foreach (LfStaticBoxedSpritePolygon bsp in co.StaticBoxedSpritePolygons)
@@ -438,7 +485,7 @@ namespace LeapfrogEditor
                shapevm.PointVms.Add(dragPointVm);
             }
 
-            shapes.Add(shapevm);
+            shapes.Shapes.Add(shapevm);
          }
 
          foreach (LfDynamicBoxedSpritePolygon bsp in co.DynamicBoxedSpritePolygons)
@@ -451,73 +498,67 @@ namespace LeapfrogEditor
                shapevm.PointVms.Add(dragPointVm);
             }
 
-            shapes.Add(shapevm);
+            shapes.Shapes.Add(shapevm);
          }
 
          return shapes;
 
       }
 
-      private CompositeCollection SetJoints(CompoundObject co)
+      private StateJointCollectionViewModel SetJoints(CompoundObject co)
       {
-         CompositeCollection joints = new CompositeCollection()
-         {
-            new CollectionContainer { Collection = new ObservableCollection<WeldJointViewModel>() },
-            new CollectionContainer { Collection = new ObservableCollection<RevoluteJointViewModel>() },
-            new CollectionContainer { Collection = new ObservableCollection<PrismaticJointViewModel>() },
-            new CollectionContainer { Collection = new ObservableCollection<RopeViewModel>() },
-         };
+         StateJointCollectionViewModel joints = new StateJointCollectionViewModel(this);
 
          foreach (WeldJoint wj in co.WeldJoints)
          {
             WeldJointViewModel wjvm = new WeldJointViewModel(MainVm, this, wj);
-            joints.Add(wjvm);
+            joints.Joints.Add(wjvm);
          }
 
          foreach (RevoluteJoint rj in co.RevoluteJoints)
          {
             RevoluteJointViewModel rjvm = new RevoluteJointViewModel(MainVm, this, rj);
-            joints.Add(rjvm);
+            joints.Joints.Add(rjvm);
          }
 
          foreach (PrismaticJoint pj in co.PrismaticJoints)
          {
             PrismaticJointViewModel pjvm = new PrismaticJointViewModel(MainVm, this, pj);
-            joints.Add(pjvm);
+            joints.Joints.Add(pjvm);
          }
 
          foreach (Rope r in co.Ropes)
          {
             RopeViewModel rvm = new RopeViewModel(MainVm, this, r);
-            joints.Add(rvm);
+            joints.Joints.Add(rvm);
          }
 
          return joints;
       }
 
-      private ObservableCollection<CoSystemViewModel> SetSystems(CompoundObject co)
+      private StateSystemCollectionViewModel SetSystems(CompoundObject co)
       {
-         ObservableCollection<CoSystemViewModel> systems = new ObservableCollection<CoSystemViewModel>();
+         StateSystemCollectionViewModel systems = new StateSystemCollectionViewModel(this);
 
          foreach (CoSystem s in co.Systems)
          {
             CoSystemViewModel svm = new CoSystemViewModel(MainVm, this, s);
-            systems.Add(svm);
+            systems.Systems.Add(svm);
          }
 
          return systems;
       }
 
 
-      private ObservableCollection<CompoundObjectViewModel> SetChildren(CompoundObject co)
+      private StateChildCollectionViewModel SetChildren(CompoundObject co)
       {
-         ObservableCollection<CompoundObjectViewModel> tempChildren = new ObservableCollection<CompoundObjectViewModel>();
+         StateChildCollectionViewModel tempChildren = new StateChildCollectionViewModel(this);
 
          foreach (ChildObject cho in co.ChildObjects)
          {
             CompoundObjectViewModel covm = new CompoundObjectViewModel(MainVm, this, cho);
             covm.BuildViewModel(cho);
-            tempChildren.Add(covm);
+            tempChildren.Children.Add(covm);
          }
 
          return tempChildren;
@@ -531,19 +572,19 @@ namespace LeapfrogEditor
       {
          // Check if there are any joints connected to this svm, if so, removed them
          // We may remove joints so we need a for loop here:
-         for (int i = Joints.Count - 1; i >= 0; i--)
+         for (int i = StateJoints.Joints.Count - 1; i >= 0; i--)
          {
             // Below will take care of all joints since they
             // all inherit from WeldJoint
-            if (Joints[i] is WeldJointViewModel)
+            if (StateJoints.Joints[i] is WeldJointViewModel)
             {
-               WeldJointViewModel joint = (WeldJointViewModel)Joints[i];
+               WeldJointViewModel joint = (WeldJointViewModel)StateJoints.Joints[i];
 
                if ((joint.AName == svm.Name) || (joint.BName == svm.Name))
                {
                   // Remove the joint
                   ModelObject.RemoveJoint(joint.ModelObject);
-                  Joints.RemoveAt(i);
+                  StateJoints.Joints.RemoveAt(i);
                }
             }
          }
@@ -552,12 +593,12 @@ namespace LeapfrogEditor
          ModelObject.RemoveShape(svm.ModelObject);
 
          // Remove the shape viewmodel from this
-         Shapes.Remove(svm);
+         StateShapes.Shapes.Remove(svm);
 
          // If there are no more shapes in the CO, remove the CO
-         if (Shapes.Count == 0)
+         if (StateShapes.Shapes.Count == 0)
          {
-            //Parent.ChildObjects.Remove(this);
+            //Parent.StateChildObjects.Remove(this);
             //Parent.ModelObject.ChildObjectRefs(this.ChildObjectOfParent)
          }
 
@@ -566,7 +607,7 @@ namespace LeapfrogEditor
 
       public void InvalidateJoints()
       {
-         foreach (object o in Joints)
+         foreach (object o in StateJoints.Joints)
          {
             // Below will take care of all joints since they
             // all inherit from WeldJoint
@@ -579,9 +620,9 @@ namespace LeapfrogEditor
          }
       }
 
-      public LfShapeViewModel FindShape(string name, CompositeCollection shapes)
+      public LfShapeViewModel FindShape(string name, StateShapeCollectionViewModel shapes)
       {
-         foreach (object o in shapes)
+         foreach (object o in shapes.Shapes)
          {
             if (o is LfShapeViewModel)
             {
@@ -604,21 +645,22 @@ namespace LeapfrogEditor
          _joints.Clear();
          _systems.Clear();
          _childObjects.Clear();
+         _treeCollection.Clear();
 
          foreach (TStateProperties<ChildObjectStateProperties> sp in cor.StateProperties)
          {
-            CompositeCollection sc = SetShapes(sp.Properties.CompObj);
+            StateShapeCollectionViewModel sc = SetShapes(sp.Properties.CompObj);
             _shapes.Add(sc);
 
-            CompositeCollection jc = SetJoints(sp.Properties.CompObj);
+            StateJointCollectionViewModel jc = SetJoints(sp.Properties.CompObj);
             _joints.Add(jc);
 
-            _systems = SetSystems(sp.Properties.CompObj);
+            _systems.Add(SetSystems(sp.Properties.CompObj));
 
             _childObjects.Add(SetChildren(sp.Properties.CompObj));
 
             // Only now is the Joints property valid for this state
-            foreach (object o in jc)
+            foreach (object o in jc.Joints)
             {
                if (o is WeldJointViewModel)
                {
@@ -637,64 +679,15 @@ namespace LeapfrogEditor
                }
             }
          }
-      }
 
-      public void BuildTreeViewModel()
-      {
-         TreeViewViewModel tvvm = new TreeViewViewModel("Shapes", null, this, MainVm);
-
-         foreach (Object obj in Shapes)
-         {
-            if (obj is LfShapeViewModel)
-            {
-               LfShapeViewModel stvvm = obj as LfShapeViewModel;
-               stvvm.BuildTreeViewModel();
-               tvvm.TreeChildren.Add(stvvm);
-            }
-         }
-
-         TreeChildren.Add(tvvm);
-
-         tvvm = new TreeViewViewModel("Joints", null, this, MainVm);
-
-         foreach (Object obj in Joints)
-         {
-            if (obj is WeldJointViewModel)
-            {
-               WeldJointViewModel jtvvm = obj as WeldJointViewModel;
-               jtvvm.BuildTreeViewModel();
-               tvvm.TreeChildren.Add(jtvvm);
-            }
-         }
-
-         TreeChildren.Add(tvvm);
-
-         tvvm = new TreeViewViewModel("Systems", null, this, MainVm);
-
-         foreach (CoSystemViewModel csvm in _systems)
-         {
-            csvm.BuildTreeViewModel();
-            tvvm.TreeChildren.Add(csvm.Properties);
-         }
-
-         TreeChildren.Add(tvvm);
-
-         tvvm = new TreeViewViewModel("Children", null, this, MainVm);
-
-         foreach (CompoundObjectViewModel covm in ChildObjects)
-         {
-            covm.BuildTreeViewModel();
-            tvvm.TreeChildren.Add(covm);
-         }
-
-         TreeChildren.Add(tvvm);
+         BuildTreeViewCollection();
       }
 
       public void DeselectAllChildren()
       {
-         if (Shapes != null)
+         if ((StateShapes != null) && (StateShapes.Shapes != null))
          {
-            foreach (object o in Shapes)
+            foreach (object o in StateShapes.Shapes)
             {
                if (o is LfShapeViewModel)
                {
@@ -705,9 +698,9 @@ namespace LeapfrogEditor
             }
          }
 
-         if (Joints != null)
+         if (StateJoints != null)
          {
-            foreach (object o in Joints)
+            foreach (object o in StateJoints.Joints)
             {
                if (o is WeldJointViewModel)
                {
@@ -718,9 +711,9 @@ namespace LeapfrogEditor
             }
          }
 
-         if (ChildObjects != null)
+         if (StateChildObjects != null)
          {
-            foreach (CompoundObjectViewModel child in ChildObjects)
+            foreach (CompoundObjectViewModel child in StateChildObjects.Children)
             {
                // child.DeselectAllChildren();
                child.IsSelected = false;
@@ -814,7 +807,7 @@ namespace LeapfrogEditor
 
       public void GenerateTriangles()
       {
-         foreach (object o in Shapes)
+         foreach (object o in StateShapes.Shapes)
          {
             if (o is LfPolygonViewModel)
             {
@@ -824,7 +817,7 @@ namespace LeapfrogEditor
             }
          }
 
-         foreach (CompoundObjectViewModel covm in ChildObjects)
+         foreach (CompoundObjectViewModel covm in StateChildObjects.Children)
          {
             covm.GenerateTriangles();
          }

@@ -58,11 +58,26 @@ namespace LeapfrogEditor
 
       #region Declarations
 
+
+      /*
+       * In the model-domain, the MyChildObject is the top level entity
+       * This contains one state property, i.e. the MyStateProperty.
+       * This contains one single child: the MyCP. 
+       * The MyCP is connected to the MyCpVm view model
+       * This is the data context of the graphic screen.
+       * 
+       * In the tree view we need the MyCpVm to be the only
+       * child in a collection binded to the ItemSource property 
+       * of the TreeView. This will be an ObservableCollection of
+       * CompoundObjectViewModel, called TreeTop.
+       */
+
+
       private ChildObject _myChildObject = new ChildObject();
       private TStateProperties<ChildObjectStateProperties> _myStateProp = new TStateProperties<ChildObjectStateProperties>();
       private CompoundObject _myCP;
       private CompoundObjectViewModel _myCpVm;
-      private TreeViewViewModel _topTreeViewViewModel = new TreeViewViewModel();
+      private ObservableCollection<CompoundObjectViewModel> _topTreeViewViewModel = new ObservableCollection<CompoundObjectViewModel>();
 
       private CompoundObjectViewModel _selectedCompoundObject = null;
       private ObservableCollection<LfShapeViewModel> _selectedShapes = new ObservableCollection<LfShapeViewModel>();
@@ -122,7 +137,7 @@ namespace LeapfrogEditor
 
       #region Properties
 
-      public TreeViewViewModel TopTreeViewViewModel
+      public ObservableCollection<CompoundObjectViewModel> TopTreeViewViewModel
       {
          get { return _topTreeViewViewModel; }
          set { _topTreeViewViewModel = value; }
@@ -294,9 +309,7 @@ namespace LeapfrogEditor
 
                // All the regular data is now set. Lets build the tree view which
                // is a little bit different.
-               MyCpVm.BuildTreeViewModel();
-
-               TopTreeViewViewModel.TreeChildren.Add(MyCpVm);
+               TopTreeViewViewModel.Add(MyCpVm);
 
                MyCpVm.OnPropertyChanged("");
                OnPropertyChanged("");
@@ -335,6 +348,7 @@ namespace LeapfrogEditor
 
                ChildObjectStateProperties cosp = new ChildObjectStateProperties();
                cosp.File = fullFileName;
+               
 
                MyStateProp.Properties = cosp;
 
@@ -342,14 +356,12 @@ namespace LeapfrogEditor
 
                MyStateProp.Properties.CompObj = MyCP;
                MyChildObject.StateProperties.Add(MyStateProp);
+               MyChildObject.Name = fileName;
 
                MyCpVm = new CompoundObjectViewModel(this, null, MyChildObject);
                MyCpVm.BuildViewModel(MyChildObject);
 
-               // All the regular data is now set. Lets build the tree view which
-               // is a little bit different.
-               MyCpVm.BuildTreeViewModel();
-               TopTreeViewViewModel.TreeChildren.Add(MyCpVm);
+               TopTreeViewViewModel.Add(MyCpVm);
 
                MyCpVm.OnPropertyChanged("");
                OnPropertyChanged("");
@@ -453,7 +465,7 @@ namespace LeapfrogEditor
             newCpVm.BuildViewModel(newChildObject);
 
             SelectedCompoundObject.ModelObject.ChildObjects.Add(newChildObject);
-            SelectedCompoundObject.ChildObjects.Add(newCpVm);
+            SelectedCompoundObject.StateChildObjects.Children.Add(newCpVm);
 
             MyCpVm.OnPropertyChanged("");
             OnPropertyChanged("");
@@ -540,7 +552,7 @@ namespace LeapfrogEditor
 
       void StateExecute(Object parameter)
       {
-         CompoundObjectViewModel covm = MyCpVm.ChildObjects[0];
+         CompoundObjectViewModel covm = MyCpVm.StateChildObjects.Children[0];
 
          if (covm.SelectedStateIndex == 0)
          {
@@ -704,7 +716,7 @@ namespace LeapfrogEditor
                   // Polygon has no more points, delete the polygon Shape
 
                   polyVm.Parent.ModelObject.RemoveShape(polyVm.ModelObject);
-                  polyVm.Parent.Shapes.Remove(polyVm);
+                  polyVm.Parent.StateShapes.Shapes.Remove(polyVm);
                }
 
                // Before we remove the point
@@ -720,7 +732,7 @@ namespace LeapfrogEditor
                CompoundObjectViewModel covm = jvm.Parent;
 
                covm.ModelObject.RemoveJoint(jvm.ModelObject);
-               covm.Joints.Remove(jvm);
+               covm.StateJoints.Joints.Remove(jvm);
 
             }
             _selectedJoints.Clear();
@@ -1270,7 +1282,7 @@ namespace LeapfrogEditor
 
                if ((newShape != null) && (newShapeVm != null))
                {
-                  SelectedCompoundObject.Shapes.Add(newShapeVm);
+                  SelectedCompoundObject.StateShapes.Shapes.Add(newShapeVm);
 
                   _selectedShapes.Add(newShapeVm);
 
@@ -1324,7 +1336,7 @@ namespace LeapfrogEditor
                newPolygon.PosX = localClickPoint.X;
                newPolygon.PosY = localClickPoint.Y;
 
-               SelectedCompoundObject.Shapes.Add(newPolygonVm);
+               SelectedCompoundObject.StateShapes.Shapes.Add(newPolygonVm);
 
                _selectedShapes.Add(newPolygonVm);
                newPolygonVm.IsSelected = true;
@@ -1371,7 +1383,7 @@ namespace LeapfrogEditor
                newPolygon.PosX = localClickPoint.X;
                newPolygon.PosY = localClickPoint.Y;
 
-               SelectedCompoundObject.Shapes.Add(newPolygonVm);
+               SelectedCompoundObject.StateShapes.Shapes.Add(newPolygonVm);
 
                _selectedShapes.Add(newPolygonVm);
                newPolygonVm.IsSelected = true;
@@ -1435,7 +1447,7 @@ namespace LeapfrogEditor
                   wjvm = new PrismaticJointViewModel(this, SelectedCompoundObject, (PrismaticJoint)wj);
                }
 
-               wjvm.ConnectToShapes(SelectedCompoundObject.Shapes);
+               wjvm.ConnectToShapes(SelectedCompoundObject.StateShapes);
 
                Point parentObjectOrigo = new Point(SelectedCompoundObject.PosX, SelectedCompoundObject.PosY);
 
@@ -1465,7 +1477,7 @@ namespace LeapfrogEditor
                wjvm.BAnchorX = rotatedBClickPoint.X;
                wjvm.BAnchorY = rotatedBClickPoint.Y;
 
-               SelectedCompoundObject.Joints.Add(wjvm);
+               SelectedCompoundObject.StateJoints.Joints.Add(wjvm);
 
                if (_LeftClickState == LeftClickState.weldJoint)
                {
@@ -1506,7 +1518,7 @@ namespace LeapfrogEditor
 
                RopeViewModel rpvm = new RopeViewModel(this, SelectedCompoundObject, rp);
 
-               rpvm.ConnectToShapes(SelectedCompoundObject.Shapes);
+               rpvm.ConnectToShapes(SelectedCompoundObject.StateShapes);
 
                Point parentObjectOrigo = new Point(SelectedCompoundObject.PosX, SelectedCompoundObject.PosY);
 
@@ -1537,7 +1549,7 @@ namespace LeapfrogEditor
                   rpvm.BAnchorY = rotatedBClickPoint.Y;
                }
 
-               SelectedCompoundObject.Joints.Add(rpvm);
+               SelectedCompoundObject.StateJoints.Joints.Add(rpvm);
                SelectedCompoundObject.ModelObject.Ropes.Add(rp);
 
                _LeftClickState = LeftClickState.none;

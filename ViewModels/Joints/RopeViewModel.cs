@@ -194,7 +194,7 @@ namespace LeapfrogEditor
 
       #region public Methods
 
-      public new void ConnectToShapes(CompositeCollection shapes)
+      public new void ConnectToShapes(StateShapeCollectionViewModel shapes)
       {
          _aVm = Parent.FindShape(ModelObject.AName, shapes);
          if (_aVm == null)

@@ -207,11 +207,6 @@ namespace LeapfrogEditor
          return null;
       }
 
-      override public void BuildTreeViewModel()
-      {
-         TreeName = "Polygon - " + Name;
-      }
-
       #endregion
 
 

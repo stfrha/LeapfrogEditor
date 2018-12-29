@@ -373,11 +373,6 @@ namespace LeapfrogEditor
          return Parent.CoPointInShape(coPoint, this);
       }
 
-      virtual public void BuildTreeViewModel()
-      {
-         TreeName = Name;
-      }
-
       #endregion
    }
 }

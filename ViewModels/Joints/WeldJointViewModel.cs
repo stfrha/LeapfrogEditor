@@ -198,7 +198,7 @@ namespace LeapfrogEditor
 
       #region public Methods
 
-      public void ConnectToShapes(CompositeCollection shapes)
+      public void ConnectToShapes(StateShapeCollectionViewModel shapes)
       {
          _aVm = Parent.FindShape(ModelObject.AName, shapes);
          if (_aVm == null)
@@ -211,11 +211,6 @@ namespace LeapfrogEditor
          {
             MessageBox.Show("The shape B pointed to by " + ModelObject.Name + " does not exists in CO " + Parent.Name, "Error parsing file", MessageBoxButton.OK, MessageBoxImage.Error);
          }
-      }
-
-      virtual public void BuildTreeViewModel()
-      {
-         TreeName = Name;
       }
 
       #endregion

@@ -88,7 +88,7 @@
          </Grid.ColumnDefinitions>
          <Grid Grid.Column="0"
                Background="Blue">
-            <TreeView x:Name="TheTreeView" Grid.Row="1" ItemsSource="{Binding MyCpVm.TreeChildren}" >
+            <TreeView x:Name="TheTreeView" Grid.Row="1" ItemsSource="{Binding TopTreeViewViewModel}" >
                <TreeView.ItemContainerStyle>
                   <Style TargetType="{x:Type TreeViewItem}">
                      <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
@@ -104,6 +104,32 @@
                <TreeView.Resources>
                   <HierarchicalDataTemplate DataType="{x:Type local:TreeViewViewModel}" ItemsSource="{Binding TreeChildren}">
                      <Label Margin="-2"  Content="{Binding TreeName}" />
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:CompoundObjectViewModel}"
+                     ItemsSource="{Binding TreeCollection}">
+                     <Label Margin="-2"  Content="{Binding Name}" />
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:StateShapeCollectionViewModel}"
+                     ItemsSource="{Binding Shapes}">
+                     <Label Margin="-2"  Content="Shapes" />
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:StateJointCollectionViewModel}"
+                     ItemsSource="{Binding Joints}">
+                     <Label Margin="-2"  Content="Joints" />
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:StateSystemCollectionViewModel}"
+                     ItemsSource="{Binding Systems}">
+                     <Label Margin="-2"  Content="Systems" />
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:StateChildCollectionViewModel}"
+                     ItemsSource="{Binding Children}">
+                     <Label Margin="-2"  Content="Child Objects" />
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:LfShapeViewModel}" >
+                     <Label Margin="-2"  Content="{Binding Name}" />
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:WeldJointViewModel}" >
+                     <Label Margin="-2"  Content="{Binding Name}" />
                   </HierarchicalDataTemplate>
                   <!--<HierarchicalDataTemplate DataType="{x:Type local:SignalModeTreeViewViewModel}" ItemsSource="{Binding Children}">
                      <Label Margin="-2"  Content="{Binding Name}">

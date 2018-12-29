@@ -10,7 +10,7 @@ using System.Windows.Media.Imaging;
 
 namespace LeapfrogEditor
 {
-   class CoSystemViewModel : TreeViewViewModel
+   public class CoSystemViewModel : TreeViewViewModel
    {
       #region Declarations
 
@@ -117,11 +117,6 @@ namespace LeapfrogEditor
       #endregion
 
       #region public Methods
-
-      virtual public void BuildTreeViewModel()
-      {
-         TreeName = Name;
-      }
 
       #endregion
    }
