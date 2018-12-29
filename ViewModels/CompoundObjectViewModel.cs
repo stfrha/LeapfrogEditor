@@ -231,19 +231,26 @@ namespace LeapfrogEditor
 
       public ObservableCollection<string> States
       {
-         get
-         {
-            ObservableCollection<string> s = new ObservableCollection<string>();
-
-            foreach (TStateProperties<ChildObjectStateProperties> sp in _childObjectOfParent.StateProperties)
-            {
-               s.Add(sp.State);
-            }            
-
-            return s;
-         }
+         get { return ModelObject.States; }
          set { }
       }
+
+      // Old implementation, is this of any use?
+      //public ObservableCollection<string> States
+      //{
+      //   get
+      //   {
+      //      ObservableCollection<string> s = new ObservableCollection<string>();
+
+      //      foreach (TStateProperties<ChildObjectStateProperties> sp in _childObjectOfParent.StateProperties)
+      //      {
+      //         s.Add(sp.State);
+      //      }
+
+      //      return s;
+      //   }
+      //   set { }
+      //}
 
       public StateShapeCollectionViewModel StateShapes
       {
