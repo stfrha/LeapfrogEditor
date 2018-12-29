@@ -298,7 +298,7 @@ namespace LeapfrogEditor
 
                MyChildObject.StateProperties.Add(MyStateProp);
 
-               MyCpVm = new CompoundObjectViewModel(this, null, MyChildObject);
+               MyCpVm = new CompoundObjectViewModel(this, MyCP, MyStateProp.Properties, null, MyChildObject);
 
                // To get a handle to the new CompoundObject we need a shape
                // to select. Lets place a default Sprite Box at coordinate 0,0
@@ -358,7 +358,7 @@ namespace LeapfrogEditor
                MyChildObject.StateProperties.Add(MyStateProp);
                MyChildObject.Name = fileName;
 
-               MyCpVm = new CompoundObjectViewModel(this, null, MyChildObject);
+               MyCpVm = new CompoundObjectViewModel(this, MyCP, MyStateProp.Properties, null, MyChildObject);
                MyCpVm.BuildViewModel(MyChildObject);
 
                TopTreeViewViewModel.Add(MyCpVm);
@@ -461,7 +461,7 @@ namespace LeapfrogEditor
 
             newChildObject.StateProperties.Add(newStateProp);
 
-            CompoundObjectViewModel newCpVm = new CompoundObjectViewModel(this, null, newChildObject);
+            CompoundObjectViewModel newCpVm = new CompoundObjectViewModel(this, newCp, newStateProp.Properties, null, newChildObject);
             newCpVm.BuildViewModel(newChildObject);
 
             SelectedCompoundObject.ModelObject.ChildObjects.Add(newChildObject);

@@ -38,18 +38,21 @@ namespace LeapfrogEditor
       #region Declarations
 
       private ChildObject _childObjectOfParent;
-      private CompoundObjectViewModel _parent;
+      private CompoundObject _modelObject;
+      private ChildObjectStateProperties _modelObjectProperties;
+      private CompoundObjectViewModel _parentVm;
 
       private int _selectedStateIndex = 0;
 
       private CoBehaviourViewModel _behaviour;
 
-      // Collections below is two dimensional to accomondate for all State properties
-      // The outher collection is all StateChildObjects and the inner collection
-      // is the states of that child
-      private ObservableCollection<StateShapeCollectionViewModel> _shapes = new ObservableCollection<StateShapeCollectionViewModel>();
-      private ObservableCollection<StateJointCollectionViewModel> _joints = new ObservableCollection<StateJointCollectionViewModel>();
-      private ObservableCollection<StateSystemCollectionViewModel> _systems = new ObservableCollection<StateSystemCollectionViewModel>();
+      private StateShapeCollectionViewModel _shapes;
+      private StateJointCollectionViewModel _joints;
+      private StateSystemCollectionViewModel _systems;
+
+      // Collection below is two dimensional to accomondate for all State properties
+      // The outer collection is all the states of the CompoundObject and the inner collection
+      // is the ChildObjects of each state
       private ObservableCollection<StateChildCollectionViewModel> _childObjects = new ObservableCollection<StateChildCollectionViewModel>();
 
       private ObservableCollection<StateCollectionViewModelBase> _treeCollection = new ObservableCollection<StateCollectionViewModelBase>();
@@ -57,10 +60,17 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public CompoundObjectViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, ChildObject childObjectOfParent)
+      public CompoundObjectViewModel(
+         MainViewModel mainVm, 
+         CompoundObject modelObject, 
+         ChildObjectStateProperties modelObjectProperties, 
+         CompoundObjectViewModel parentVm, 
+         ChildObject childObjectOfParent)
       {
          MainVm = mainVm;
-         Parent = parent;
+         ModelObject = modelObject;
+         ModelObjectProperties = modelObjectProperties;
+         ParentVm = parentVm;
          ChildObjectOfParent = childObjectOfParent;
          SelectedStateIndex = 0;
          BuildTreeViewCollection();
@@ -82,26 +92,31 @@ namespace LeapfrogEditor
 
       public CompoundObject ModelObject
       {
-         get
-         {
-            if (_childObjectOfParent != null)
-            {
-               if (_childObjectOfParent.StateProperties.Count > 0)
-               {
-                  return _childObjectOfParent.StateProperties[_selectedStateIndex].Properties.CompObj;
-               }
-            }
-            return null;
-         }
-         set { }
-      }
-
-      public CompoundObjectViewModel Parent
-      {
-         get { return _parent; }
+         get { return _modelObject; }
          set
          {
-            _parent = value;
+            _modelObject = value;
+            OnPropertyChanged("");
+         }
+      }
+
+      public ChildObjectStateProperties ModelObjectProperties
+      {
+         get { return _modelObjectProperties; }
+         set
+         {
+            _modelObjectProperties = value;
+            OnPropertyChanged("");
+         }
+      }
+
+
+      public CompoundObjectViewModel ParentVm
+      {
+         get { return _parentVm; }
+         set
+         {
+            _parentVm = value;
             OnPropertyChanged("");
          }
       }
@@ -128,72 +143,40 @@ namespace LeapfrogEditor
 
       public double PosX
       {
-         get
-         {
-            if (_childObjectOfParent != null)
-            {
-               if ((_selectedStateIndex >= 0) && (_childObjectOfParent.StateProperties.Count > 0))
-               {
-                  return _childObjectOfParent.StateProperties[_selectedStateIndex].Properties.PosX;
-               }
-            }
-            return 0;
-         }
+         get { return _modelObjectProperties.PosX; }
          set
          {
-            if (_childObjectOfParent != null)
+            _modelObjectProperties.PosX = value;
+
+            OnPropertyChanged("PosX");
+            OnPropertyChanged("BoundingBox");
+
+            CompoundObjectViewModel p = ParentVm;
+
+            while (p != null)
             {
-               if ((_selectedStateIndex >= 0) && (_childObjectOfParent.StateProperties.Count > 0))
-               {
-                  _childObjectOfParent.StateProperties[_selectedStateIndex].Properties.PosX = value;
-
-                  OnPropertyChanged("PosX");
-                  OnPropertyChanged("BoundingBox");
-
-                  CompoundObjectViewModel p = Parent;
-
-                  while (p != null)
-                  {
-                     p.OnPropertyChanged("BoundingBox");
-                     p = p.Parent;
-                  }
-               }
+               p.OnPropertyChanged("BoundingBox");
+               p = p.ParentVm;
             }
          }
       }
 
       public double PosY
       {
-         get
-         {
-            if (_childObjectOfParent != null)
-            {
-               if ((_selectedStateIndex >= 0) && (_childObjectOfParent.StateProperties.Count > _selectedStateIndex))
-               {
-                  return _childObjectOfParent.StateProperties[_selectedStateIndex].Properties.PosY;
-               }
-            }
-            return 0;
-         }
+         get { return _modelObjectProperties.PosY; }
          set
          {
-            if (_childObjectOfParent != null)
+            _modelObjectProperties.PosY = value;
+
+            OnPropertyChanged("PosY");
+            OnPropertyChanged("BoundingBox");
+
+            CompoundObjectViewModel p = ParentVm;
+
+            while (p != null)
             {
-               if ((_selectedStateIndex >= 0) && (_childObjectOfParent.StateProperties.Count > 0))
-               {
-                  _childObjectOfParent.StateProperties[_selectedStateIndex].Properties.PosY = value;
-
-                  OnPropertyChanged("PosY");
-                  OnPropertyChanged("BoundingBox");
-
-                  CompoundObjectViewModel p = Parent;
-
-                  while (p != null)
-                  {
-                     p.OnPropertyChanged("BoundingBox");
-                     p = p.Parent;
-                  }
-               }
+               p.OnPropertyChanged("BoundingBox");
+               p = p.ParentVm;
             }
          }
       }
@@ -219,12 +202,12 @@ namespace LeapfrogEditor
             OnPropertyChanged("");
             BuildTreeViewCollection();
 
-            CompoundObjectViewModel p = Parent;
+            CompoundObjectViewModel p = ParentVm;
 
             while (p != null)
             {
                p.OnPropertyChanged("BoundingBox");
-               p = p.Parent;
+               p = p.ParentVm;
             }
          }
       }
@@ -254,58 +237,31 @@ namespace LeapfrogEditor
 
       public StateShapeCollectionViewModel StateShapes
       {
-         get
-         {
-            if ((_selectedStateIndex >= 0) && (_shapes.Count > _selectedStateIndex))
-            {
-               return _shapes[_selectedStateIndex];
-            }
-            return null;
-         }
+         get { return _shapes; }
          set
          {
-            if ((_selectedStateIndex >= 0) && (_shapes.Count > _selectedStateIndex))
-            {
-               _shapes[_selectedStateIndex] = value;
-            }
+            _shapes = value;
+            OnPropertyChanged("StateShapes");
          }
       }
 
       public StateJointCollectionViewModel StateJoints
       {
-         get
-         {
-            if ((_selectedStateIndex >= 0) && (_joints.Count > _selectedStateIndex))
-            {
-               return _joints[_selectedStateIndex];
-            }
-            return null;
-         }
+         get { return _joints; }
          set
          {
-            if ((_selectedStateIndex >= 0) && (_joints.Count > _selectedStateIndex))
-            {
-               _joints[_selectedStateIndex] = value;
-            }
+            _joints = value;
+            OnPropertyChanged("StateJoints");
          }
       }
 
       public StateSystemCollectionViewModel StateSystems
       {
-         get
-         {
-            if ((_selectedStateIndex >= 0) && (_shapes.Count > _selectedStateIndex))
-            {
-               return _systems[_selectedStateIndex];
-            }
-            return null;
-         }
+         get { return _systems; }
          set
          {
-            if ((_selectedStateIndex >= 0) && (_shapes.Count > _selectedStateIndex))
-            {
-               _systems[_selectedStateIndex] = value;
-            }
+            _systems = value;
+            OnPropertyChanged("StateSystems");
          }
       }
 
@@ -557,18 +513,65 @@ namespace LeapfrogEditor
       }
 
 
-      private StateChildCollectionViewModel SetChildren(CompoundObject co)
+      private ObservableCollection<StateChildCollectionViewModel> SetChildren(CompoundObject co)
+      // This method creates the collection of StateChildCollectionViewModels for each state of the
+      // CompoundObject. The StateChildCollectionViewModel for each state will hold the ChildObject that
+      // mathches the state. However, if there is no match of the state, and the ChildObject has another
+      // state that is "default", this is included in the state. If the ChildObject does not have a 
+      // default state, either, it is not included in the state.
+      // The default state is compulsory for all CompoundObjects. 
+      // 
       {
-         StateChildCollectionViewModel tempChildren = new StateChildCollectionViewModel(this);
+         ObservableCollection<StateChildCollectionViewModel> stateChildren = new ObservableCollection<StateChildCollectionViewModel>();
 
-         foreach (ChildObject cho in co.ChildObjects)
+         // We iterate the list of states first
+         foreach (string stateStr in States)
          {
-            CompoundObjectViewModel covm = new CompoundObjectViewModel(MainVm, this, cho);
-            covm.BuildViewModel(cho);
-            tempChildren.Children.Add(covm);
+
+            StateChildCollectionViewModel stateChild = new StateChildCollectionViewModel(this);
+
+            bool matchedState = false;
+
+            //... then we iterate all ChildObjects of the CO and look if any of them
+            // has a matching state. 
+            foreach (ChildObject cho in co.ChildObjects)
+            {
+               // Now we iterate all state properties of this ChildObject and process it
+               // if the state of the ChildObject matches the current stateStr
+               foreach (TStateProperties<ChildObjectStateProperties> sp in cho.StateProperties)
+               {
+                  if (sp.State == stateStr)
+                  {
+                     // Now process this ChildObject and insert this ChildObject in this state
+                     CompoundObjectViewModel covm = new CompoundObjectViewModel(MainVm, sp.Properties.CompObj, sp.Properties, this, cho);
+                     covm.BuildViewModel(cho);
+                     stateChild.Children.Add(covm);
+
+                     matchedState = true;
+                  }
+               }
+
+               if (!matchedState)
+               {
+                  // There was no match, now we iterate all state properties again and process it
+                  // if the state of the ChildObject is "default"
+                  foreach (TStateProperties<ChildObjectStateProperties> sp in cho.StateProperties)
+                  {
+                     if (sp.State == "default")
+                     {
+                        // Now process this ChildObject and insert this ChildObject in this state
+                        CompoundObjectViewModel covm = new CompoundObjectViewModel(MainVm, sp.Properties.CompObj, sp.Properties, this, cho);
+                        covm.BuildViewModel(cho);
+                        stateChild.Children.Add(covm);
+                     }
+                  }
+               }
+            }
+
+            stateChildren.Add(stateChild);
          }
 
-         return tempChildren;
+         return stateChildren;
       }
 
       #endregion
@@ -605,8 +608,8 @@ namespace LeapfrogEditor
          // If there are no more shapes in the CO, remove the CO
          if (StateShapes.Shapes.Count == 0)
          {
-            //Parent.StateChildObjects.Remove(this);
-            //Parent.ModelObject.ChildObjectRefs(this.ChildObjectOfParent)
+            //ParentVm.StateChildObjects.Remove(this);
+            //ParentVm.ModelObject.ChildObjectRefs(this.ChildObjectOfParent)
          }
 
          OnPropertyChanged("");
@@ -645,47 +648,41 @@ namespace LeapfrogEditor
          return null;
       }
 
-
       public void BuildViewModel(ChildObject cor)
+      // This method connects references in the COVM. At the creation of the COVM
+      // the ModelObject, ModelObjectProperties, ParentVm and ChildObjectOfParent is defined.
+      // Here we build the shape, joint and system collections and connect those objects 
+      // with the necessary references. The ChildObjects are also added to the corresponding
+      // state index in the StateChildObjects collection
       {
-         _shapes.Clear();
-         _joints.Clear();
-         _systems.Clear();
          _childObjects.Clear();
          _treeCollection.Clear();
 
-         foreach (TStateProperties<ChildObjectStateProperties> sp in cor.StateProperties)
+         _shapes = SetShapes(ModelObject);
+         _joints = SetJoints(ModelObject);
+         _systems = SetSystems(ModelObject);
+
+         // Only now is the Joints property valid for this state
+         foreach (object o in _joints.Joints)
          {
-            StateShapeCollectionViewModel sc = SetShapes(sp.Properties.CompObj);
-            _shapes.Add(sc);
-
-            StateJointCollectionViewModel jc = SetJoints(sp.Properties.CompObj);
-            _joints.Add(jc);
-
-            _systems.Add(SetSystems(sp.Properties.CompObj));
-
-            _childObjects.Add(SetChildren(sp.Properties.CompObj));
-
-            // Only now is the Joints property valid for this state
-            foreach (object o in jc.Joints)
+            if (o is WeldJointViewModel)
             {
-               if (o is WeldJointViewModel)
+               if (o is RopeViewModel)
                {
-                  if (o is RopeViewModel)
-                  {
-                     RopeViewModel joint = (RopeViewModel)o;
+                  RopeViewModel joint = (RopeViewModel)o;
 
-                     joint.ConnectToShapes(sc);
-                  }
-                  else
-                  {
-                     WeldJointViewModel joint = (WeldJointViewModel)o;
+                  joint.ConnectToShapes(_shapes);
+               }
+               else
+               {
+                  WeldJointViewModel joint = (WeldJointViewModel)o;
 
-                     joint.ConnectToShapes(sc);
-                  }
+                  joint.ConnectToShapes(_shapes);
                }
             }
          }
+
+         _childObjects = SetChildren(ModelObject);
 
          BuildTreeViewCollection();
       }
@@ -788,7 +785,7 @@ namespace LeapfrogEditor
       // at the top level CompoundObject which is the scene. Then we returns the point
       public Point GetScenePointFromCoPoint(Point coPoint)
       {
-         if (Parent != null)
+         if (ParentVm != null)
          {
             Point parentPoint = ParentCoPoint(coPoint);
             return GetScenePointFromCoPoint(parentPoint);
@@ -801,7 +798,7 @@ namespace LeapfrogEditor
 
       public Point GetCoPointFromScenePoint(Point scenePoint)
       {
-         if (Parent != null)
+         if (ParentVm != null)
          {
             Point parentPoint = CoPointFromParent(scenePoint);
             return GetCoPointFromScenePoint(parentPoint);

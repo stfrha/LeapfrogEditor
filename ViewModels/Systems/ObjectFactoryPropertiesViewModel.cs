@@ -77,7 +77,7 @@ namespace LeapfrogEditor
             {
                p.OnPropertyChanged("BoundingBox");
                p.InvalidateJoints();
-               p = p.Parent;
+               p = p.ParentVm;
             }
          }
       }
@@ -105,7 +105,7 @@ namespace LeapfrogEditor
             {
                p.OnPropertyChanged("BoundingBox");
                p.InvalidateJoints();
-               p = p.Parent;
+               p = p.ParentVm;
             }
          }
       }
@@ -132,7 +132,7 @@ namespace LeapfrogEditor
             while (p != null)
             {
                p.OnPropertyChanged("BoundingBox");
-               p = p.Parent;
+               p = p.ParentVm;
             }
          }
       }
@@ -159,7 +159,7 @@ namespace LeapfrogEditor
             while (p != null)
             {
                p.OnPropertyChanged("BoundingBox");
-               p = p.Parent;
+               p = p.ParentVm;
             }
          }
       }
