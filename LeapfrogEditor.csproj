@@ -67,6 +67,7 @@
     <Compile Include="ViewModels\Behvaiours\SteerableObjectPropertiesViewModel.cs" />
     <Compile Include="ViewModels\Behvaiours\BreakableObjectPropertiesViewModel.cs" />
     <Compile Include="ViewModels\Behvaiours\CoBehaviourViewModel.cs" />
+    <Compile Include="ViewModels\DataBindingProxy.cs" />
     <Compile Include="ViewModels\Joints\StateJointCollectionViewModel.cs" />
     <Compile Include="ViewModels\Shape and bodies\StateShapeCollectionViewModel.cs" />
     <Compile Include="ViewModels\SpawnObjectViewModel.cs" />

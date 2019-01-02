@@ -72,12 +72,17 @@ namespace LeapfrogEditor
        * CompoundObjectViewModel, called TreeTop.
        */
 
-
+      // These are the top level objects that holds the loaded file
+      // after loading, these must be the same as the object being
+      // edited
       private ChildObject _myChildObject = new ChildObject();
       private TStateProperties<ChildObjectStateProperties> _myStateProp = new TStateProperties<ChildObjectStateProperties>();
       private CompoundObject _myCP;
       private CompoundObjectViewModel _myCpVm;
       private ObservableCollection<CompoundObjectViewModel> _topTreeViewViewModel = new ObservableCollection<CompoundObjectViewModel>();
+
+      // Object VM that is being edited
+      private CompoundObjectViewModel _editedCpVm;
 
       private CompoundObjectViewModel _selectedCompoundObject = null;
       private ObservableCollection<LfShapeViewModel> _selectedShapes = new ObservableCollection<LfShapeViewModel>();
@@ -170,6 +175,18 @@ namespace LeapfrogEditor
             OnPropertyChanged("MyCpVm");
          }
       }
+
+      public CompoundObjectViewModel EditedCpVm
+      {
+         get { return _editedCpVm; }
+         set
+         {
+            _editedCpVm = value;
+            OnPropertyChanged("EditedCpVm");
+         }
+      }
+
+
 
       public string WindowTitle
       {
@@ -360,10 +377,14 @@ namespace LeapfrogEditor
 
                MyCpVm = new CompoundObjectViewModel(this, MyCP, MyStateProp.Properties, null, MyChildObject);
                MyCpVm.BuildViewModel(MyChildObject);
+               MyCpVm.OnPropertyChanged("");
 
+               // Even if we edit a child object, the tree view should remain 
+               // according to the loaded file.
                TopTreeViewViewModel.Add(MyCpVm);
 
-               MyCpVm.OnPropertyChanged("");
+               EditedCpVm = MyCpVm;
+               EditedCpVm.OnPropertyChanged("");
                OnPropertyChanged("");
             }
          }
@@ -381,6 +402,50 @@ namespace LeapfrogEditor
             return new MicroMvvm.RelayCommand<Object>(parameter => ReloadExecute(parameter), parameter => CanReloadExecute(parameter));
          }
       }
+
+      void ChangeEditableObjectExecute(Object parameter)
+      {
+         // What object is we pointing at?
+         if (parameter is CompoundObjectViewModel)
+         {
+            EditedCpVm = parameter as CompoundObjectViewModel;
+            EditedCpVm.OnPropertyChanged("");
+            OnPropertyChanged("");
+
+            if (SelectedCompoundObject != null)
+            {
+               // Some Compound Object is selected and now we want to replace
+               // it with the new. We need to deselect any child-selections first
+               SelectedCompoundObject.DeselectAllChildren();
+               _selectedShapes.Clear();
+               _selectedJoints.Clear();
+               SelectedCompoundObject.IsSelected = false;
+            }
+
+         }
+      }
+
+      bool CanChangeEditableObjectExecute(Object parameter)
+      {
+         return true;
+      }
+
+      public ICommand ChangeEditableObject
+      {
+         get
+         {
+            return new MicroMvvm.RelayCommand<Object>(parameter => ChangeEditableObjectExecute(parameter), parameter => CanChangeEditableObjectExecute(parameter));
+         }
+      }
+
+
+
+
+
+      
+
+
+
 
       void SaveExecute(Object parameter)
       {
@@ -1066,8 +1131,20 @@ namespace LeapfrogEditor
                   // Mouse up on Shape
                   LfShapeViewModel shvm = (LfShapeViewModel)sender;
 
-                  if (shvm.Parent.IsSelected)
+                  // If the clicked shape is children of the edited object, it should
+                  // be selected (assessing the ctrl key in the process for multiple 
+                  // selection)
+                  // If it is not part of the Editable object, the parent should be selected
+
+//                  if (shvm.Parent.IsSelected)
+                  if (shvm.Parent == EditedCpVm)
                   {
+                     if (!EditedCpVm.IsSelected)
+                     {
+                        EditedCpVm.IsSelected = true;
+                        SelectedCompoundObject = EditedCpVm;
+                     }
+
                      if (!ctrl)
                      {
                         foreach (LfShapeViewModel selshape in _selectedShapes)
@@ -1088,8 +1165,13 @@ namespace LeapfrogEditor
                   }
                   else
                   {
+                     // The clicked shape is part of a child object and thus, only 
+                     // the child object shall be selected
+
                      if (SelectedCompoundObject != null)
                      {
+                        // Some Compound Object is selected and now we want to replace
+                        // it with the new. We need to deselect any child-selections first
                         SelectedCompoundObject.DeselectAllChildren();
                         _selectedShapes.Clear();
                         _selectedJoints.Clear();

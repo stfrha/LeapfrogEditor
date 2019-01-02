@@ -141,6 +141,22 @@ namespace LeapfrogEditor
          }
       }
 
+      public string RefName
+      {
+         get
+         {
+            if ((ModelObjectProperties.File == "") || (ModelObjectProperties.File == "undef_file.xml"))
+            {
+               return Name;
+            }
+
+            return Name + " - " + ModelObjectProperties.File;
+         }
+         set
+         {
+         }
+      }
+
       public double PosX
       {
          get { return _modelObjectProperties.PosX; }
