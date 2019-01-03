@@ -37,15 +37,27 @@ namespace LeapfrogEditor
           DependencyProperty.Register("EditableCompoundObject", typeof(CompoundObjectViewModel), typeof(PropertiesEditor), new PropertyMetadata(default(CompoundObjectViewModel)));
 
 
+      public ObservableCollection<CompoundObjectViewModel> SelectedChildren
+      {
+         get { return (ObservableCollection<CompoundObjectViewModel>)GetValue(SelectedChildrenProperty); }
+         set { SetValue(SelectedChildrenProperty, value); }
+      }
+
+      // Using a DependencyProperty as the backing store for SelectedChildren.  This enables animation, styling, binding, etc...
+      public static readonly DependencyProperty SelectedChildrenProperty =
+          DependencyProperty.Register("SelectedChildren", typeof(ObservableCollection<CompoundObjectViewModel>), typeof(PropertiesEditor), new PropertyMetadata(default(ObservableCollection<CompoundObjectViewModel>)));
+
+
+
 
       public ObservableCollection<LfShapeViewModel> EditableShapes
       {
-         get { return (ObservableCollection<LfShapeViewModel>)GetValue(observableCollectionProperty); }
-         set { SetValue(observableCollectionProperty, value); }
+         get { return (ObservableCollection<LfShapeViewModel>)GetValue(EditableShapesProperty); }
+         set { SetValue(EditableShapesProperty, value); }
       }
 
       // Using a DependencyProperty as the backing store for EditableShapes.  This enables animation, styling, binding, etc...
-      public static readonly DependencyProperty observableCollectionProperty =
+      public static readonly DependencyProperty EditableShapesProperty =
           DependencyProperty.Register("EditableShapes", typeof(ObservableCollection<LfShapeViewModel>), typeof(PropertiesEditor), new PropertyMetadata(default(ObservableCollection<LfShapeViewModel>)));
 
 

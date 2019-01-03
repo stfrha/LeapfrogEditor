@@ -111,9 +111,12 @@
                      <Label Margin="-2"  Content="{Binding RefName}">
                         <Label.ContextMenu>
                            <ContextMenu>
+                              <MenuItem Header="Open Object File" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.OpenChildFile, Source={StaticResource DataContextProxy}}" />
                               <MenuItem Header="Edit this object" 
-                              CommandParameter="{Binding}"
-                              Command="{Binding Path=Data.ChangeEditableObject, Source={StaticResource DataContextProxy}}" />
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.ChangeEditableObject, Source={StaticResource DataContextProxy}}" />
                            </ContextMenu>
                         </Label.ContextMenu>
                      </Label>
@@ -493,6 +496,7 @@
          <ScrollViewer Grid.Column="2">
             <local:PropertiesEditor 
             EditableCompoundObject="{Binding EditedCpVm}"
+            SelectedChildren="{Binding SelectedChildObjects}"
             EditableShapes="{Binding SelectedShapes}"
             EditableJoints="{Binding SelectedJoints}"
             />

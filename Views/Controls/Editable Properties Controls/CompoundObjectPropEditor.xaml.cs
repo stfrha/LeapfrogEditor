@@ -24,5 +24,20 @@ namespace LeapfrogEditor
       {
          InitializeComponent();
       }
+
+
+
+      public string Headline
+      {
+         get { return (string)GetValue(HeadlineProperty); }
+         set { SetValue(HeadlineProperty, value); }
+      }
+
+      // Using a DependencyProperty as the backing store for Headline.  This enables animation, styling, binding, etc...
+      public static readonly DependencyProperty HeadlineProperty =
+          DependencyProperty.Register("Headline", typeof(string), typeof(CompoundObjectPropEditor), new PropertyMetadata(default(string)));
+
+
+
    }
 }
