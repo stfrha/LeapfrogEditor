@@ -34,7 +34,7 @@ namespace LeapfrogEditor
          _mainVm = mainVm;
       }
 
-      public TreeViewViewModel(string name, Object obj, TreeViewViewModel parent, MainViewModel mainVm)
+      public TreeViewViewModel(string name, TreeViewViewModel parent, MainViewModel mainVm)
       {
          _treeParent = parent;
          _isSelected = false;

@@ -75,11 +75,11 @@ namespace LeapfrogEditor
       // These are the top level objects that holds the loaded file
       // after loading, these must be the same as the object being
       // edited
-      private ChildObject _myChildObject = new ChildObject();
-      private TStateProperties<ChildObjectStateProperties> _myStateProp = new TStateProperties<ChildObjectStateProperties>();
-      private CompoundObject _myCP;
-      private CompoundObjectViewModel _myCpVm;
-      private ObservableCollection<CompoundObjectViewModel> _topTreeViewViewModel = new ObservableCollection<CompoundObjectViewModel>();
+      //private ChildObject _myChildObject = new ChildObject();
+      //private TStateProperties<ChildObjectStateProperties> _myStateProp = new TStateProperties<ChildObjectStateProperties>();
+      //private CompoundObject _myCP;
+      //private CompoundObjectViewModel _myCpVm;
+      private ObservableCollection<FileCOViewModel> _fileCollectionViewModel = new ObservableCollection<FileCOViewModel>();
 
       // Object VM that is being edited
       private CompoundObjectViewModel _editedCpVm;
@@ -142,39 +142,39 @@ namespace LeapfrogEditor
 
       #region Properties
 
-      public ObservableCollection<CompoundObjectViewModel> TopTreeViewViewModel
+      public ObservableCollection<FileCOViewModel> FileCollectionViewModel
       {
-         get { return _topTreeViewViewModel; }
-         set { _topTreeViewViewModel = value; }
+         get { return _fileCollectionViewModel; }
+         set { _fileCollectionViewModel = value; }
       }
 
-      public ChildObject MyChildObject
-      {
-         get { return _myChildObject; }
-         set { _myChildObject = value; }
-      }
+      //public ChildObject MyChildObject
+      //{
+      //   get { return _myChildObject; }
+      //   set { _myChildObject = value; }
+      //}
 
-      public TStateProperties<ChildObjectStateProperties> MyStateProp
-      {
-         get { return _myStateProp; }
-         set { _myStateProp = value; }
-      }
+      //public TStateProperties<ChildObjectStateProperties> MyStateProp
+      //{
+      //   get { return _myStateProp; }
+      //   set { _myStateProp = value; }
+      //}
 
-      public CompoundObject MyCP
-      {
-         get { return _myCP; }
-         set { _myCP = value; }
-      }
+      //public CompoundObject MyCP
+      //{
+      //   get { return _myCP; }
+      //   set { _myCP = value; }
+      //}
 
-      public CompoundObjectViewModel MyCpVm
-      {
-         get { return _myCpVm; }
-         set
-         {
-            _myCpVm = value;
-            OnPropertyChanged("MyCpVm");
-         }
-      }
+      //public CompoundObjectViewModel MyCpVm
+      //{
+      //   get { return _myCpVm; }
+      //   set
+      //   {
+      //      _myCpVm = value;
+      //      OnPropertyChanged("MyCpVm");
+      //   }
+      //}
 
       public CompoundObjectViewModel EditedCpVm
       {
@@ -186,18 +186,16 @@ namespace LeapfrogEditor
          }
       }
 
-
-
       public string WindowTitle
       {
          get
          {
-            if (MyCpVm == null)
+            if (EditedCpVm == null)
             {
                return "Leapfrog Editor - No file loaded";
             }
 
-            string fileName = System.IO.Path.GetFileName(MyChildObject.StateProperties[0].Properties.File);
+            string fileName = System.IO.Path.GetFileName(EditedCpVm.ModelObjectProperties.File);
 
             return "Leapfrog Editor - " + fileName;
          }
@@ -299,32 +297,29 @@ namespace LeapfrogEditor
 
                ChildObjectStateProperties cosp = new ChildObjectStateProperties();
                cosp.File = fullFileName;
-               
-               MyStateProp = new TStateProperties<ChildObjectStateProperties>();
-               MyStateProp.Properties = cosp;
 
-               MyCP = new CompoundObject();
+               TStateProperties<ChildObjectStateProperties>  newStateProp = new TStateProperties<ChildObjectStateProperties>();
+               newStateProp.Properties = cosp;
 
-               MyStateProp.Properties.CompObj = MyCP;
+               CompoundObject newCP = new CompoundObject();
+               newStateProp.Properties.CompObj = newCP;
 
-               MyChildObject = new ChildObject();
+               ChildObject newChildObject = new ChildObject();
+               newChildObject.StateProperties.Add(newStateProp);
 
-               MyChildObject.StateProperties.Add(MyStateProp);
-
-               MyCpVm = new CompoundObjectViewModel(this, MyCP, MyStateProp.Properties, null, MyChildObject);
+               FileCOViewModel newCpVm = new FileCOViewModel(this, newCP, newStateProp.Properties, null, newChildObject);
 
                // To get a handle to the new CompoundObject we need a shape
                // to select. Lets place a default Sprite Box at coordinate 0,0
                LfStaticCircle defShape = new LfStaticCircle();
-               MyCP.StaticCircles.Add(defShape);
+               newCP.StaticCircles.Add(defShape);
                LfStaticCircleViewModel defShapeVM = new LfStaticCircleViewModel(this, null, defShape);
-               MyCpVm.BuildViewModel(MyChildObject);
+               newCpVm.BuildViewModel(newChildObject);
 
-               // All the regular data is now set. Lets build the tree view which
-               // is a little bit different.
-               TopTreeViewViewModel.Add(MyCpVm);
+               FileCollectionViewModel.Add(newCpVm);
 
-               MyCpVm.OnPropertyChanged("");
+               EditedCpVm = newCpVm;
+               EditedCpVm.OnPropertyChanged("");
                OnPropertyChanged("");
             }
          }
@@ -361,27 +356,51 @@ namespace LeapfrogEditor
 
                ChildObjectStateProperties cosp = new ChildObjectStateProperties();
                cosp.File = fullFileName;
-               
 
-               MyStateProp.Properties = cosp;
+               TStateProperties<ChildObjectStateProperties> newStateProp = new TStateProperties<ChildObjectStateProperties>();
+               newStateProp.Properties = cosp;
 
-               MyCP = CompoundObject.ReadFromFile(fullFileName);
+               CompoundObject newCP = CompoundObject.ReadFromFile(fullFileName);
+               newStateProp.Properties.CompObj = newCP;
 
-               MyStateProp.Properties.CompObj = MyCP;
-               MyChildObject.StateProperties.Add(MyStateProp);
-               MyChildObject.Name = fileName;
+               ChildObject newChildObject = new ChildObject();
+               newChildObject.StateProperties.Add(newStateProp);
+               newChildObject.Name = fileName;
 
-               MyCpVm = new CompoundObjectViewModel(this, MyCP, MyStateProp.Properties, null, MyChildObject);
-               MyCpVm.BuildViewModel(MyChildObject);
-               MyCpVm.OnPropertyChanged("");
+               FileCOViewModel newCpVm = new FileCOViewModel(this, newCP, newStateProp.Properties, null, newChildObject);
+               newCpVm.BuildViewModel(newChildObject);
 
-               // Even if we edit a child object, the tree view should remain 
-               // according to the loaded file.
-               TopTreeViewViewModel.Add(MyCpVm);
+               FileCollectionViewModel.Add(newCpVm);
 
-               EditedCpVm = MyCpVm;
+               EditedCpVm = newCpVm;
                EditedCpVm.OnPropertyChanged("");
                OnPropertyChanged("");
+
+
+
+
+
+
+
+
+
+               //MyStateProp.Properties = cosp;
+
+               //MyCP = CompoundObject.ReadFromFile(fullFileName);
+
+               //MyStateProp.Properties.CompObj = MyCP;
+               //MyChildObject.StateProperties.Add(MyStateProp);
+               //MyChildObject.Name = fileName;
+
+               //MyCpVm = new FileCOViewModel(this, MyCP, MyStateProp.Properties, null, MyChildObject);
+               //MyCpVm.BuildViewModel(MyChildObject);
+               //MyCpVm.OnPropertyChanged("");
+
+               //FileCollectionViewModel.Add(MyCpVm);
+
+               //EditedCpVm = MyCpVm;
+               //EditedCpVm.OnPropertyChanged("");
+               //OnPropertyChanged("");
             }
          }
       }
@@ -418,17 +437,16 @@ namespace LeapfrogEditor
 
       bool CanChangeEditableObjectExecute(Object parameter)
       {
+         if (parameter is FileCOViewModel)
+         {
+            // If the parameter is a file, it is obviously loaded so we want to be able to edit agian
+            // if we changed which CO to edit.
+            return true;
+         }
+
          if (parameter is CompoundObjectViewModel)
          {
             CompoundObjectViewModel covm = parameter as CompoundObjectViewModel;
-
-            // MyCpVm will obviously have a file (it is the first loaded)
-            // but it is already loaded, so we want to be able to edit agian
-            // if we changed which CO to edit.
-            if (covm == MyCpVm)
-            {
-               return true;
-            }
 
             if ((covm.ModelObjectProperties.File == "") || (covm.ModelObjectProperties.File == "undef_file.xml"))
             {
@@ -504,9 +522,9 @@ namespace LeapfrogEditor
       void SaveExecute(Object parameter)
       {
          // Generate Triangles before saving
-         MyCpVm.GenerateTriangles();
+         EditedCpVm.GenerateTriangles();
 
-         MyCpVm.ModelObject.WriteToFile(MyStateProp.Properties.File);
+         EditedCpVm.ModelObject.WriteToFile(EditedCpVm.ModelObjectProperties.File);
       }
 
       bool CanSaveExecute(Object parameter)
@@ -528,10 +546,10 @@ namespace LeapfrogEditor
 
          if (sfd.ShowDialog() == true)
          {
-            MyCpVm.GenerateTriangles();
-
-            MyStateProp.Properties.File = sfd.FileName;
-            MyCpVm.ModelObject.WriteToFile(MyStateProp.Properties.File);
+            // Generate Triangles before saving
+            EditedCpVm.GenerateTriangles();
+            EditedCpVm.ModelObjectProperties.File = sfd.FileName;
+            EditedCpVm.ModelObject.WriteToFile(EditedCpVm.ModelObjectProperties.File);
          }
       }
 
@@ -585,8 +603,6 @@ namespace LeapfrogEditor
 
             EditedCpVm.ModelObject.ChildObjects.Add(newChildObject);
             EditedCpVm.StateChildObjects.Children.Add(newCpVm);
-
-            MyCpVm.OnPropertyChanged("");
             OnPropertyChanged("");
          }
       }
@@ -653,7 +669,7 @@ namespace LeapfrogEditor
 
       void CreateTrianglesExecute(Object parameter)
       {
-         MyCpVm.GenerateTriangles();
+         EditedCpVm.GenerateTriangles();
       }
 
       bool CanCreateTrianglesExecute(Object parameter)
@@ -671,7 +687,7 @@ namespace LeapfrogEditor
 
       void StateExecute(Object parameter)
       {
-         CompoundObjectViewModel covm = MyCpVm.StateChildObjects.Children[0];
+         CompoundObjectViewModel covm = EditedCpVm.StateChildObjects.Children[0];
 
          if (covm.SelectedStateIndex == 0)
          {
@@ -1294,7 +1310,7 @@ namespace LeapfrogEditor
 
          clickPoint.Offset(-w / 2, -h / 2);
 
-         if (MyCpVm == null) return false;
+         if (EditedCpVm == null) return false;
 
          if (button == MouseButton.Left)
          {
