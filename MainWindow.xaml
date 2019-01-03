@@ -492,7 +492,7 @@
          </DockPanel>
          <ScrollViewer Grid.Column="2">
             <local:PropertiesEditor 
-            EditableCompoundObject="{Binding SelectedCompoundObject}"
+            EditableCompoundObject="{Binding EditedCpVm}"
             EditableShapes="{Binding SelectedShapes}"
             EditableJoints="{Binding SelectedJoints}"
             />
