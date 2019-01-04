@@ -215,6 +215,12 @@ namespace LeapfrogEditor
       #region Public Methods
 
       public static CompoundObject ReadFromFile(string fileName)
+         // This method reads an xml file containing a CompoundObject
+         // and returns with the generated CompoundObject. 
+         // All child objects with other XML-files are also read 
+         // (however it will not be possible to edit them without
+         // explicitly open thems as separate files.
+         // TODO: Error handling is non-existent.
       {
          string path = Path.GetDirectoryName(fileName);
 
@@ -264,6 +270,10 @@ namespace LeapfrogEditor
       }
 
       public void WriteToFile(string fileName)
+         // This methos writes the CompoundObject to file. The children
+         // that contains file references are not written since they 
+         // can not be edited under this object. They need to be
+         // opened and edited as separate files.
       {
          XmlWriterSettings settings = new XmlWriterSettings();
          settings.Indent = true;
@@ -278,20 +288,6 @@ namespace LeapfrogEditor
          FileStream fs = new FileStream(fileName, FileMode.Create);
          XmlWriter writer = XmlWriter.Create(fs, settings);
          ser.Serialize(writer, this, ns);
-
-         // Iterate ChildObjects to save all child objects
-         foreach (ChildObject co in ChildObjects)
-         {
-            foreach (TStateProperties<ChildObjectStateProperties> sp in co.StateProperties)
-            {
-               if (sp.Properties.File != "")
-               {
-                  string newFile = System.IO.Path.Combine(path, sp.Properties.File);
-
-                  sp.Properties.CompObj.WriteToFile(newFile);
-               }
-            }
-         }
 
          // Iterate ClippedWindowProperties to save all space scenes as child objects
          foreach (ClippedWindowRef cw in ClippedWindows)

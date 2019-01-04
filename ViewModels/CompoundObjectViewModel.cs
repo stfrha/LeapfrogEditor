@@ -741,6 +741,32 @@ namespace LeapfrogEditor
          }
       }
 
+
+      public bool ChildHasFileReference(string fileName)
+      {
+         foreach (StateChildCollectionViewModel sccvm in _childObjects)
+         {
+            foreach (CompoundObjectViewModel covm in sccvm.Children)
+            {
+               if (covm.ModelObjectProperties.File == fileName)
+               {
+                  return true;
+               }
+               else
+               {
+                  if (covm.ChildHasFileReference(fileName))
+                  {
+                     return true;
+                  }
+               }
+            }
+         }
+
+         return false;
+      }
+
+
+
       // This method returns with the point of the shape's coordinate system
       // in this CompoundObject's coordinate system. 
       // The position of the shape is added to the shape point. The shape point

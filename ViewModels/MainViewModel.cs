@@ -307,7 +307,7 @@ namespace LeapfrogEditor
                ChildObject newChildObject = new ChildObject();
                newChildObject.StateProperties.Add(newStateProp);
 
-               FileCOViewModel newCpVm = new FileCOViewModel(this, newCP, newStateProp.Properties, null, newChildObject);
+               FileCOViewModel newCpVm = new FileCOViewModel(fileName, this, newCP, newStateProp.Properties, null, newChildObject);
 
                // To get a handle to the new CompoundObject we need a shape
                // to select. Lets place a default Sprite Box at coordinate 0,0
@@ -340,68 +340,14 @@ namespace LeapfrogEditor
 
       void ReloadExecute(Object parameter)
       {
-         if (MessageBox.Show("There is no check if there is unsaved data. Do you really want to open a new scene?", "Open Scene Warning", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
+         OpenFileDialog ofd = new OpenFileDialog();
+
+         ofd.Filter = "Scene files (*.xml)|*.xml|All files (*.*)|*.*";
+         ofd.CheckFileExists = true;
+
+         if (ofd.ShowDialog() == true)
          {
-            OpenFileDialog ofd = new OpenFileDialog();
-
-            ofd.Filter = "Scene files (*.xml)|*.xml|All files (*.*)|*.*";
-            ofd.CheckFileExists = true;
-
-            if (ofd.ShowDialog() == true)
-            {
-               string fileName = System.IO.Path.GetFileName(ofd.FileName);
-               string s = @"..\..\..\leapfrog\data\" + fileName;
-               string fullPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-               string fullFileName = System.IO.Path.Combine(fullPath, s);
-
-               ChildObjectStateProperties cosp = new ChildObjectStateProperties();
-               cosp.File = fullFileName;
-
-               TStateProperties<ChildObjectStateProperties> newStateProp = new TStateProperties<ChildObjectStateProperties>();
-               newStateProp.Properties = cosp;
-
-               CompoundObject newCP = CompoundObject.ReadFromFile(fullFileName);
-               newStateProp.Properties.CompObj = newCP;
-
-               ChildObject newChildObject = new ChildObject();
-               newChildObject.StateProperties.Add(newStateProp);
-               newChildObject.Name = fileName;
-
-               FileCOViewModel newCpVm = new FileCOViewModel(this, newCP, newStateProp.Properties, null, newChildObject);
-               newCpVm.BuildViewModel(newChildObject);
-
-               FileCollectionViewModel.Add(newCpVm);
-
-               EditedCpVm = newCpVm;
-               EditedCpVm.OnPropertyChanged("");
-               OnPropertyChanged("");
-
-
-
-
-
-
-
-
-
-               //MyStateProp.Properties = cosp;
-
-               //MyCP = CompoundObject.ReadFromFile(fullFileName);
-
-               //MyStateProp.Properties.CompObj = MyCP;
-               //MyChildObject.StateProperties.Add(MyStateProp);
-               //MyChildObject.Name = fileName;
-
-               //MyCpVm = new FileCOViewModel(this, MyCP, MyStateProp.Properties, null, MyChildObject);
-               //MyCpVm.BuildViewModel(MyChildObject);
-               //MyCpVm.OnPropertyChanged("");
-
-               //FileCollectionViewModel.Add(MyCpVm);
-
-               //EditedCpVm = MyCpVm;
-               //EditedCpVm.OnPropertyChanged("");
-               //OnPropertyChanged("");
-            }
+            OpenFileToEdit(System.IO.Path.GetFileName(ofd.FileName));
          }
       }
 
@@ -470,15 +416,9 @@ namespace LeapfrogEditor
          // What object is we pointing at?
          if (parameter is CompoundObjectViewModel)
          {
-            EditedCpVm = parameter as CompoundObjectViewModel;
-            EditedCpVm.OnPropertyChanged("");
-            OnPropertyChanged("");
+            CompoundObjectViewModel covm = parameter as CompoundObjectViewModel;
 
-            if (SelectedChildObjects.Count > 0)
-            {
-               DeselectAll();
-            }
-
+            OpenFileToEdit(covm.ModelObjectProperties.File);
          }
       }
 
@@ -491,6 +431,8 @@ namespace LeapfrogEditor
             if (covm == EditedCpVm)
             {
                // We dont want to reopen the file that is already open
+               // TODO: We need to iterate the file list to know if this 
+               // file is open
                return false;
             }
 
@@ -511,7 +453,69 @@ namespace LeapfrogEditor
          }
       }
 
+      void SaveThisObjectExecute(Object parameter)
+      {
+         if (parameter is FileCOViewModel)
+         {
+            FileCOViewModel fcovm = parameter as FileCOViewModel;
 
+            // Generate Triangles before saving
+            fcovm.GenerateTriangles();
+
+            fcovm.ModelObject.WriteToFile(EditedCpVm.ModelObjectProperties.File);
+
+            // Now, since we potentially have changed the contents of this file,
+            // lets look if any object has this object as a child, in which case we 
+            // update that child (by reloading it).
+            UpdateFileReferences(fcovm);
+
+
+         }
+      }
+
+      bool CanSaveThisObjectExecute(Object parameter)
+      {
+         return true;
+      }
+
+      public ICommand SaveThisObject
+      {
+         get
+         {
+            return new MicroMvvm.RelayCommand<Object>(parameter => SaveThisObjectExecute(parameter), parameter => CanSaveThisObjectExecute(parameter));
+         }
+      }
+
+      void CloseThisFileExecute(Object parameter)
+      {
+         if (parameter is FileCOViewModel)
+         {
+            FileCOViewModel fcovm = parameter as FileCOViewModel;
+
+            int i = FileCollectionViewModel.IndexOf(fcovm);
+
+            if (i >= 0)
+            {
+               if (MessageBox.Show("There is no check if there is unsaved data. Do you really want to close this file?", "Close File Warning", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
+               {
+                  FileCollectionViewModel.RemoveAt(i);
+               }
+            }
+         }
+      }
+
+      bool CanCloseThisFileExecute(Object parameter)
+      {
+         return (parameter is FileCOViewModel);
+      }
+
+      public ICommand CloseThisFile
+      {
+         get
+         {
+            return new MicroMvvm.RelayCommand<Object>(parameter => CloseThisFileExecute(parameter), parameter => CanCloseThisFileExecute(parameter));
+         }
+      }
 
 
 
@@ -1826,6 +1830,87 @@ namespace LeapfrogEditor
          SelectedPoints.Clear();
       }
 
+      private FileCOViewModel FindOpenedFile(string fileName)
+      {
+         foreach (FileCOViewModel fcovm in FileCollectionViewModel)
+         {
+            if (fcovm.Name == fileName)
+            {
+               // File is already opened, return with it
+               return fcovm;
+            }
+         }
+
+         return null;
+      }
+
+      private void UpdateFileReferences(FileCOViewModel updateReferencesToMe)
+      {
+         // Iterate all files except the file that is to be updated
+         for (int i = 0; i < FileCollectionViewModel.Count; i++)
+         {
+            FileCOViewModel fcovm = FileCollectionViewModel[i];
+
+            if (fcovm != updateReferencesToMe)
+            {
+               if (fcovm.ChildHasFileReference((updateReferencesToMe.FileName)))
+               {
+                  // If any child within this file has a reference to the 
+                  // supplied object, we relaod the whole file
+                  FileCollectionViewModel[i] = OpenFile(FileCollectionViewModel[i].FileName);
+               }
+            }
+         }
+      }
+
+      private FileCOViewModel OpenFile(string fileName)
+      {
+         string s = @"..\..\..\leapfrog\data\" + fileName;
+         string fullPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+         string fullFileName = System.IO.Path.Combine(fullPath, s);
+
+         ChildObjectStateProperties cosp = new ChildObjectStateProperties();
+         cosp.File = fullFileName;
+
+         TStateProperties<ChildObjectStateProperties> newStateProp = new TStateProperties<ChildObjectStateProperties>();
+         newStateProp.Properties = cosp;
+
+         CompoundObject newCP = CompoundObject.ReadFromFile(fullFileName);
+         newStateProp.Properties.CompObj = newCP;
+
+         ChildObject newChildObject = new ChildObject();
+         newChildObject.StateProperties.Add(newStateProp);
+         newChildObject.Name = fileName;
+
+         FileCOViewModel newCpVm = new FileCOViewModel(fileName, this, newCP, newStateProp.Properties, null, newChildObject);
+         newCpVm.BuildViewModel(newChildObject);
+
+         return newCpVm;
+
+      }
+
+      private void OpenFileToEdit(string fileName)
+      {
+         // Lets first look to see if this file is not already openend
+         FileCOViewModel fcovm = FindOpenedFile(fileName);
+
+         if (fcovm != null)
+         {
+            // If file is already opened, we simply edit it
+            EditedCpVm = fcovm;
+            EditedCpVm.OnPropertyChanged("");
+            OnPropertyChanged("");
+            return;
+         }
+
+         FileCOViewModel newCpVm = OpenFile(fileName);
+
+         FileCollectionViewModel.Add(newCpVm);
+
+         EditedCpVm = newCpVm;
+         EditedCpVm.OnPropertyChanged("");
+         OnPropertyChanged("");
+      }
 
       #endregion
    }
