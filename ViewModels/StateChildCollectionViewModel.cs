@@ -20,8 +20,11 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public StateChildCollectionViewModel(CompoundObjectViewModel parent) :
-         base(parent)
+      public StateChildCollectionViewModel(
+         TreeViewViewModel treeParent,
+         CompoundObjectViewModel parentVm,
+         MainViewModel mainVm) :
+         base(treeParent, parentVm, mainVm)
       {
       }
 

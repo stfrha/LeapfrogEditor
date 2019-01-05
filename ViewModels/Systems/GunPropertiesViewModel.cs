@@ -20,7 +20,12 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public GunPropertiesViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, GunProperties modelObject)
+      public GunPropertiesViewModel(
+         TreeViewViewModel treeParent,
+         CompoundObjectViewModel parentVm,
+         MainViewModel mainVm,
+         GunProperties modelObject) :
+         base(treeParent, parentVm, mainVm)
       {
          ModelObject = modelObject;
       }

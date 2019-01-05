@@ -17,8 +17,12 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public LfDynamicBoxViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, LfDynamicBox modelObject) :
-         base(mainVm, parent, modelObject)
+      public LfDynamicBoxViewModel(
+         TreeViewViewModel treeParent, 
+         CompoundObjectViewModel parentVm, 
+         MainViewModel mainVm, 
+         LfDynamicBox modelObject) :
+         base(treeParent, parentVm, mainVm, modelObject)
       {
          ModelObject = modelObject;
       }

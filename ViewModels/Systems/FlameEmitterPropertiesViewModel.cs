@@ -20,7 +20,12 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public FlameEmitterPropertiesViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, FlameEmitterProperties modelObject) 
+      public FlameEmitterPropertiesViewModel(
+         TreeViewViewModel treeParent,
+         CompoundObjectViewModel parentVm,
+         MainViewModel mainVm,
+         FlameEmitterProperties modelObject) :
+         base(treeParent, parentVm, mainVm)
       {
          ModelObject = modelObject;
       }

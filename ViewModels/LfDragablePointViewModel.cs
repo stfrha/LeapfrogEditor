@@ -94,7 +94,7 @@ namespace LeapfrogEditor
                   }
                }
 
-               CompoundObjectViewModel p = Parent.Parent;
+               CompoundObjectViewModel p = Parent.ParentVm;
 
                while (p != null)
                {
@@ -143,7 +143,7 @@ namespace LeapfrogEditor
                   }
                }
 
-               CompoundObjectViewModel p = Parent.Parent;
+               CompoundObjectViewModel p = Parent.ParentVm;
 
                while (p != null)
                {

@@ -17,8 +17,8 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public LfScalableTexturePolygonViewModel(MainViewModel mainVm, CompoundObjectViewModel parent) :
-         base(mainVm, parent)
+      public LfScalableTexturePolygonViewModel(TreeViewViewModel treeParent, CompoundObjectViewModel parentVm, MainViewModel mainVm) :
+         base(treeParent, parentVm, mainVm)
       {
       }
 

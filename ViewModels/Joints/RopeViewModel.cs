@@ -20,11 +20,13 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public RopeViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, Rope modelObject) 
-         : base(mainVm, parent, modelObject)
+      public RopeViewModel(
+         TreeViewViewModel treeParent, 
+         CompoundObjectViewModel parentVm, 
+         MainViewModel mainVm, 
+         Rope modelObject) 
+         : base(treeParent, parentVm, mainVm, modelObject)
       {
-         MainVm = mainVm;
-         Parent = parent;
          ModelObject = modelObject;
       }
 
@@ -196,18 +198,18 @@ namespace LeapfrogEditor
 
       public new void ConnectToShapes(StateShapeCollectionViewModel shapes)
       {
-         _aVm = Parent.FindShape(ModelObject.AName, shapes);
+         _aVm = ParentVm.FindShape(ModelObject.AName, shapes);
          if (_aVm == null)
          {
-            MessageBox.Show("The shape A pointed to by " + ModelObject.Name + " does not exists in CO " + Parent.Name, "Error parsing file", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show("The shape A pointed to by " + ModelObject.Name + " does not exists in CO " + ParentVm.Name, "Error parsing file", MessageBoxButton.OK, MessageBoxImage.Error);
          }
 
          if (ModelObject.BName != "notDef")
          {
-            _bVm = Parent.FindShape(ModelObject.BName, shapes);
+            _bVm = ParentVm.FindShape(ModelObject.BName, shapes);
             if (_bVm == null)
             {
-               MessageBox.Show("The shape B pointed to by " + ModelObject.Name + " does not exists in CO " + Parent.Name, "Error parsing file", MessageBoxButton.OK, MessageBoxImage.Error);
+               MessageBox.Show("The shape B pointed to by " + ModelObject.Name + " does not exists in CO " + ParentVm.Name, "Error parsing file", MessageBoxButton.OK, MessageBoxImage.Error);
             }
          }
       }

@@ -14,47 +14,18 @@ namespace LeapfrogEditor
    {
       #region Declarations
 
-      private CompoundObjectViewModel _parent;
-
       #endregion
 
       #region Constructors
 
-      public StateCollectionViewModelBase(CompoundObjectViewModel parent)
+      public StateCollectionViewModelBase(TreeViewViewModel treeParent, CompoundObjectViewModel parentVm, MainViewModel mainVm) :
+         base(treeParent, parentVm, mainVm)
       {
-         Parent = parent;
       }
 
       #endregion
 
       #region Properties
-
-      public CompoundObjectViewModel Parent
-      {
-         get { return _parent; }
-         set
-         {
-            _parent = value;
-            OnPropertyChanged("");
-         }
-      }
-
-      public new bool IsSelected
-      {
-         get { return _isSelected; }
-         set
-         {
-            _isSelected = value;
-
-            if (!_isSelected)
-            {
-               DeselectAllChildren();
-            }
-
-
-            OnPropertyChanged("IsSelected");
-         }
-      }
 
       #endregion
 

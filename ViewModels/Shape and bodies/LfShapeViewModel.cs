@@ -9,21 +9,19 @@ using System.Windows.Media;
 
 namespace LeapfrogEditor
 {
-   public class LfShapeViewModel : TreeViewViewModel, IPositionInterface
+   public class LfShapeViewModel : ConditionalSelectTreeViewViewModel, IPositionInterface
    {
       #region Declarations
 
       private LfShape _modelObject;
-      private CompoundObjectViewModel _parent;
 
       #endregion
 
       #region Constructors
 
-      public LfShapeViewModel(MainViewModel mainVm, CompoundObjectViewModel parent)
+      public LfShapeViewModel(TreeViewViewModel treeParent, CompoundObjectViewModel parentVm, MainViewModel mainVm) :
+         base(treeParent, parentVm, mainVm)
       {
-         MainVm = mainVm;
-         Parent = parent;
          ModelObject = null;
       }
 
@@ -41,16 +39,6 @@ namespace LeapfrogEditor
          set
          {
             _modelObject = value;
-            OnPropertyChanged("");
-         }
-      }
-
-      public CompoundObjectViewModel Parent
-      {
-         get { return _parent; }
-         set
-         {
-            _parent = value;
             OnPropertyChanged("");
          }
       }
@@ -105,7 +93,7 @@ namespace LeapfrogEditor
             OnPropertyChanged("PosX");
             OnPropertyChanged("BoundingBox");
 
-            CompoundObjectViewModel p = Parent;
+            CompoundObjectViewModel p = ParentVm;
 
             while (p != null)
             {
@@ -133,7 +121,7 @@ namespace LeapfrogEditor
             OnPropertyChanged("PosY");
             OnPropertyChanged("BoundingBox");
 
-            CompoundObjectViewModel p = Parent;
+            CompoundObjectViewModel p = ParentVm;
 
             while (p != null)
             {
@@ -163,7 +151,7 @@ namespace LeapfrogEditor
             OnPropertyChanged("Angle");
             OnPropertyChanged("BoundingBox");
 
-            CompoundObjectViewModel p = Parent;
+            CompoundObjectViewModel p = ParentVm;
 
             while (p != null)
             {
@@ -256,22 +244,24 @@ namespace LeapfrogEditor
          { }
       }
 
-      public new bool IsSelected
-      {
-         get { return _isSelected; }
-         set
-         {
-            _isSelected = value;
+      //public new bool IsSelected
+      //{
+      //   get { return _isSelected; }
+      //   set
+      //   {
+      //      if (MainVm.AmISelectable(this))
+      //      {
+      //         _isSelected = value;
 
-            if (!_isSelected)
-            {
-               DeselectAllChildren();
-            }
+      //         if (!_isSelected)
+      //         {
+      //            DeselectAllChildren();
+      //         }
 
-
-            OnPropertyChanged("IsSelected");
-         }
-      }
+      //         OnPropertyChanged("IsSelected");
+      //      }
+      //   }
+      //}
 
       #endregion
 
@@ -363,14 +353,14 @@ namespace LeapfrogEditor
       // of the scene (i.e. that of the top level CompoundObject).
       public Point ScenePointFromShape(Point shapePoint)
       {
-         return Parent.GetScenePointFromCoPoint(Parent.ShapePointInCo(shapePoint, this));
+         return ParentVm.GetScenePointFromCoPoint(ParentVm.ShapePointInCo(shapePoint, this));
       }
 
       public Point ShapePointFromScene(Point scenePoint)
       {
-         Point coPoint = Parent.GetCoPointFromScenePoint(scenePoint);
+         Point coPoint = ParentVm.GetCoPointFromScenePoint(scenePoint);
 
-         return Parent.CoPointInShape(coPoint, this);
+         return ParentVm.CoPointInShape(coPoint, this);
       }
 
       #endregion

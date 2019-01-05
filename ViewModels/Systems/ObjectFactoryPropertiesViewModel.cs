@@ -24,7 +24,12 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public ObjectFactoryPropertiesViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, ObjectFactoryProperties modelObject)
+      public ObjectFactoryPropertiesViewModel(
+         TreeViewViewModel treeParent, 
+         CompoundObjectViewModel parentVm,
+         MainViewModel mainVm, 
+         ObjectFactoryProperties modelObject) :
+         base(treeParent, parentVm, mainVm)
       {
          _modelObject = modelObject;
       }
@@ -32,12 +37,6 @@ namespace LeapfrogEditor
       #endregion
 
       #region Properties
-
-      public MainViewModel MainVm
-      {
-         get { return _mainVm; }
-         set { _mainVm = value; }
-      }
 
       public ObjectFactoryProperties LocalModelObject
       {

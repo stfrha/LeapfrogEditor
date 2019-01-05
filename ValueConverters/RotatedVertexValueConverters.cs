@@ -193,8 +193,8 @@ namespace LeapfrogEditor
             if ((values[0] is double) && (values[1] is LfPointViewModel))
             {
                LfPointViewModel origVertex = (LfPointViewModel)values[1];
-               IBoxPointsInterface boxVm = origVertex.Parent;
-               LfShapeViewModel shapeVm = (LfShapeViewModel)origVertex.Parent;
+               IBoxPointsInterface boxVm = origVertex.PointsParent;
+               LfShapeViewModel shapeVm = (LfShapeViewModel)origVertex.PointsParent;
 
                int i = boxVm.PointVms.IndexOf(origVertex);
 
@@ -247,8 +247,8 @@ namespace LeapfrogEditor
             {
                double pos = (double)values[0];
                LfPointViewModel vertex = (LfPointViewModel)values[1];
-               IBoxPointsInterface boxVm = vertex.Parent;
-               LfShapeViewModel shapeVm = (LfShapeViewModel)vertex.Parent;
+               IBoxPointsInterface boxVm = vertex.PointsParent;
+               LfShapeViewModel shapeVm = (LfShapeViewModel)vertex.PointsParent;
 
                Point p;
 

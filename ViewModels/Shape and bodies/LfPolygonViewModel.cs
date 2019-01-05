@@ -21,8 +21,8 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public LfPolygonViewModel(MainViewModel mainVm, CompoundObjectViewModel parent) :
-         base(mainVm, parent)
+      public LfPolygonViewModel(TreeViewViewModel treeParent, CompoundObjectViewModel parentVm, MainViewModel mainVm ) :
+         base(treeParent, parentVm, mainVm)
       {
       }
 
@@ -99,7 +99,7 @@ namespace LeapfrogEditor
          LocalModelObject.AddPoint(newPoint.ModelObject);
 
          InvalidateAll();
-         Parent.OnPropertyChanged("");
+         ParentVm.OnPropertyChanged("");
 
          return newPoint;
       }
@@ -112,7 +112,7 @@ namespace LeapfrogEditor
          LocalModelObject.RemovePoint(point.ModelObject);
 
          InvalidateAll();
-         Parent.OnPropertyChanged("");
+         ParentVm.OnPropertyChanged("");
       }
 
       public LfDragablePointViewModel InsertPoint(Point insertMe, LfDragablePointViewModel insertBeforeMe)
@@ -144,7 +144,7 @@ namespace LeapfrogEditor
          }
 
          InvalidateAll();
-         Parent.OnPropertyChanged("");
+         ParentVm.OnPropertyChanged("");
 
          return newPoint;
       }

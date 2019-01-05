@@ -19,11 +19,13 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public PrismaticJointViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, PrismaticJoint modelObject) 
-         : base(mainVm, parent, modelObject)
+      public PrismaticJointViewModel(
+         TreeViewViewModel treeParent, 
+         CompoundObjectViewModel parentVm, 
+         MainViewModel mainVm, 
+         PrismaticJoint modelObject) : 
+         base(treeParent, parentVm, mainVm, modelObject)
       {
-         MainVm = mainVm;
-         Parent = parent;
          ModelObject = modelObject;
 
          //_aVm = Parent.FindShape(ModelObject.AName);

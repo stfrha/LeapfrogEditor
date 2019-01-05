@@ -17,8 +17,12 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public LfStaticPolygonViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, LfStaticPolygon modelObject) :
-         base(mainVm, parent)
+      public LfStaticPolygonViewModel(
+         TreeViewViewModel treeParent, 
+         CompoundObjectViewModel parentVm, 
+         MainViewModel mainVm, 
+         LfStaticPolygon modelObject) :
+         base(treeParent, parentVm, mainVm)
       {
          ModelObject = modelObject;
       }

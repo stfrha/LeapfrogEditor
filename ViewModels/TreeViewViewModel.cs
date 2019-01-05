@@ -11,35 +11,21 @@ using System.Windows.Input;
 namespace LeapfrogEditor
 {
    [Serializable]
-   public class TreeViewViewModel : MicroMvvm.ViewModelBase, IMainVmInterface
+   public class TreeViewViewModel : MicroMvvm.ViewModelBase, IMainVmInterface, IParentInterface
    {
+      private CompoundObjectViewModel _parentVm;
       protected TreeViewViewModel _treeParent;
       protected bool _isSelected;
       protected bool _isExpanded;
       private MainViewModel _mainVm;
 
-      public TreeViewViewModel()
+      public TreeViewViewModel(TreeViewViewModel treeParent, CompoundObjectViewModel parentVm, MainViewModel mainVm)
       {
-         _treeParent = null;
-         _isSelected = false;
-         _isExpanded = false;
-         _mainVm = null;
-      }
-
-      public TreeViewViewModel(MainViewModel mainVm)
-      {
-         _treeParent = null;
-         _isSelected = false;
-         _isExpanded = false;
+         _treeParent = treeParent;
+         _parentVm = parentVm;
          _mainVm = mainVm;
-      }
-
-      public TreeViewViewModel(string name, TreeViewViewModel parent, MainViewModel mainVm)
-      {
-         _treeParent = parent;
          _isSelected = false;
          _isExpanded = false;
-         _mainVm = mainVm;
       }
 
       public TreeViewViewModel TreeParent
@@ -48,14 +34,28 @@ namespace LeapfrogEditor
          set { _treeParent = value; }
       }
 
+      public CompoundObjectViewModel ParentVm
+      {
+         get { return _parentVm; }
+         set
+         {
+            _parentVm = value;
+            OnPropertyChanged("");
+         }
+      }
 
-      public bool IsSelected
+      virtual public bool IsSelected
       {
          get { return _isSelected; }
          set
          {
             _isSelected = value;
             OnPropertyChanged("IsSelected");
+
+            if (_isSelected == true)
+            {
+               IsExpanded = true;
+            }
          }
       }
 

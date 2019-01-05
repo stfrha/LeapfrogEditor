@@ -17,8 +17,12 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public LfDynamicCircleViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, LfDynamicCircle modelObject) :
-         base(mainVm, parent, modelObject)
+      public LfDynamicCircleViewModel(
+         TreeViewViewModel treeParent,
+         CompoundObjectViewModel parentVm,
+         MainViewModel mainVm,
+         LfDynamicCircle modelObject) :
+         base(treeParent, parentVm, mainVm, modelObject)
       {
          ModelObject = modelObject;
       }

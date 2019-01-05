@@ -21,7 +21,8 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public BehaviourViewModelBase() 
+      public BehaviourViewModelBase(TreeViewViewModel treeParent, CompoundObjectViewModel parentVm, MainViewModel mainVm) :
+         base(treeParent, parentVm, mainVm)
       {
       }
 

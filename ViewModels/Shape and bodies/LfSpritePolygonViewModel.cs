@@ -17,8 +17,12 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public LfSpritePolygonViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, LfSpritePolygon modelObject) :
-         base(mainVm, parent)
+      public LfSpritePolygonViewModel(
+         TreeViewViewModel treeParent, 
+         CompoundObjectViewModel parentVm, 
+         MainViewModel mainVm, 
+         LfSpritePolygon modelObject) :
+         base(treeParent, parentVm, mainVm)
       {
          ModelObject = modelObject;
       }

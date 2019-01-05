@@ -22,12 +22,16 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public CoBehaviourViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, CoBehaviour modelObject) 
+      public CoBehaviourViewModel(
+         TreeViewViewModel treeParent,
+         CompoundObjectViewModel parentVm,
+         MainViewModel mainVm,
+         CoBehaviour modelObject) 
       {
          ModelObject = modelObject;
 
-         _steerableObjProperties = new SteerableObjectPropertiesViewModel(mainVm, parent, ModelObject.SteerableObjProps);
-         _breakableObjProperties = new BreakableObjectPropertiesViewModel(mainVm, parent, ModelObject.BreakableObjProps);
+         _steerableObjProperties = new SteerableObjectPropertiesViewModel(treeParent, parentVm, mainVm, ModelObject.SteerableObjProps);
+         _breakableObjProperties = new BreakableObjectPropertiesViewModel(treeParent, parentVm, mainVm, ModelObject.BreakableObjProps);
       }
 
       #endregion

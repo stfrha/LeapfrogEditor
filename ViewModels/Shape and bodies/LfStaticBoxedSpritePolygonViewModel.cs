@@ -18,8 +18,12 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public LfStaticBoxedSpritePolygonViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, LfStaticBoxedSpritePolygon modelObject) :
-         base(mainVm, parent)
+      public LfStaticBoxedSpritePolygonViewModel(
+         TreeViewViewModel treeParent, 
+         CompoundObjectViewModel parentVm, 
+         MainViewModel mainVm, 
+         LfStaticBoxedSpritePolygon modelObject) :
+         base(treeParent, parentVm, mainVm)
       {
          ModelObject = modelObject;
       }
@@ -51,7 +55,7 @@ namespace LeapfrogEditor
             OnPropertyChanged("BoundingBox");
             OnPropertyChanged("");
 
-            CompoundObjectViewModel p = Parent;
+            CompoundObjectViewModel p = ParentVm;
 
             while (p != null)
             {
@@ -77,7 +81,7 @@ namespace LeapfrogEditor
             OnPropertyChanged("Height");
             OnPropertyChanged("BoundingBox");
 
-            CompoundObjectViewModel p = Parent;
+            CompoundObjectViewModel p = ParentVm;
 
             while (p != null)
             {

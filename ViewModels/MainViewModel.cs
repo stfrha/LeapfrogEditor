@@ -199,7 +199,13 @@ namespace LeapfrogEditor
 
             string fileName = System.IO.Path.GetFileName(EditedCpVm.ModelObjectProperties.File);
 
-            return "Leapfrog Editor - " + fileName;
+            if ((fileName != "") && (fileName != "undef_file.xml"))
+            {
+               return "Leapfrog Editor - " + fileName;
+            }
+
+            return "Leapfrog Editor - " + EditedCpVm.Name;
+
          }
       }
 
@@ -316,13 +322,8 @@ namespace LeapfrogEditor
                ChildObject newChildObject = new ChildObject();
                newChildObject.StateProperties.Add(newStateProp);
 
-               FileCOViewModel newCpVm = new FileCOViewModel(fileName, this, newCP, newStateProp.Properties, null, newChildObject);
+               FileCOViewModel newCpVm = new FileCOViewModel(null, null, this, fileName, newCP, newStateProp.Properties, newChildObject);
 
-               // To get a handle to the new CompoundObject we need a shape
-               // to select. Lets place a default Sprite Box at coordinate 0,0
-               LfStaticCircle defShape = new LfStaticCircle();
-               newCP.StaticCircles.Add(defShape);
-               LfStaticCircleViewModel defShapeVM = new LfStaticCircleViewModel(this, null, defShape);
                newCpVm.BuildViewModel(newChildObject);
 
                FileCollectionViewModel.Add(newCpVm);
@@ -611,7 +612,7 @@ namespace LeapfrogEditor
 
             newChildObject.StateProperties.Add(newStateProp);
 
-            CompoundObjectViewModel newCpVm = new CompoundObjectViewModel(this, newCp, newStateProp.Properties, null, newChildObject);
+            CompoundObjectViewModel newCpVm = new CompoundObjectViewModel(null, null, this, newCp, newStateProp.Properties, newChildObject);
             newCpVm.BuildViewModel(newChildObject);
 
             EditedCpVm.ModelObject.ChildObjects.Add(newChildObject);
@@ -863,8 +864,8 @@ namespace LeapfrogEditor
                {
                   // Polygon has no more points, delete the polygon Shape
 
-                  polyVm.Parent.ModelObject.RemoveShape(polyVm.ModelObject);
-                  polyVm.Parent.StateShapes.Shapes.Remove(polyVm);
+                  polyVm.ParentVm.ModelObject.RemoveShape(polyVm.ModelObject);
+                  polyVm.ParentVm.StateShapes.Shapes.Remove(polyVm);
                }
 
                // Before we remove the point
@@ -877,7 +878,7 @@ namespace LeapfrogEditor
          {
             foreach (WeldJointViewModel jvm in SelectedJoints)
             {
-               CompoundObjectViewModel covm = jvm.Parent;
+               CompoundObjectViewModel covm = jvm.ParentVm;
 
                covm.ModelObject.RemoveJoint(jvm.ModelObject);
                covm.StateJoints.Joints.Remove(jvm);
@@ -890,7 +891,7 @@ namespace LeapfrogEditor
          {
             foreach (LfShapeViewModel svm in SelectedShapes)
             {
-               CompoundObjectViewModel covm = svm.Parent;
+               CompoundObjectViewModel covm = svm.ParentVm;
 
                covm.ModelObject.RemoveShape(svm.ModelObject);
                covm.RemoveShape(svm);
@@ -1216,7 +1217,7 @@ namespace LeapfrogEditor
                   // If it is not part of the Editable object, the parent should be selected
                   // also assessing ctrl-key
 
-                  if (shvm.Parent == EditedCpVm)
+                  if (shvm.ParentVm == EditedCpVm)
                   {
                      if (!ctrl)
                      {
@@ -1234,7 +1235,7 @@ namespace LeapfrogEditor
                         DeselectAll();
                      }
 
-                     shvm.Parent.IsSelected = true;
+                     shvm.ParentVm.IsSelected = true;
                   }
 
                   return true;
@@ -1244,7 +1245,7 @@ namespace LeapfrogEditor
 
                   WeldJointViewModel jvm = (WeldJointViewModel)sender;
 
-                  if (jvm.Parent == EditedCpVm)
+                  if (jvm.ParentVm == EditedCpVm)
                   {
                      if (!ctrl)
                      {
@@ -1270,7 +1271,7 @@ namespace LeapfrogEditor
 
                      Point coPoint = clickPoint;
 
-                     Point unrotatedShapePoint = dpvm.Parent.Parent.CoPointInShape(clickPoint, dpvm.Parent);
+                     Point unrotatedShapePoint = dpvm.Parent.ParentVm.CoPointInShape(clickPoint, dpvm.Parent);
 
                      Point rotShapePoint = dpvm.Parent.LocalPointFromRotated(unrotatedShapePoint);
 
@@ -1347,31 +1348,31 @@ namespace LeapfrogEditor
                if (_LeftClickState == LeftClickState.staticBox)
                {
                   newShape = new LfStaticBox();
-                  newShapeVm = new LfStaticBoxViewModel(this, EditedCpVm, (LfStaticBox)newShape);
+                  newShapeVm = new LfStaticBoxViewModel(EditedCpVm.StateShapes, EditedCpVm, this, (LfStaticBox)newShape);
                   EditedCpVm.ModelObject.StaticBoxes.Add((LfStaticBox)newShape);
                }
                else if (_LeftClickState == LeftClickState.dynamicBox)
                {
                   newShape = new LfDynamicBox();
-                  newShapeVm = new LfDynamicBoxViewModel(this, EditedCpVm, (LfDynamicBox)newShape);
+                  newShapeVm = new LfDynamicBoxViewModel(EditedCpVm.StateShapes, EditedCpVm, this, (LfDynamicBox)newShape);
                   EditedCpVm.ModelObject.DynamicBoxes.Add((LfDynamicBox)newShape);
                }
                else if (_LeftClickState == LeftClickState.staticCircle)
                {
                   newShape = new LfStaticCircle();
-                  newShapeVm = new LfStaticCircleViewModel(this, EditedCpVm, (LfStaticCircle)newShape);
+                  newShapeVm = new LfStaticCircleViewModel(EditedCpVm.StateShapes, EditedCpVm, this, (LfStaticCircle)newShape);
                   EditedCpVm.ModelObject.StaticCircles.Add((LfStaticCircle)newShape);
                }
                else if (_LeftClickState == LeftClickState.dynamicCircle)
                {
                   newShape = new LfDynamicCircle();
-                  newShapeVm = new LfDynamicCircleViewModel(this, EditedCpVm, (LfDynamicCircle)newShape);
+                  newShapeVm = new LfDynamicCircleViewModel(EditedCpVm.StateShapes, EditedCpVm, this, (LfDynamicCircle)newShape);
                   EditedCpVm.ModelObject.DynamicCircles.Add((LfDynamicCircle)newShape);
                }
                else if (_LeftClickState == LeftClickState.spriteBox)
                {
                   newShape = new LfSpriteBox();
-                  newShapeVm = new LfSpriteBoxViewModel(this, EditedCpVm, (LfSpriteBox)newShape);
+                  newShapeVm = new LfSpriteBoxViewModel(EditedCpVm.StateShapes, EditedCpVm, this, (LfSpriteBox)newShape);
                   EditedCpVm.ModelObject.SpriteBoxes.Add((LfSpriteBox)newShape);
                }
 
@@ -1412,19 +1413,19 @@ namespace LeapfrogEditor
                if (_LeftClickState == LeftClickState.staticPolygon)
                {
                   newPolygon = new LfStaticPolygon();
-                  newPolygonVm = new LfStaticPolygonViewModel(this, EditedCpVm, (LfStaticPolygon)newPolygon);
+                  newPolygonVm = new LfStaticPolygonViewModel(EditedCpVm.StateShapes, EditedCpVm, this, (LfStaticPolygon)newPolygon);
                   EditedCpVm.ModelObject.StaticPolygons.Add((LfStaticPolygon)newPolygon);
                }
                else if (_LeftClickState == LeftClickState.dynamicPolygon)
                {
                   newPolygon = new LfDynamicPolygon();
-                  newPolygonVm = new LfDynamicPolygonViewModel(this, EditedCpVm, (LfDynamicPolygon)newPolygon);
+                  newPolygonVm = new LfDynamicPolygonViewModel(EditedCpVm.StateShapes, EditedCpVm, this, (LfDynamicPolygon)newPolygon);
                   EditedCpVm.ModelObject.DynamicPolygons.Add((LfDynamicPolygon)newPolygon);
                }
                else
                {
                   newPolygon = new LfSpritePolygon();
-                  newPolygonVm = new LfSpritePolygonViewModel(this, EditedCpVm, (LfSpritePolygon)newPolygon);
+                  newPolygonVm = new LfSpritePolygonViewModel(EditedCpVm.StateShapes, EditedCpVm, this, (LfSpritePolygon)newPolygon);
                   EditedCpVm.ModelObject.SpritePolygons.Add((LfSpritePolygon)newPolygon);
                }
 
@@ -1465,13 +1466,13 @@ namespace LeapfrogEditor
                if (_LeftClickState == LeftClickState.staticBoxedSpritePolygon)
                {
                   newPolygon = new LfStaticBoxedSpritePolygon();
-                  newPolygonVm = new LfStaticBoxedSpritePolygonViewModel(this, EditedCpVm, (LfStaticBoxedSpritePolygon)newPolygon);
+                  newPolygonVm = new LfStaticBoxedSpritePolygonViewModel(EditedCpVm.StateShapes, EditedCpVm, this, (LfStaticBoxedSpritePolygon)newPolygon);
                   EditedCpVm.ModelObject.StaticBoxedSpritePolygons.Add((LfStaticBoxedSpritePolygon)newPolygon);
                }
                else
                {
                   newPolygon = new LfDynamicBoxedSpritePolygon();
-                  newPolygonVm = new LfDynamicBoxedSpritePolygonViewModel(this, EditedCpVm, (LfDynamicBoxedSpritePolygon)newPolygon);
+                  newPolygonVm = new LfDynamicBoxedSpritePolygonViewModel(EditedCpVm.StateShapes, EditedCpVm, this, (LfDynamicBoxedSpritePolygon)newPolygon);
                   EditedCpVm.ModelObject.DynamicBoxedSpritePolygons.Add((LfDynamicBoxedSpritePolygon)newPolygon);
                }
 
@@ -1531,15 +1532,15 @@ namespace LeapfrogEditor
 
                if (_LeftClickState == LeftClickState.weldJoint)
                {
-                  wjvm = new WeldJointViewModel(this, EditedCpVm, wj);
+                  wjvm = new WeldJointViewModel(EditedCpVm.StateJoints, EditedCpVm, this, wj);
                }
                else if (_LeftClickState == LeftClickState.revoluteJoint)
                {
-                  wjvm = new RevoluteJointViewModel(this, EditedCpVm, (RevoluteJoint)wj);
+                  wjvm = new RevoluteJointViewModel(EditedCpVm.StateJoints, EditedCpVm, this, (RevoluteJoint)wj);
                }
                else
                {
-                  wjvm = new PrismaticJointViewModel(this, EditedCpVm, (PrismaticJoint)wj);
+                  wjvm = new PrismaticJointViewModel(EditedCpVm.StateJoints, EditedCpVm, this, (PrismaticJoint)wj);
                }
 
                wjvm.ConnectToShapes(EditedCpVm.StateShapes);
@@ -1611,7 +1612,7 @@ namespace LeapfrogEditor
 
                // If there is no shape B, the rp.BName should be default "notDef"
 
-               RopeViewModel rpvm = new RopeViewModel(this, EditedCpVm, rp);
+               RopeViewModel rpvm = new RopeViewModel(EditedCpVm.StateJoints, EditedCpVm, this, rp);
 
                rpvm.ConnectToShapes(EditedCpVm.StateShapes);
 
@@ -1691,7 +1692,7 @@ namespace LeapfrogEditor
                if ((SelectedShapes.Count == 1) && (SelectedShapes[0] is LfPolygonViewModel))
                {
                   LfPolygonViewModel newPolygon = (LfPolygonViewModel)SelectedShapes[0];
-                  Point parentObjectOrigo = new Point(newPolygon.Parent.PosX, newPolygon.Parent.PosY);
+                  Point parentObjectOrigo = new Point(newPolygon.ParentVm.PosX, newPolygon.ParentVm.PosY);
                   Point shapeOrigo = new Point(newPolygon.PosX, newPolygon.PosY);
                   shapeOrigo.Offset(parentObjectOrigo.X, parentObjectOrigo.Y);
                   Point localClickPoint = new Point();
@@ -1746,7 +1747,7 @@ namespace LeapfrogEditor
             //{
             //   foreach (LfDragablePointViewModel dp in _selectedPoints)
             //   {
-            //      LfPolygonViewModel polyVm = dp.Parent;
+            //      LfPolygonViewModel polyVm = dp.ParentVm;
 
             //      // Is this the last point to be removed? If so, remove the shape
             //      // first so there is no problem with updating something with zero
@@ -1755,8 +1756,8 @@ namespace LeapfrogEditor
             //      {
             //         // Polygon has no more points, delete the polygon Shape
 
-            //         polyVm.Parent.ModelObject.RemoveShape(polyVm.ModelObject);
-            //         polyVm.Parent.Shapes.Remove(polyVm);
+            //         polyVm.ParentVm.ModelObject.RemoveShape(polyVm.ModelObject);
+            //         polyVm.ParentVm.Shapes.Remove(polyVm);
             //      }
 
             //      // Before we remove the point
@@ -1804,7 +1805,7 @@ namespace LeapfrogEditor
             {
                LfShapeViewModel shvm = tvvm as LfShapeViewModel;
 
-               if (shvm.Parent == EditedCpVm)
+               if (shvm.ParentVm == EditedCpVm)
                {
                   // This is the shape of the object being edited, 
                   SelectedShapes.Add(shvm);
@@ -1815,13 +1816,18 @@ namespace LeapfrogEditor
             {
                WeldJointViewModel jvm = tvvm as WeldJointViewModel;
 
-               if (jvm.Parent == EditedCpVm)
+               if (jvm.ParentVm == EditedCpVm)
                {
                   // This is the shape of the object being edited, 
                   SelectedJoints.Add(jvm);
                }
             }
          }
+      }
+
+      public bool AmISelectable(IParentInterface me)
+      {
+         return (me.ParentVm == EditedCpVm);
       }
 
       #endregion
@@ -1868,10 +1874,13 @@ namespace LeapfrogEditor
       private void DeselectAll()
       {
          EditedCpVm.IsSelected = false;
-         SelectedItems.Clear();
-         SelectedChildObjects.Clear();
-         SelectedShapes.Clear();
-         SelectedJoints.Clear();
+
+         foreach (FileCOViewModel fcovm in FileCollectionViewModel)
+         {
+            fcovm.DeselectAllChildren();
+            fcovm.IsSelected = false;
+         }
+
          SelectedPoints.Clear();
       }
 
@@ -1927,7 +1936,7 @@ namespace LeapfrogEditor
          newChildObject.StateProperties.Add(newStateProp);
          newChildObject.Name = fileName;
 
-         FileCOViewModel newCpVm = new FileCOViewModel(fileName, this, newCP, newStateProp.Properties, null, newChildObject);
+         FileCOViewModel newCpVm = new FileCOViewModel(null, null, this, fileName, newCP, newStateProp.Properties, newChildObject);
          newCpVm.BuildViewModel(newChildObject);
 
          return newCpVm;
@@ -1955,6 +1964,8 @@ namespace LeapfrogEditor
          EditedCpVm = newCpVm;
          EditedCpVm.OnPropertyChanged("");
          OnPropertyChanged("");
+
+         //((MainWindow)System.Windows.Application.Current.MainWindow).TheTreeView.
       }
 
       #endregion

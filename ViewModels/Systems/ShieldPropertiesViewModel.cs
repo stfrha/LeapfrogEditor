@@ -20,7 +20,12 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public ShieldPropertiesViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, ShieldProperties modelObject)
+      public ShieldPropertiesViewModel(
+         TreeViewViewModel treeParent,
+         CompoundObjectViewModel parentVm,
+         MainViewModel mainVm,
+         ShieldProperties modelObject) :
+         base(treeParent, parentVm, mainVm)
       {
          ModelObject = modelObject;
       }

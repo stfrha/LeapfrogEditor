@@ -20,8 +20,8 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public LfSpriteBoxViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, LfSpriteBox modelObject) :
-         base(mainVm, parent)
+      public LfSpriteBoxViewModel(TreeViewViewModel treeParent, CompoundObjectViewModel parentVm, MainViewModel mainVm, LfSpriteBox modelObject) :
+         base(treeParent, parentVm, mainVm)
       {
          ModelObject = modelObject;
          UpdateCornerPoints();
@@ -53,7 +53,7 @@ namespace LeapfrogEditor
             OnPropertyChanged("Width");
             OnPropertyChanged("BoundingBox");
 
-            CompoundObjectViewModel p = Parent;
+            CompoundObjectViewModel p = ParentVm;
 
             while (p != null)
             {
@@ -80,7 +80,7 @@ namespace LeapfrogEditor
             OnPropertyChanged("Height");
             OnPropertyChanged("BoundingBox");
 
-            CompoundObjectViewModel p = Parent;
+            CompoundObjectViewModel p = ParentVm;
 
             while (p != null)
             {

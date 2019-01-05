@@ -20,7 +20,12 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public BreakableObjectPropertiesViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, BreakableObjectProperties modelObject) 
+      public BreakableObjectPropertiesViewModel(
+         TreeViewViewModel treeParent, 
+         CompoundObjectViewModel parentVm, 
+         MainViewModel mainVm, 
+         BreakableObjectProperties modelObject) :
+         base(treeParent, parentVm, mainVm)
       {
          ModelObject = modelObject;
       }

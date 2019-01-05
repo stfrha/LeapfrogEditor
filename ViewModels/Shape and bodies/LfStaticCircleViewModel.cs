@@ -17,8 +17,12 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public LfStaticCircleViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, LfStaticCircle modelObject) :
-         base(mainVm, parent)
+      public LfStaticCircleViewModel(
+         TreeViewViewModel treeParent, 
+         CompoundObjectViewModel parentVm, 
+         MainViewModel mainVm, 
+         LfStaticCircle modelObject) :
+         base(treeParent, parentVm, mainVm)
       {
          ModelObject = modelObject;
       }
@@ -48,7 +52,7 @@ namespace LeapfrogEditor
             OnPropertyChanged("Radius");
             OnPropertyChanged("BoundingBox");
 
-            CompoundObjectViewModel p = Parent;
+            CompoundObjectViewModel p = ParentVm;
 
             while (p != null)
             {

@@ -10,12 +10,11 @@ using System.Windows.Media;
 
 namespace LeapfrogEditor
 {
-   public class WeldJointViewModel : TreeViewViewModel, IMainVmInterface
+   public class WeldJointViewModel : ConditionalSelectTreeViewViewModel
    {
       #region Declarations
 
       private WeldJoint _modelObject;
-      private CompoundObjectViewModel _parent;
       protected LfShapeViewModel _aVm;
       protected LfShapeViewModel _bVm;
 
@@ -23,10 +22,9 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public WeldJointViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, WeldJoint modelObject)
+      public WeldJointViewModel(TreeViewViewModel treeParent, CompoundObjectViewModel parentVm,  MainViewModel mainVm, WeldJoint modelObject) :
+         base(treeParent, parentVm, mainVm)
       {
-         MainVm = mainVm;
-         Parent = parent;
          ModelObject = modelObject;
       }
 
@@ -44,16 +42,6 @@ namespace LeapfrogEditor
          set
          {
             _modelObject = value;
-            OnPropertyChanged("");
-         }
-      }
-
-      public CompoundObjectViewModel Parent
-      {
-         get { return _parent; }
-         set
-         {
-            _parent = value;
             OnPropertyChanged("");
          }
       }
@@ -200,16 +188,16 @@ namespace LeapfrogEditor
 
       public void ConnectToShapes(StateShapeCollectionViewModel shapes)
       {
-         _aVm = Parent.FindShape(ModelObject.AName, shapes);
+         _aVm = ParentVm.FindShape(ModelObject.AName, shapes);
          if (_aVm == null)
          {
-            MessageBox.Show("The shape A pointed to by " + ModelObject.Name + " does not exists in CO " + Parent.Name, "Error parsing file", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show("The shape A pointed to by " + ModelObject.Name + " does not exists in CO " + ParentVm.Name, "Error parsing file", MessageBoxButton.OK, MessageBoxImage.Error);
          }
 
-         _bVm = Parent.FindShape(ModelObject.BName, shapes);
+         _bVm = ParentVm.FindShape(ModelObject.BName, shapes);
          if (_bVm == null)
          {
-            MessageBox.Show("The shape B pointed to by " + ModelObject.Name + " does not exists in CO " + Parent.Name, "Error parsing file", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show("The shape B pointed to by " + ModelObject.Name + " does not exists in CO " + ParentVm.Name, "Error parsing file", MessageBoxButton.OK, MessageBoxImage.Error);
          }
       }
 

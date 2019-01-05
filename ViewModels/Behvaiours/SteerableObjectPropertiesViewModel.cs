@@ -20,7 +20,12 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public SteerableObjectPropertiesViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, SteerableObjectProperties modelObject) 
+      public SteerableObjectPropertiesViewModel(
+         TreeViewViewModel treeParent,
+         CompoundObjectViewModel parentVm,
+         MainViewModel mainVm,
+         SteerableObjectProperties modelObject) :
+         base(treeParent, parentVm, mainVm)
       {
          ModelObject = modelObject;
       }

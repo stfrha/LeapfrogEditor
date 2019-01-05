@@ -19,23 +19,25 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public MotorizedJointViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, MotorizedJoint modelObject) 
-         : base(mainVm, parent, modelObject)
+      public MotorizedJointViewModel(
+         TreeViewViewModel treeParent, 
+         CompoundObjectViewModel parentVm, 
+         MainViewModel mainVm, 
+         MotorizedJoint modelObject) :
+         base(treeParent, parentVm, mainVm, modelObject)
       {
-         MainVm = mainVm;
-         Parent = parent;
          ModelObject = modelObject;
 
-         //_aVm = Parent.FindShape(ModelObject.AName);
+         //_aVm = ParentVm.FindShape(ModelObject.AName);
          //if (_aVm == null)
          //{
-         //   MessageBox.Show("The shape A pointed to by " + ModelObject.Name + " does not exists in CO " + Parent.Name, "Error parsing file", MessageBoxButton.OK, MessageBoxImage.Error);
+         //   MessageBox.Show("The shape A pointed to by " + ModelObject.Name + " does not exists in CO " + ParentVm.Name, "Error parsing file", MessageBoxButton.OK, MessageBoxImage.Error);
          //}
 
-         //_bVm = Parent.FindShape(ModelObject.BName);
+         //_bVm = ParentVm.FindShape(ModelObject.BName);
          //if (_bVm == null)
          //{
-         //   MessageBox.Show("The shape B pointed to by " + ModelObject.Name + " does not exists in CO " + Parent.Name, "Error parsing file", MessageBoxButton.OK, MessageBoxImage.Error);
+         //   MessageBox.Show("The shape B pointed to by " + ModelObject.Name + " does not exists in CO " + ParentVm.Name, "Error parsing file", MessageBoxButton.OK, MessageBoxImage.Error);
          //}
       }
 

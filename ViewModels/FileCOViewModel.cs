@@ -26,13 +26,14 @@ namespace LeapfrogEditor
       #region Constructors
 
       public FileCOViewModel(
-         string fileName,
+         TreeViewViewModel treeParent,
+         CompoundObjectViewModel parentVm,
          MainViewModel mainVm,
+         string fileName,
          CompoundObject modelObject,
          ChildObjectStateProperties modelObjectProperties,
-         CompoundObjectViewModel parentVm,
          ChildObject childObjectOfParent) :
-         base(mainVm, modelObject, modelObjectProperties, parentVm, childObjectOfParent)
+         base(treeParent, parentVm, mainVm, modelObject, modelObjectProperties, childObjectOfParent)
       {
          _fileName = fileName;
       }

@@ -17,8 +17,12 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public LfDynamicBoxedSpritePolygonViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, LfDynamicBoxedSpritePolygon modelObject) :
-         base(mainVm, parent, modelObject)
+      public LfDynamicBoxedSpritePolygonViewModel(
+         TreeViewViewModel treeParent, 
+         CompoundObjectViewModel parentVm, 
+         MainViewModel mainVm, 
+         LfDynamicBoxedSpritePolygon modelObject) :
+         base(treeParent, parentVm, mainVm, modelObject)
       {
          ModelObject = modelObject;
       }
