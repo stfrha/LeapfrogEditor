@@ -81,6 +81,15 @@
     <Compile Include="ViewModels\Systems\GunPropertiesViewModel.cs" />
     <Compile Include="ViewModels\Systems\FlameEmitterPropertiesViewModel.cs" />
     <Compile Include="ViewModels\TreeViewViewModel.cs" />
+    <Compile Include="Views\Controls\Editable Properties Controls\Behaviour Properties Control\SteerableBehaviourPropEditor.xaml.cs">
+      <DependentUpon>SteerableBehaviourPropEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Editable Properties Controls\Behaviour Properties Control\BreakabkeBehaviourPropEditor.xaml.cs">
+      <DependentUpon>BreakabkeBehaviourPropEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Editable Properties Controls\Primitives\StringListSelectionEditorControl.xaml.cs">
+      <DependentUpon>StringListSelectionEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\Editable Properties Controls\SpritePolygonPropEditor.xaml.cs">
       <DependentUpon>SpritePolygonPropEditor.xaml</DependentUpon>
     </Compile>
@@ -249,6 +258,18 @@
       <DependentUpon>CompoundObjectUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\Editable Shapes Controls\TriangleShape.cs" />
+    <Page Include="Views\Controls\Editable Properties Controls\Behaviour Properties Control\SteerableBehaviourPropEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\Editable Properties Controls\Behaviour Properties Control\BreakabkeBehaviourPropEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\Editable Properties Controls\Primitives\StringListSelectionEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\Controls\Editable Properties Controls\SpritePolygonPropEditor.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -408,6 +429,10 @@
     <ProjectReference Include="..\MicroMvvm\MicroMvvm.csproj">
       <Project>{9efe6cbd-df21-436e-9f81-e258bab0b653}</Project>
       <Name>MicroMvvm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MultiSelectTreeView\MultiSelectTreeView\MultiSelectTreeView.csproj">
+      <Project>{2854814f-ea3c-41d4-aa94-460c4694f430}</Project>
+      <Name>MultiSelectTreeView</Name>
     </ProjectReference>
     <ProjectReference Include="PolygonTriangulation_src\GeometryUtility\GeometryUtility.csproj">
       <Project>{fd47d6ac-8238-4975-91c8-51e88326f27f}</Project>

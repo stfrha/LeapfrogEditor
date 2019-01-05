@@ -23,7 +23,7 @@ namespace LeapfrogEditor
 
       public CoBehaviour()
       {
-         _type = "notDefined";
+         _type = "notApplicable";
       }
 
       #endregion

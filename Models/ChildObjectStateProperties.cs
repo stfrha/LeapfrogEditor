@@ -37,7 +37,10 @@ namespace LeapfrogEditor
          set { _file = value; }
       }
 
-      // TODO: Conditional serialization if file != nothing
+      public bool ShouldSerializeFile()
+      {
+         return ((_file != "") && (_file != "undef_file.xml"));
+      }
 
       [XmlAttribute("posX")]
       public double PosX
@@ -60,8 +63,10 @@ namespace LeapfrogEditor
          set { _compObj = value; }
       }
 
-      // TODO: Conditional serialization on not null
-
+      public bool ShouldSerializeCompObj()
+      {
+         return ((_file == "") || (_file == "undef_file.xml"));
+      }
 
       #endregion
    }

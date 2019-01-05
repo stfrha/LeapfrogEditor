@@ -84,6 +84,8 @@ namespace LeapfrogEditor
       // Object VM that is being edited
       private CompoundObjectViewModel _editedCpVm;
 
+      private ObservableCollection<TreeViewViewModel> _selectedItems = new ObservableCollection<TreeViewViewModel>();
+
       private ObservableCollection<CompoundObjectViewModel> _selectedChildObjects = new ObservableCollection<CompoundObjectViewModel>();
       private ObservableCollection<LfShapeViewModel> _selectedShapes = new ObservableCollection<LfShapeViewModel>();
       private ObservableCollection<WeldJointViewModel> _selectedJoints = new ObservableCollection<WeldJointViewModel>();
@@ -200,6 +202,13 @@ namespace LeapfrogEditor
             return "Leapfrog Editor - " + fileName;
          }
       }
+
+      public ObservableCollection<TreeViewViewModel> SelectedItems
+      {
+         get { return _selectedItems; }
+         set { _selectedItems = value; }
+      }
+
 
       public ObservableCollection<CompoundObjectViewModel> SelectedChildObjects
       {
@@ -1214,7 +1223,6 @@ namespace LeapfrogEditor
                         DeselectAll();
                      }
 
-                     SelectedShapes.Add(shvm);
                      shvm.IsSelected = true;
                   }
                   else
@@ -1226,7 +1234,6 @@ namespace LeapfrogEditor
                         DeselectAll();
                      }
 
-                     SelectedChildObjects.Add(shvm.Parent);
                      shvm.Parent.IsSelected = true;
                   }
 
@@ -1241,10 +1248,9 @@ namespace LeapfrogEditor
                   {
                      if (!ctrl)
                      {
-                        DeselectJoints();
+                        DeselectAll();
                      }
 
-                     SelectedJoints.Add(jvm);
                      jvm.IsSelected = true;
                   }
 
@@ -1772,8 +1778,52 @@ namespace LeapfrogEditor
          }
       }
 
+      public void HandleSelectionChanged()
+      {
+         // Here we assess the current selection and updates 
+         // the selection collection of different types
 
-      
+         SelectedChildObjects.Clear();
+         SelectedShapes.Clear();
+         SelectedJoints.Clear();
+
+         foreach (TreeViewViewModel tvvm in SelectedItems)
+         {
+            if (tvvm is CompoundObjectViewModel)
+            {
+               CompoundObjectViewModel covm = tvvm as CompoundObjectViewModel;
+
+               if (covm.ParentVm == EditedCpVm)
+               {
+                  // This is the child object of the object being edited, 
+                  SelectedChildObjects.Add(covm);
+               }
+            }
+
+            if (tvvm is LfShapeViewModel)
+            {
+               LfShapeViewModel shvm = tvvm as LfShapeViewModel;
+
+               if (shvm.Parent == EditedCpVm)
+               {
+                  // This is the shape of the object being edited, 
+                  SelectedShapes.Add(shvm);
+               }
+            }
+
+            if (tvvm is WeldJointViewModel)
+            {
+               WeldJointViewModel jvm = tvvm as WeldJointViewModel;
+
+               if (jvm.Parent == EditedCpVm)
+               {
+                  // This is the shape of the object being edited, 
+                  SelectedJoints.Add(jvm);
+               }
+            }
+         }
+      }
+
       #endregion
 
       #region private Methods
@@ -1797,14 +1847,14 @@ namespace LeapfrogEditor
 
       }
 
-      private void DeselectJoints()
-      {
-         foreach (WeldJointViewModel selJoint in SelectedJoints)
-         {
-            selJoint.IsSelected = false;
-         }
-         SelectedJoints.Clear();
-      }
+      //private void DeselectJoints()
+      //{
+      //   foreach (WeldJointViewModel selJoint in SelectedJoints)
+      //   {
+      //      selJoint.IsSelected = false;
+      //   }
+      //   SelectedJoints.Clear();
+      //}
 
       //private void DeselectShapes()
       //{
@@ -1818,12 +1868,7 @@ namespace LeapfrogEditor
       private void DeselectAll()
       {
          EditedCpVm.IsSelected = false;
-
-         foreach (CompoundObjectViewModel covm in SelectedChildObjects)
-         {
-            covm.IsSelected = false;
-         }
-
+         SelectedItems.Clear();
          SelectedChildObjects.Clear();
          SelectedShapes.Clear();
          SelectedJoints.Clear();

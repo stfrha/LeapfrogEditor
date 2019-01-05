@@ -25,6 +25,9 @@ namespace LeapfrogEditor
       public CoBehaviourViewModel(MainViewModel mainVm, CompoundObjectViewModel parent, CoBehaviour modelObject) 
       {
          ModelObject = modelObject;
+
+         _steerableObjProperties = new SteerableObjectPropertiesViewModel(mainVm, parent, ModelObject.SteerableObjProps);
+         _breakableObjProperties = new BreakableObjectPropertiesViewModel(mainVm, parent, ModelObject.BreakableObjProps);
       }
 
       #endregion
@@ -43,6 +46,7 @@ namespace LeapfrogEditor
          {
             LocalModelObject.Type = value;
             OnPropertyChanged("Type");
+            OnPropertyChanged("BehaviourProperties");
          }
       }
 
@@ -61,27 +65,27 @@ namespace LeapfrogEditor
 
             return null;
          }
-         set
-         {
-            if (Type == "steerableObject")
-            {
-               if (value is SteerableObjectPropertiesViewModel)
-               {
-                  _steerableObjProperties = (SteerableObjectPropertiesViewModel)value;
-                  LocalModelObject.SteerableObjProps = ((SteerableObjectPropertiesViewModel)value).LocalModelObject;
-                  OnPropertyChanged("BehaviourProperties");
-               }
-            }
-            else if (Type == "breakableObject")
-            {
-               if (value is BreakableObjectPropertiesViewModel)
-               {
-                  _breakableObjProperties = (BreakableObjectPropertiesViewModel)value;
-                  LocalModelObject.BreakableObjProps = ((BreakableObjectPropertiesViewModel)value).LocalModelObject;
-                  OnPropertyChanged("BehaviourProperties");
-               }
-            }
-         }
+         //set
+         //{
+         //   if (Type == "steerableObject")
+         //   {
+         //      if (value is SteerableObjectPropertiesViewModel)
+         //      {
+         //         _steerableObjProperties = (SteerableObjectPropertiesViewModel)value;
+         //         LocalModelObject.SteerableObjProps = ((SteerableObjectPropertiesViewModel)value).LocalModelObject;
+         //         OnPropertyChanged("BehaviourProperties");
+         //      }
+         //   }
+         //   else if (Type == "breakableObject")
+         //   {
+         //      if (value is BreakableObjectPropertiesViewModel)
+         //      {
+         //         _breakableObjProperties = (BreakableObjectPropertiesViewModel)value;
+         //         LocalModelObject.BreakableObjProps = ((BreakableObjectPropertiesViewModel)value).LocalModelObject;
+         //         OnPropertyChanged("BehaviourProperties");
+         //      }
+         //   }
+         //}
       }
 
       #endregion

@@ -19,7 +19,7 @@ namespace LeapfrogEditor
       #region Declarations
 
       //Behaviour
-      private CoBehaviour _behaviour;
+      private CoBehaviour _behaviour = new CoBehaviour();
 
       // Shapes
       private ObservableCollection<LfSpriteBox> _spriteBoxes = new ObservableCollection<LfSpriteBox>();

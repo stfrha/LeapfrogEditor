@@ -15,6 +15,25 @@
             <local:CoStateEditorControl Headline="States" />
             <local:DoubleEditorControl Headline="PosX" MyValue="{Binding PosX, Mode=TwoWay}" />
             <local:DoubleEditorControl Headline="PosY" MyValue="{Binding PosY, Mode=TwoWay}" />
+            <local:StringListSelectionEditorControl 
+               Headline="Behaviour" 
+               Strings="{Binding Behaviours}"
+               SelectionIndex="{Binding SelectedBehaviourIndex, Mode=TwoWay}" />
+            <ContentControl 
+               DataContext="{Binding Behaviour.BehaviourProperties}"
+               Content="{Binding}">
+               <ContentControl.Resources>
+                  <DataTemplate DataType="{x:Type local:SteerableObjectPropertiesViewModel}">
+                     <local:SteerableBehaviourPropEditor />
+                  </DataTemplate>
+                  <DataTemplate DataType="{x:Type local:BreakableObjectPropertiesViewModel}">
+                     <local:BreakabkeBehaviourPropEditor />
+                  </DataTemplate>
+                  <DataTemplate x:Key="He1" >
+                     <Label Content="Undef Properties" />
+                  </DataTemplate>
+               </ContentControl.Resources>
+            </ContentControl>
          </StackPanel>
       </Border>
    </DockPanel>

@@ -45,6 +45,7 @@ namespace LeapfrogEditor
       private int _selectedStateIndex = 0;
 
       private CoBehaviourViewModel _behaviour;
+      private int _selectedBehaviourIndex = 0;
 
       private StateShapeCollectionViewModel _shapes;
       private StateJointCollectionViewModel _joints;
@@ -73,7 +74,11 @@ namespace LeapfrogEditor
          ParentVm = parentVm;
          ChildObjectOfParent = childObjectOfParent;
          SelectedStateIndex = 0;
+         Behaviour = new CoBehaviourViewModel(mainVm, this, ModelObject.Behaviour);
+
          BuildTreeViewCollection();
+
+         SelectedBehaviourIndex = Behaviours.IndexOf(ModelObject.Behaviour.Type);
       }
 
       #endregion
@@ -234,23 +239,6 @@ namespace LeapfrogEditor
          set { }
       }
 
-      // Old implementation, is this of any use?
-      //public ObservableCollection<string> States
-      //{
-      //   get
-      //   {
-      //      ObservableCollection<string> s = new ObservableCollection<string>();
-
-      //      foreach (TStateProperties<ChildObjectStateProperties> sp in _childObjectOfParent.StateProperties)
-      //      {
-      //         s.Add(sp.State);
-      //      }
-
-      //      return s;
-      //   }
-      //   set { }
-      //}
-
       public StateShapeCollectionViewModel StateShapes
       {
          get { return _shapes; }
@@ -299,6 +287,46 @@ namespace LeapfrogEditor
             }
          }
       }
+
+      public List<string> Behaviours
+      {
+         get
+         {
+            return new List<string>()
+            {
+               "notApplicable",
+               "leapfrog",
+               "launchSite",
+               "landingPad",
+               "breakableObject",
+               "steerableObject"
+            };
+         }
+      }
+
+      public int SelectedBehaviourIndex
+      {
+         get
+         {
+            return _selectedBehaviourIndex;
+         }
+         set
+         {
+            if (value == -1)
+            {
+               _selectedBehaviourIndex = 0;
+            }
+            else
+            {
+               _selectedBehaviourIndex = value;
+            }
+            OnPropertyChanged("SelectedBehaviourIndex");
+
+            Behaviour.Type = Behaviours[SelectedBehaviourIndex];
+         }
+      }
+
+
 
       public ObservableCollection<StateCollectionViewModelBase> TreeCollection
       {

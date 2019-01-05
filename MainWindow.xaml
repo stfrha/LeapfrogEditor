@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ZoomAndPan="clr-namespace:ZoomAndPan;assembly=ZoomAndPan"
+        xmlns:Controls="clr-namespace:System.Windows.Controls;assembly=MultiSelectTreeView" 
         xmlns:local="clr-namespace:LeapfrogEditor"
         mc:Ignorable="d"
         x:Name="root"
@@ -16,12 +17,6 @@
    </Window.DataContext>
    <Window.Resources>
       <local:BindingProxy x:Key="DataContextProxy" Data="{Binding}" />
-      <DataTemplate DataType="{x:Type local:CompoundObjectViewModel}">
-         <local:CompoundObjectUserControl 
-            ShowJoints="{Binding DataContext.ShowJoints, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-            ShowTriangles="{Binding DataContext.ShowTriangles, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-            />
-      </DataTemplate>
    </Window.Resources>
    <Grid>
       <Grid.RowDefinitions>
@@ -90,7 +85,90 @@
          </Grid.ColumnDefinitions>
          <Grid Grid.Column="0"
                Background="Blue">
-            <TreeView x:Name="TheTreeView" Grid.Row="1" ItemsSource="{Binding FileCollectionViewModel}" >
+            <Controls:MultiSelectTreeView 
+               Grid.Row="1" 
+               x:Name="TheTreeView" 
+               ItemsSource="{Binding FileCollectionViewModel}"
+               SelectedItems="{Binding SelectedItems}"
+               SelectionChanged="HandleSelectionChanged">
+               <Controls:MultiSelectTreeView.ItemContainerStyle>
+                  <Style TargetType="{x:Type Controls:MultiSelectTreeViewItem}">
+                     <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                     <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                     <Setter Property="FontWeight" Value="Normal" />
+                     <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                           <Setter Property="FontWeight" Value="Bold" />
+                        </Trigger>
+                     </Style.Triggers>
+                  </Style>
+               </Controls:MultiSelectTreeView.ItemContainerStyle>
+               <Controls:MultiSelectTreeView.Resources>
+                  <HierarchicalDataTemplate DataType="{x:Type local:TreeViewViewModel}" ItemsSource="{Binding TreeChildren}">
+                     <TextBlock Margin="2"  Text="{Binding TreeName}" />
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:FileCOViewModel}"
+                     ItemsSource="{Binding TreeCollection}">
+                     <TextBlock Margin="2"  Text="{Binding FileName}">
+                        <TextBlock.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Edit this file" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.ChangeEditableObject, Source={StaticResource DataContextProxy}}" />
+                              <MenuItem Header="Save" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.SaveThisObject, Source={StaticResource DataContextProxy}}" />
+                              <Separator />
+                              <MenuItem Header="Close..." 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.CloseThisFile, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </TextBlock.ContextMenu>
+                     </TextBlock>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:CompoundObjectViewModel}"
+                     ItemsSource="{Binding TreeCollection}">
+                     <TextBlock Margin="2"  Text="{Binding RefName}">
+                        <TextBlock.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Open Object File" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.OpenChildFile, Source={StaticResource DataContextProxy}}" />
+                              <MenuItem Header="Edit this object" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.ChangeEditableObject, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </TextBlock.ContextMenu>
+                     </TextBlock>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:StateShapeCollectionViewModel}"
+                     ItemsSource="{Binding Shapes}">
+                     <TextBlock Margin="2"  Text="Shapes" />
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:StateJointCollectionViewModel}"
+                     ItemsSource="{Binding Joints}">
+                     <TextBlock Margin="2"  Text="Joints" />
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:StateSystemCollectionViewModel}"
+                     ItemsSource="{Binding Systems}">
+                     <TextBlock Margin="2"  Text="Systems" />
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:StateChildCollectionViewModel}"
+                     ItemsSource="{Binding Children}">
+                     <TextBlock Margin="2"  Text="Child Objects" />
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:LfShapeViewModel}" >
+                     <TextBlock Margin="2"  Text="{Binding Name}" />
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:WeldJointViewModel}" >
+                     <TextBlock Margin="2"  Text="{Binding Name}" />
+                  </HierarchicalDataTemplate>
+               </Controls:MultiSelectTreeView.Resources>
+            </Controls:MultiSelectTreeView>
+            <!--<TreeView 
+               Grid.Row="1" 
+               x:Name="TheTreeView" 
+               ItemsSource="{Binding FileCollectionViewModel}">
                <TreeView.ItemContainerStyle>
                   <Style TargetType="{x:Type TreeViewItem}">
                      <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
@@ -104,9 +182,9 @@
                   </Style>
                </TreeView.ItemContainerStyle>
                <TreeView.Resources>
-                  <!--<HierarchicalDataTemplate DataType="{x:Type local:TreeViewViewModel}" ItemsSource="{Binding TreeChildren}">
+                  <HierarchicalDataTemplate DataType="{x:Type local:TreeViewViewModel}" ItemsSource="{Binding TreeChildren}">
                      <TextBlock Margin="2"  Text="{Binding TreeName}" />
-                  </HierarchicalDataTemplate>-->
+                  </HierarchicalDataTemplate>
                   <HierarchicalDataTemplate DataType="{x:Type local:FileCOViewModel}"
                      ItemsSource="{Binding TreeCollection}">
                      <TextBlock Margin="2"  Text="{Binding FileName}">
@@ -164,7 +242,7 @@
                      <TextBlock Margin="2"  Text="{Binding Name}" />
                   </HierarchicalDataTemplate>
                </TreeView.Resources>
-            </TreeView>
+            </TreeView>-->
          </Grid>
          <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" />
          <DockPanel Grid.Column="2">
@@ -224,7 +302,16 @@
                            />
                         <ContentControl 
                            DataContext="{Binding EditedCpVm}"
-                           Content="{Binding}" />
+                           Content="{Binding}">
+                           <ContentControl.Resources>
+                              <DataTemplate DataType="{x:Type local:CompoundObjectViewModel}">
+                                 <local:CompoundObjectUserControl 
+                                    ShowJoints="{Binding DataContext.ShowJoints, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                    ShowTriangles="{Binding DataContext.ShowTriangles, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                    />
+                              </DataTemplate>
+                           </ContentControl.Resources>
+                        </ContentControl>
                      </local:CenteredCanvas>
 
                      <!--
