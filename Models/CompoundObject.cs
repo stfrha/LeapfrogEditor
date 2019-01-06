@@ -250,6 +250,32 @@ namespace LeapfrogEditor
             }
          }
 
+         // Iterate SpawnObjects of BreakableObject Behaviour properties to load all spawn objects
+         if (co.Behaviour.Type == "breakableObject")
+         {
+            foreach (SpawnObject so in co.Behaviour.BreakableObjProps.SpawnObjects)
+            {
+               ChildObject cor = so.MyChildObject;
+
+               // Iterate all state properties
+               foreach (TStateProperties<ChildObjectStateProperties> sp in cor.StateProperties)
+               {
+                  // Only read files if the child object is referenced from a 
+                  // separate file, otherwise the serialization will already have
+                  // populated the child object.
+                  if ((sp.Properties.File != "") && (sp.Properties.CompObj == null))
+                  {
+                     string newFile = System.IO.Path.Combine(path, sp.Properties.File);
+
+                     CompoundObject childCo = CompoundObject.ReadFromFile(newFile);
+
+                     sp.Properties.CompObj = childCo;
+
+                  }
+               }
+            }
+         }
+
          // Iterate ClippedWindows to load all each child objects
          foreach (ClippedWindowRef cwr in co.ClippedWindows)
          {

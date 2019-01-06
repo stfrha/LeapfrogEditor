@@ -16,6 +16,9 @@ namespace LeapfrogEditor
 
       private CoSystem _modelObject;
 
+      private int _selectedSystemIndex;
+
+
       // Only one object is in use per instance of this class. The object
       // in use is defined by the type string of the system.
       private ObjectFactoryPropertiesViewModel _objFactStatesProps;
@@ -30,7 +33,14 @@ namespace LeapfrogEditor
       public CoSystemViewModel(TreeViewViewModel treeParent, CompoundObjectViewModel parentVm, MainViewModel mainVm, CoSystem modelObject) :
          base(treeParent, parentVm, mainVm)
       {
-         _modelObject = modelObject;
+         LocalModelObject = modelObject;
+
+         SelectedSystemIndex = Systems.IndexOf(LocalModelObject.Type);
+
+         _objFactStatesProps = new ObjectFactoryPropertiesViewModel(treeParent, parentVm, mainVm, LocalModelObject.ObjFactStateProperties);
+         _flameEmitterStatesProps = new FlameEmitterPropertiesViewModel(treeParent, parentVm, mainVm, LocalModelObject.FlameEmitterStateProperties);
+         _gunStatesProps = new GunPropertiesViewModel(treeParent, parentVm, mainVm, LocalModelObject.GunStateProperties);
+         _shieldStatesProps = new ShieldPropertiesViewModel(treeParent, parentVm, mainVm, LocalModelObject.ShieldStateProperties);
       }
 
       #endregion
@@ -40,6 +50,11 @@ namespace LeapfrogEditor
       public CoSystem LocalModelObject
       {
          get { return _modelObject; }
+         set
+         {
+            _modelObject = value;
+            OnPropertyChanged("LocalModelObject");
+         }
       }
 
       public string Name
@@ -59,6 +74,7 @@ namespace LeapfrogEditor
          {
             LocalModelObject.Type = value;
             OnPropertyChanged("Type");
+            OnPropertyChanged("Properties");
          }
       }
 
@@ -106,19 +122,60 @@ namespace LeapfrogEditor
          }
       }
 
+      public List<string> Systems
+      {
+         get
+         {
+            return new List<string>()
+            {
+               "notApplicable",
+               "objectFactory",
+               "gun",
+               "flameEmitter",
+               "reentryFlameEmitter",
+               "shield"
+            };
+         }
+      }
 
-      #endregion
+      public int SelectedSystemIndex
+      {
+         get
+         {
+            return _selectedSystemIndex;
+         }
+         set
+         {
+            if (value == -1)
+            {
+               _selectedSystemIndex = 0;
+            }
+            else
+            {
+               _selectedSystemIndex = value;
+            }
+            OnPropertyChanged("SelectedSystemIndex");
 
-      #region private Methods
+            Type = Systems[_selectedSystemIndex];
+         }
+      }
 
-      #endregion
 
-      #region protected Methods
+   
 
-      #endregion
 
-      #region public Methods
+   #endregion
 
-      #endregion
-   }
+   #region private Methods
+
+   #endregion
+
+   #region protected Methods
+
+   #endregion
+
+   #region public Methods
+
+   #endregion
+}
 }

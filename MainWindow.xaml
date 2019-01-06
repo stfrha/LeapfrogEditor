@@ -141,6 +141,27 @@
                         </TextBlock.ContextMenu>
                      </TextBlock>
                   </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:SteerableObjectPropertiesViewModel}"
+                     ItemsSource="{Binding TreeCollection}">
+                     <TextBlock Margin="2"  Text="Steerable Object Behaviour Properties">
+                     </TextBlock>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:BreakableObjectPropertiesViewModel}"
+                     ItemsSource="{Binding SpawnObjects}">
+                     <TextBlock Margin="2"  Text="Spawn Objects">
+                        <TextBlock.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Add Spawn object..." 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.OpenChildFile, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </TextBlock.ContextMenu>
+                     </TextBlock>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:SpawnObjectViewModel}" 
+                     ItemsSource="{Binding SpawnCompoundObject}">
+                     <TextBlock Margin="2"  Text="{Binding Headline}" />
+                  </HierarchicalDataTemplate>
                   <HierarchicalDataTemplate DataType="{x:Type local:StateShapeCollectionViewModel}"
                      ItemsSource="{Binding Shapes}">
                      <TextBlock Margin="2"  Text="Shapes" />
@@ -161,6 +182,9 @@
                      <TextBlock Margin="2"  Text="{Binding Name}" />
                   </HierarchicalDataTemplate>
                   <HierarchicalDataTemplate DataType="{x:Type local:WeldJointViewModel}" >
+                     <TextBlock Margin="2"  Text="{Binding Name}" />
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:CoSystemViewModel}" >
                      <TextBlock Margin="2"  Text="{Binding Name}" />
                   </HierarchicalDataTemplate>
                </Controls:MultiSelectTreeView.Resources>
@@ -338,9 +362,11 @@
          <ScrollViewer Grid.Column="3">
             <local:PropertiesEditor 
             EditableCompoundObject="{Binding EditedCpVm}"
+            EditableSpawnObject="{Binding EditableSpawnObject}"
             SelectedChildren="{Binding SelectedChildObjects}"
             EditableShapes="{Binding SelectedShapes}"
             EditableJoints="{Binding SelectedJoints}"
+            EditableSystems="{Binding SelectedSystems}"
             />
          </ScrollViewer>
       </Grid>

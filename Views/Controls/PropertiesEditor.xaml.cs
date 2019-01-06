@@ -37,6 +37,20 @@ namespace LeapfrogEditor
           DependencyProperty.Register("EditableCompoundObject", typeof(CompoundObjectViewModel), typeof(PropertiesEditor), new PropertyMetadata(default(CompoundObjectViewModel)));
 
 
+
+      public SpawnObjectViewModel EditableSpawnObject
+      {
+         get { return (SpawnObjectViewModel)GetValue(EditableSpawnObjectProperty); }
+         set { SetValue(EditableSpawnObjectProperty, value); }
+      }
+
+      // Using a DependencyProperty as the backing store for EditableSpawnObject.  This enables animation, styling, binding, etc...
+      public static readonly DependencyProperty EditableSpawnObjectProperty =
+          DependencyProperty.Register("EditableSpawnObject", typeof(SpawnObjectViewModel), typeof(PropertiesEditor), new PropertyMetadata(default(SpawnObjectViewModel)));
+
+
+
+
       public ObservableCollection<CompoundObjectViewModel> SelectedChildren
       {
          get { return (ObservableCollection<CompoundObjectViewModel>)GetValue(SelectedChildrenProperty); }
@@ -72,6 +86,18 @@ namespace LeapfrogEditor
       // Using a DependencyProperty as the backing store for EditableJoints.  This enables animation, styling, binding, etc...
       public static readonly DependencyProperty EditableJointsProperty =
           DependencyProperty.Register("EditableJoints", typeof(ObservableCollection<WeldJointViewModel>), typeof(PropertiesEditor), new PropertyMetadata(default(ObservableCollection<WeldJointViewModel>)));
+
+
+
+      public ObservableCollection<CoSystemViewModel> EditableSystems
+      {
+         get { return (ObservableCollection<CoSystemViewModel>)GetValue(EditableSystemsProperty); }
+         set { SetValue(EditableSystemsProperty, value); }
+      }
+
+      // Using a DependencyProperty as the backing store for EditableSystems.  This enables animation, styling, binding, etc...
+      public static readonly DependencyProperty EditableSystemsProperty =
+          DependencyProperty.Register("EditableSystems", typeof(ObservableCollection<CoSystemViewModel>), typeof(PropertiesEditor), new PropertyMetadata(default(ObservableCollection<CoSystemViewModel>)));
 
    }
 }

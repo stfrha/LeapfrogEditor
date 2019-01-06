@@ -93,6 +93,9 @@
     <Compile Include="Views\Controls\Editable Properties Controls\Primitives\StringListSelectionEditorControl.xaml.cs">
       <DependentUpon>StringListSelectionEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\Editable Properties Controls\SpawnObjectPropEditor.xaml.cs">
+      <DependentUpon>SpawnObjectPropEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\Editable Properties Controls\SpritePolygonPropEditor.xaml.cs">
       <DependentUpon>SpritePolygonPropEditor.xaml</DependentUpon>
     </Compile>
@@ -117,6 +120,12 @@
     <Compile Include="Models\CollisionEntities.cs" />
     <Compile Include="Models\ZLevels.cs" />
     <Compile Include="Utilities\ParentalFinder.cs" />
+    <Compile Include="Views\Controls\Editable Properties Controls\System Properties Control\SystemPropertiesEditor.xaml.cs">
+      <DependentUpon>SystemPropertiesEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Editable Properties Controls\System Properties Control\GunSystemPropEditor.xaml.cs">
+      <DependentUpon>GunSystemPropEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\Editable Shapes Controls\BoxedSpritePolygonControl.xaml.cs">
       <DependentUpon>BoxedSpritePolygonControl.xaml</DependentUpon>
     </Compile>
@@ -273,6 +282,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\Controls\Editable Properties Controls\SpawnObjectPropEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\Controls\Editable Properties Controls\SpritePolygonPropEditor.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -284,6 +297,14 @@
     <Page Include="Views\Controls\Editable Properties Controls\CompoundObjectPropEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Controls\Editable Properties Controls\System Properties Control\SystemPropertiesEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\Editable Properties Controls\System Properties Control\GunSystemPropEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Controls\Editable Shapes Controls\BoxedSpritePolygonControl.xaml">
       <Generator>MSBuild:Compile</Generator>

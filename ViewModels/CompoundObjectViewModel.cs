@@ -10,25 +10,10 @@ using System.Windows.Data;
 using System.Windows.Media;
 
 
-
 /*
- *  How about a new set of view model classes: StateShapes, StateJoints, StateSystems and StateChildren
- * 
- * This class would have one ObservableCollection for each state and for each such class
- * Each such class would have one CompositeCollection (or ObservableCollection) for each 
- * object of each class.
- * There can be a HierarchicalDataTemplate for each State-class. The CompoundObjectViewModel
- * will have one CompositeCollection of all State-classes which will group each object type
- * into one level of the TreeView. 
- * 
- * Lets try it
- * 
- * 
- * 
+ * The CompoundObjectViewModel encompass the CompoundObject (incl its states, and behaviour) 
+ * as well as all the ChildObjects of all states
  */
-
-
-
 
 
 namespace LeapfrogEditor
@@ -130,6 +115,11 @@ namespace LeapfrogEditor
          {
             _childObjectOfParent.Name = value;
             OnPropertyChanged("Name");
+            OnPropertyChanged("RefName");
+            if (TreeParent != null)
+            {
+               TreeParent.OnPropertyChanged("");
+            }
          }
       }
 
@@ -413,7 +403,10 @@ namespace LeapfrogEditor
             }
          }
 
-         TreeCollection.Insert(0, Behaviour.BehaviourProperties);
+         if ((Behaviour != null) && (Behaviour.Type == "breakableObject"))
+         {
+            TreeCollection.Insert(0, Behaviour.BehaviourProperties);
+         }
       }
 
       #endregion
@@ -426,7 +419,7 @@ namespace LeapfrogEditor
 
          // Behaviour child is not ready to be set, it will 
          // be set later.
-         _treeCollection.Add(Behaviour.BehaviourProperties);
+         SetBehaviourPropertyInTreeView();
 
          _treeCollection.Add(StateShapes);
          _treeCollection.Add(StateJoints);

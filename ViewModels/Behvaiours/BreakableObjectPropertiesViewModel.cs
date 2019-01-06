@@ -16,6 +16,8 @@ namespace LeapfrogEditor
 
       private BreakableObjectProperties ModelObject;
 
+      private ObservableCollection<SpawnObjectViewModel> _spawnObjects = new ObservableCollection<SpawnObjectViewModel>();
+
       #endregion
 
       #region Constructors
@@ -28,6 +30,12 @@ namespace LeapfrogEditor
          base(treeParent, parentVm, mainVm)
       {
          ModelObject = modelObject;
+                  
+         foreach (SpawnObject so in ModelObject.SpawnObjects)
+         {
+            SpawnObjectViewModel sovm = new SpawnObjectViewModel(this, parentVm, mainVm, so);
+            SpawnObjects.Add(sovm);
+         }
       }
 
       #endregion
@@ -59,12 +67,12 @@ namespace LeapfrogEditor
          }
       }
 
-      public ObservableCollection<SpawnObject> SpawnObjects
+      public ObservableCollection<SpawnObjectViewModel> SpawnObjects
       {
-         get { return LocalModelObject.SpawnObjects; }
+         get { return _spawnObjects; }
          set
          {
-            LocalModelObject.SpawnObjects = value;
+            _spawnObjects = value;
             OnPropertyChanged("SpawnObjects");
          }
       }

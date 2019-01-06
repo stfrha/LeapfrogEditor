@@ -89,7 +89,9 @@ namespace LeapfrogEditor
       private ObservableCollection<CompoundObjectViewModel> _selectedChildObjects = new ObservableCollection<CompoundObjectViewModel>();
       private ObservableCollection<LfShapeViewModel> _selectedShapes = new ObservableCollection<LfShapeViewModel>();
       private ObservableCollection<WeldJointViewModel> _selectedJoints = new ObservableCollection<WeldJointViewModel>();
+      private ObservableCollection<CoSystemViewModel> _selectedSystems = new ObservableCollection<CoSystemViewModel>();
       private ObservableCollection<LfDragablePointViewModel> _selectedPoints = new ObservableCollection<LfDragablePointViewModel>();
+      private SpawnObjectViewModel _editableSpawnObject = null;
 
       private ZLevels _zLevels = new ZLevels();
       private CollisionEntities _collEnts = new CollisionEntities();
@@ -234,10 +236,26 @@ namespace LeapfrogEditor
          set { _selectedJoints = value; }
       }
 
+      public ObservableCollection<CoSystemViewModel> SelectedSystems
+      {
+         get { return _selectedSystems; }
+         set { _selectedSystems = value; }
+      }
+
       public ObservableCollection<LfDragablePointViewModel> SelectedPoints
       {
          get { return _selectedPoints; }
          set { _selectedPoints = value; }
+      }
+
+      public SpawnObjectViewModel EditableSpawnObject
+      {
+         get { return _editableSpawnObject; }
+         set
+         {
+            _editableSpawnObject = value;
+            OnPropertyChanged("EditableSpawnObject");
+         }
       }
 
       public LeftClickState LeftClickState
@@ -1787,6 +1805,8 @@ namespace LeapfrogEditor
          SelectedChildObjects.Clear();
          SelectedShapes.Clear();
          SelectedJoints.Clear();
+         SelectedSystems.Clear();
+         EditableSpawnObject = null;
 
          foreach (TreeViewViewModel tvvm in SelectedItems)
          {
@@ -1821,6 +1841,22 @@ namespace LeapfrogEditor
                   // This is the shape of the object being edited, 
                   SelectedJoints.Add(jvm);
                }
+            }
+
+            if (tvvm is CoSystemViewModel)
+            {
+               CoSystemViewModel svm = tvvm as CoSystemViewModel;
+
+               if (svm.ParentVm == EditedCpVm)
+               {
+                  // This is the shape of the object being edited, 
+                  SelectedSystems.Add(svm);
+               }
+            }
+
+            if (tvvm is SpawnObjectViewModel)
+            {
+               EditableSpawnObject = tvvm as SpawnObjectViewModel;
             }
          }
       }

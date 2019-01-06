@@ -16,12 +16,21 @@
       <ContentControl
          DataContext="{Binding EditableCompoundObject, ElementName=root}"
          Content="{Binding}" 
-         Margin="2"
-      >
+         Margin="2" >
          <ContentControl.Resources>
             <DataTemplate DataType="{x:Type local:CompoundObjectViewModel}">
                <local:CompoundObjectPropEditor 
                   Headline="Compound Object under Edit"/>
+            </DataTemplate>
+         </ContentControl.Resources>
+      </ContentControl>
+      <ContentControl
+         DataContext="{Binding EditableSpawnObject, ElementName=root}"
+         Content="{Binding}" 
+         Margin="2" >
+         <ContentControl.Resources>
+            <DataTemplate DataType="{x:Type local:SpawnObjectViewModel}">
+               <local:SpawnObjectPropEditor />
             </DataTemplate>
          </ContentControl.Resources>
       </ContentControl>
@@ -325,6 +334,21 @@
                      </StackPanel>
                   </Border>
                </DockPanel>
+            </DataTemplate>
+         </ItemsControl.Resources>
+         <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+               <StackPanel />
+            </ItemsPanelTemplate>
+         </ItemsControl.ItemsPanel>
+      </ItemsControl>
+      <ItemsControl 
+         ItemsSource="{Binding EditableSystems, ElementName=root}"
+         Margin="2"
+         >
+         <ItemsControl.Resources>
+            <DataTemplate DataType="{x:Type local:CoSystemViewModel}">
+               <local:SystemPropertiesEditor />
             </DataTemplate>
          </ItemsControl.Resources>
          <ItemsControl.ItemsPanel>

@@ -15,6 +15,7 @@
             <local:CoStateEditorControl Headline="States" />
             <local:DoubleEditorControl Headline="PosX" MyValue="{Binding PosX, Mode=TwoWay}" />
             <local:DoubleEditorControl Headline="PosY" MyValue="{Binding PosY, Mode=TwoWay}" />
+            <local:StringEditorControl Headline="File" MyValue="{Binding ModelObjectProperties.File, Mode=TwoWay}" />
             <local:StringListSelectionEditorControl 
                Headline="Behaviour" 
                Strings="{Binding Behaviours}"
