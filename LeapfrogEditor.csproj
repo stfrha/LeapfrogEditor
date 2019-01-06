@@ -64,6 +64,7 @@
     <Compile Include="Models\Systems\ShieldProperties.cs" />
     <Compile Include="Models\Systems\GunProperties.cs" />
     <Compile Include="ViewModels\Behvaiours\BehaviourViewModelBase.cs" />
+    <Compile Include="ViewModels\Behvaiours\StateBehaviourCollectionViewModel.cs" />
     <Compile Include="ViewModels\Behvaiours\SteerableObjectPropertiesViewModel.cs" />
     <Compile Include="ViewModels\Behvaiours\BreakableObjectPropertiesViewModel.cs" />
     <Compile Include="ViewModels\Behvaiours\CoBehaviourViewModel.cs" />

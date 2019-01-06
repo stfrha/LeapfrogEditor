@@ -5,15 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace LeapfrogEditor
 {
-   // This class is a common base for all Behvaiour properties
-   // view models so that we can return something common when 
-   // a behaviour properties view model is requested.
-   public class BehaviourViewModelBase : StateBehaviourCollectionViewModel
+   public class StateBehaviourCollectionViewModel : StateCollectionViewModelBase
    {
       #region Declarations
 
@@ -21,7 +18,10 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public BehaviourViewModelBase(TreeViewViewModel treeParent, CompoundObjectViewModel parentVm, MainViewModel mainVm) :
+      public StateBehaviourCollectionViewModel(
+         TreeViewViewModel treeParent,
+         CompoundObjectViewModel parentVm,
+         MainViewModel mainVm) :
          base(treeParent, parentVm, mainVm)
       {
       }
@@ -29,11 +29,6 @@ namespace LeapfrogEditor
       #endregion
 
       #region Properties
-
-
-      #endregion
-
-      #region private Methods
 
       #endregion
 

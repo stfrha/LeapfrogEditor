@@ -72,11 +72,10 @@ namespace LeapfrogEditor
          ModelObject = modelObject;
          ModelObjectProperties = modelObjectProperties;
          ChildObjectOfParent = childObjectOfParent;
+
+         Behaviour = new CoBehaviourViewModel(TreeParent, this, MainVm, ModelObject.Behaviour);
+
          SelectedStateIndex = 0;
-         Behaviour = new CoBehaviourViewModel(treeParent, this, mainVm, ModelObject.Behaviour);
-
-         BuildTreeViewCollection();
-
          SelectedBehaviourIndex = Behaviours.IndexOf(ModelObject.Behaviour.Type);
       }
 
@@ -311,6 +310,24 @@ namespace LeapfrogEditor
             OnPropertyChanged("SelectedBehaviourIndex");
 
             Behaviour.Type = Behaviours[SelectedBehaviourIndex];
+
+            SetBehaviourPropertyInTreeView();
+
+            // TODO: Except for updating the Type property 
+            // which will expose a new BehaviourProperty,
+            // we must also update the child of the Tree View
+            // and this must be done here.
+            // This ViewModel object is the Behaviour property of
+            // the CompoundObjectViewModel. The COVM also has a TreeCollection
+            // property which holds folders for all shapes, joints, systems, child
+            // objects and Behaviour property. The Behaviour property should be the
+            // set to either _steerableObjProperties or _breakableObjProperties
+            // depending on the Type property. Both these types are derived of
+            // BehaviourViewModelBase which is derived of TreeViewViewModel.
+            // By letting BehaviourViewModelBase be derived from a new class that
+            // is derived from StateCollectionViewModelBase, which basically is empty,
+            // and derived from TreeViewViewModel it can be inserted into the TreeCollection
+            // and thus will be displayed in the tree. 
          }
       }
 
@@ -384,6 +401,21 @@ namespace LeapfrogEditor
       //   }
       //}
 
+      public void SetBehaviourPropertyInTreeView()
+      {
+         // Remove the current element (if any) in the TreeCollection that is of BehaviourViewModelBase
+         foreach (StateCollectionViewModelBase s in TreeCollection)
+         {
+            if (s is BehaviourViewModelBase)
+            {
+               TreeCollection.Remove(s);
+               break;
+            }
+         }
+
+         TreeCollection.Insert(0, Behaviour.BehaviourProperties);
+      }
+
       #endregion
 
       #region Private Methods
@@ -391,6 +423,11 @@ namespace LeapfrogEditor
       private void BuildTreeViewCollection()
       {
          _treeCollection.Clear();
+
+         // Behaviour child is not ready to be set, it will 
+         // be set later.
+         _treeCollection.Add(Behaviour.BehaviourProperties);
+
          _treeCollection.Add(StateShapes);
          _treeCollection.Add(StateJoints);
          _treeCollection.Add(StateSystems);

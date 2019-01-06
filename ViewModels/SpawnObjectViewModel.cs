@@ -10,7 +10,7 @@ using System.Windows.Media.Imaging;
 
 namespace LeapfrogEditor
 {
-   class SpawnObjectViewModel : MicroMvvm.ViewModelBase
+   public class SpawnObjectViewModel : MicroMvvm.ViewModelBase
    {
       #region Declarations
 
