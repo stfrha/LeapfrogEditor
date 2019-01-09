@@ -14,9 +14,10 @@ namespace LeapfrogEditor
    {
       #region Declarations
 
-      private CoBehaviour ModelObject;
+      private CoBehaviour _modelObject;
       private SteerableObjectPropertiesViewModel _steerableObjProperties;
       private BreakableObjectPropertiesViewModel _breakableObjProperties;
+      private ScenePropertiesViewModel _sceneProperties;
 
       #endregion
 
@@ -28,8 +29,9 @@ namespace LeapfrogEditor
          MainViewModel mainVm,
          CoBehaviour modelObject) 
       {
-         ModelObject = modelObject;
+         _modelObject = modelObject;
 
+         _sceneProperties = new ScenePropertiesViewModel(treeParent, parentVm, mainVm, ModelObject.SceneProperties);
          _steerableObjProperties = new SteerableObjectPropertiesViewModel(treeParent, parentVm, mainVm, ModelObject.SteerableObjProps);
          _breakableObjProperties = new BreakableObjectPropertiesViewModel(treeParent, parentVm, mainVm, ModelObject.BreakableObjProps);
       }
@@ -38,27 +40,82 @@ namespace LeapfrogEditor
 
       #region Properties
 
-      public CoBehaviour LocalModelObject
+      public CoBehaviour ModelObject
       {
-         get { return ModelObject; }
+         get { return _modelObject; }
+         set
+         {
+            _modelObject = value;
+            OnPropertyChanged("ModelObject");
+         }
       }
 
       public string Type
       {
-         get { return LocalModelObject.Type; }
+         get { return ModelObject.Type; }
          set
          {
-            LocalModelObject.Type = value;
+            ModelObject.Type = value;
             OnPropertyChanged("Type");
             OnPropertyChanged("BehaviourProperties");
          }
+      }
+
+      // To be general, all behaviour need to provide the SelectedStateIndex
+      // property even though it is only scenes that actually has some
+      // meaningfull content. For all other behaviour types, index 0 is returned
+      // and the property can not be set.
+
+      public int SelectedStateIndex
+      {
+         get
+         {
+            if (Type == "scene")
+            {
+               return _sceneProperties.SelectedStateIndex;
+            }
+
+            return 0;
+         }
+         set
+         {
+            if (Type == "scene")
+            {
+               _sceneProperties.SelectedStateIndex = value;
+
+               OnPropertyChanged("");
+            }
+         }
+      }
+
+      public ObservableCollection<StateViewModel> States
+      {
+         get
+         {
+            if (Type == "scene")
+            {
+               return _sceneProperties.States;
+            }
+
+            ObservableCollection<StateViewModel> svms = new ObservableCollection<StateViewModel>();
+
+            StateViewModel svm = new StateViewModel(null, null, null, null, "default");
+            svms.Add(svm);
+
+            return svms;
+         }
+         set { }
       }
 
       public BehaviourViewModelBase BehaviourProperties
       {
          get
          {
-            if (Type == "steerableObject")
+            if (Type == "scene")
+            {
+               return _sceneProperties;
+            }
+            else if (Type == "steerableObject")
             {
                return _steerableObjProperties;
             }
@@ -69,27 +126,6 @@ namespace LeapfrogEditor
 
             return null;
          }
-         //set
-         //{
-         //   if (Type == "steerableObject")
-         //   {
-         //      if (value is SteerableObjectPropertiesViewModel)
-         //      {
-         //         _steerableObjProperties = (SteerableObjectPropertiesViewModel)value;
-         //         LocalModelObject.SteerableObjProps = ((SteerableObjectPropertiesViewModel)value).LocalModelObject;
-         //         OnPropertyChanged("BehaviourProperties");
-         //      }
-         //   }
-         //   else if (Type == "breakableObject")
-         //   {
-         //      if (value is BreakableObjectPropertiesViewModel)
-         //      {
-         //         _breakableObjProperties = (BreakableObjectPropertiesViewModel)value;
-         //         LocalModelObject.BreakableObjProps = ((BreakableObjectPropertiesViewModel)value).LocalModelObject;
-         //         OnPropertyChanged("BehaviourProperties");
-         //      }
-         //   }
-         //}
       }
 
       #endregion

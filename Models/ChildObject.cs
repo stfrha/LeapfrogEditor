@@ -37,6 +37,7 @@ namespace LeapfrogEditor
          set { _name = value; }
       }
 
+      // TODO: Is this property really used?
       [XmlAttribute("type")]
       public string Type
       {

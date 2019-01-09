@@ -86,7 +86,8 @@ namespace LeapfrogEditor
 
       private ObservableCollection<TreeViewViewModel> _selectedItems = new ObservableCollection<TreeViewViewModel>();
 
-      private ObservableCollection<CompoundObjectViewModel> _selectedChildObjects = new ObservableCollection<CompoundObjectViewModel>();
+      private ObservableCollection<ChildObjectViewModel> _selectedChildObjects = new ObservableCollection<ChildObjectViewModel>();
+      private ObservableCollection<ChildObjectStatePropertiesViewModel> _selectedChildObjectStateProperties = new ObservableCollection<ChildObjectStatePropertiesViewModel>();
       private ObservableCollection<LfShapeViewModel> _selectedShapes = new ObservableCollection<LfShapeViewModel>();
       private ObservableCollection<WeldJointViewModel> _selectedJoints = new ObservableCollection<WeldJointViewModel>();
       private ObservableCollection<CoSystemViewModel> _selectedSystems = new ObservableCollection<CoSystemViewModel>();
@@ -194,20 +195,14 @@ namespace LeapfrogEditor
       {
          get
          {
+            string titleBase = "Leapfrog Editor";
+
             if (EditedCpVm == null)
             {
-               return "Leapfrog Editor - No file loaded";
+               return titleBase +" - No file loaded";
             }
 
-            string fileName = System.IO.Path.GetFileName(EditedCpVm.ModelObjectProperties.File);
-
-            if ((fileName != "") && (fileName != "undef_file.xml"))
-            {
-               return "Leapfrog Editor - " + fileName;
-            }
-
-            return "Leapfrog Editor - " + EditedCpVm.Name;
-
+            return EditedCpVm.Name;
          }
       }
 
@@ -218,10 +213,16 @@ namespace LeapfrogEditor
       }
 
 
-      public ObservableCollection<CompoundObjectViewModel> SelectedChildObjects
+      public ObservableCollection<ChildObjectViewModel> SelectedChildObjects
       {
          get { return _selectedChildObjects; }
          set { _selectedChildObjects = value; }
+      }
+
+      public ObservableCollection<ChildObjectStatePropertiesViewModel> SelectedChildObjectStateProperties
+      {
+         get { return _selectedChildObjectStateProperties; }
+         set { _selectedChildObjectStateProperties = value; }
       }
 
       public ObservableCollection<LfShapeViewModel> SelectedShapes
@@ -340,7 +341,7 @@ namespace LeapfrogEditor
                ChildObject newChildObject = new ChildObject();
                newChildObject.StateProperties.Add(newStateProp);
 
-               FileCOViewModel newCpVm = new FileCOViewModel(null, null, this, fileName, newCP, newStateProp.Properties, newChildObject);
+               FileCOViewModel newCpVm = new FileCOViewModel(null, null, this, fileName, newCP);
 
                newCpVm.BuildViewModel(newChildObject);
 
@@ -422,10 +423,10 @@ namespace LeapfrogEditor
          {
             CompoundObjectViewModel covm = parameter as CompoundObjectViewModel;
 
-            if ((covm.ModelObjectProperties.File == "") || (covm.ModelObjectProperties.File == "undef_file.xml"))
-            {
-               return true;
-            }
+            //if ((covm.ModelObjectProperties.File == "") || (covm.ModelObjectProperties.File == "undef_file.xml"))
+            //{
+            //   return true;
+            //}
          }
 
          return false;
@@ -446,7 +447,7 @@ namespace LeapfrogEditor
          {
             CompoundObjectViewModel covm = parameter as CompoundObjectViewModel;
 
-            OpenFileToEdit(covm.ModelObjectProperties.File);
+            OpenFileToEdit(covm.ReferenceChildFileName);
          }
       }
 
@@ -464,10 +465,7 @@ namespace LeapfrogEditor
                return false;
             }
 
-            if ((covm.ModelObjectProperties.File != "") && (covm.ModelObjectProperties.File != "undef_file.xml"))
-            {
-               return true;
-            }
+            return (covm.IsFileReferenceChild);
          }
 
          return false;
@@ -490,7 +488,7 @@ namespace LeapfrogEditor
             // Generate Triangles before saving
             fcovm.GenerateTriangles();
 
-            fcovm.ModelObject.WriteToFile(EditedCpVm.ModelObjectProperties.File);
+            fcovm.ModelObject.WriteToFile(fcovm.FileName);
 
             // Now, since we potentially have changed the contents of this file,
             // lets look if any object has this object as a child, in which case we 
@@ -554,14 +552,20 @@ namespace LeapfrogEditor
       void SaveExecute(Object parameter)
       {
          // Generate Triangles before saving
-         EditedCpVm.GenerateTriangles();
+         if (EditedCpVm is FileCOViewModel)
+         {
+            FileCOViewModel fvm = EditedCpVm as FileCOViewModel;
 
-         EditedCpVm.ModelObject.WriteToFile(EditedCpVm.ModelObjectProperties.File);
+            EditedCpVm.GenerateTriangles();
+
+            EditedCpVm.ModelObject.WriteToFile(fvm.FileName);
+         }
+
       }
 
       bool CanSaveExecute(Object parameter)
       {
-         return true;
+         return (EditedCpVm is FileCOViewModel);
       }
 
       public ICommand Save
@@ -574,20 +578,34 @@ namespace LeapfrogEditor
 
       void SaveAsExecute(Object parameter)
       {
-         SaveFileDialog sfd = new SaveFileDialog();
-
-         if (sfd.ShowDialog() == true)
+         // Generate Triangles before saving
+         if (EditedCpVm is FileCOViewModel)
          {
-            // Generate Triangles before saving
+            FileCOViewModel fvm = EditedCpVm as FileCOViewModel;
+
+            SaveFileDialog sfd = new SaveFileDialog();
+
+            if (sfd.ShowDialog() == true)
+            {
+               // Generate Triangles before saving
+               EditedCpVm.GenerateTriangles();
+               fvm.FileName = sfd.FileName;
+               EditedCpVm.ModelObject.WriteToFile(fvm.FileName);
+            }
+
+
             EditedCpVm.GenerateTriangles();
-            EditedCpVm.ModelObjectProperties.File = sfd.FileName;
-            EditedCpVm.ModelObject.WriteToFile(EditedCpVm.ModelObjectProperties.File);
+
+            EditedCpVm.ModelObject.WriteToFile(fvm.FileName);
          }
+
+
+
       }
 
       bool CanSaveAsExecute(Object parameter)
       {
-         return true;
+         return (EditedCpVm is FileCOViewModel);
       }
 
       public ICommand SaveAs
@@ -614,28 +632,28 @@ namespace LeapfrogEditor
 
             // Fortsätt här!!!!!
 
-            ChildObjectStateProperties childProps = new ChildObjectStateProperties();
+            //ChildObjectStateProperties childProps = new ChildObjectStateProperties();
 
-            childProps.File = fullFileName;
+            //childProps.File = fullFileName;
 
-            TStateProperties<ChildObjectStateProperties> newStateProp = new TStateProperties<ChildObjectStateProperties>();
-            newStateProp.State = "default";
-            newStateProp.Properties = childProps;
+            //TStateProperties<ChildObjectStateProperties> newStateProp = new TStateProperties<ChildObjectStateProperties>();
+            //newStateProp.State = "default";
+            //newStateProp.Properties = childProps;
 
-            CompoundObject newCp = CompoundObject.ReadFromFile(fullFileName);
+            //CompoundObject newCp = CompoundObject.ReadFromFile(fullFileName);
 
-            newStateProp.Properties.CompObj = newCp;
+            //newStateProp.Properties.CompObj = newCp;
 
-            ChildObject newChildObject = new ChildObject();
+            //ChildObject newChildObject = new ChildObject();
 
-            newChildObject.StateProperties.Add(newStateProp);
+            //newChildObject.StateProperties.Add(newStateProp);
 
-            CompoundObjectViewModel newCpVm = new CompoundObjectViewModel(null, null, this, newCp, newStateProp.Properties, newChildObject);
-            newCpVm.BuildViewModel(newChildObject);
+            //CompoundObjectViewModel newCpVm = new CompoundObjectViewModel(null, null, this, newCp /*, newStateProp.Properties, newChildObject*/);
+            //newCpVm.BuildViewModel(newChildObject);
 
-            EditedCpVm.ModelObject.ChildObjects.Add(newChildObject);
-            EditedCpVm.StateChildObjects.Children.Add(newCpVm);
-            OnPropertyChanged("");
+            //EditedCpVm.ModelObject.ChildObjects.Add(newChildObject);
+            //EditedCpVm.StateChildObjects.Children.Add(newCpVm);
+            //OnPropertyChanged("");
          }
       }
 
@@ -652,6 +670,42 @@ namespace LeapfrogEditor
          }
       }
 
+      
+
+      void DisplayStateExecute(Object parameter)
+      {
+         if (parameter is StateViewModel)
+         {
+            StateViewModel svm = parameter as StateViewModel;
+
+            svm.SetOnDisplay();
+
+            EditedCpVm.OnPropertyChanged("");
+         }
+      }
+
+      bool CanDisplayStateExecute(Object parameter)
+      {
+         if (parameter is StateViewModel)
+         {
+            StateViewModel svm = parameter as StateViewModel;
+
+            if (!svm.IsOnDisplay)
+            {
+               return true;
+            }
+         }
+
+         return false;
+      }
+
+      public ICommand DisplayState
+      {
+         get
+         {
+            return new MicroMvvm.RelayCommand<Object>(parameter => DisplayStateExecute(parameter), parameter => CanDisplayStateExecute(parameter));
+         }
+      }
 
       void SetShapeWidthExecute(Object parameter)
       {
@@ -719,16 +773,16 @@ namespace LeapfrogEditor
 
       void StateExecute(Object parameter)
       {
-         CompoundObjectViewModel covm = EditedCpVm.StateChildObjects.Children[0];
+         //CompoundObjectViewModel covm = EditedCpVm.StateChildObjects.Children[0];
 
-         if (covm.SelectedStateIndex == 0)
-         {
-            covm.SelectedStateIndex = 1;
-         }
-         else
-         {
-            covm.SelectedStateIndex = 0;
-         }
+         //if (covm.Behaviour.SelectedStateIndex == 0)
+         //{
+         //   covm.Behaviour.SelectedStateIndex = 1;
+         //}
+         //else
+         //{
+         //   covm.Behaviour.SelectedStateIndex = 0;
+         //}
       }
 
       bool CanStateExecute(Object parameter)
@@ -1803,6 +1857,7 @@ namespace LeapfrogEditor
          // the selection collection of different types
 
          SelectedChildObjects.Clear();
+         SelectedChildObjectStateProperties.Clear();
          SelectedShapes.Clear();
          SelectedJoints.Clear();
          SelectedSystems.Clear();
@@ -1810,14 +1865,25 @@ namespace LeapfrogEditor
 
          foreach (TreeViewViewModel tvvm in SelectedItems)
          {
-            if (tvvm is CompoundObjectViewModel)
+            if (tvvm is ChildObjectViewModel)
             {
-               CompoundObjectViewModel covm = tvvm as CompoundObjectViewModel;
+               ChildObjectViewModel covm = tvvm as ChildObjectViewModel;
 
                if (covm.ParentVm == EditedCpVm)
                {
                   // This is the child object of the object being edited, 
                   SelectedChildObjects.Add(covm);
+               }
+            }
+
+            if (tvvm is ChildObjectStatePropertiesViewModel)
+            {
+               ChildObjectStatePropertiesViewModel cospvm = tvvm as ChildObjectStatePropertiesViewModel;
+
+               if (cospvm.ParentVm == EditedCpVm)
+               {
+                  // This is the child object of the object being edited, 
+                  SelectedChildObjectStateProperties.Add(cospvm);
                }
             }
 
@@ -1972,7 +2038,7 @@ namespace LeapfrogEditor
          newChildObject.StateProperties.Add(newStateProp);
          newChildObject.Name = fileName;
 
-         FileCOViewModel newCpVm = new FileCOViewModel(null, null, this, fileName, newCP, newStateProp.Properties, newChildObject);
+         FileCOViewModel newCpVm = new FileCOViewModel(null, null, this, fileName, newCP);
          newCpVm.BuildViewModel(newChildObject);
 
          return newCpVm;

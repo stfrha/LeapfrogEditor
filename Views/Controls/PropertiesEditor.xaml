@@ -39,9 +39,25 @@
          Margin="2"
          >
          <ItemsControl.Resources>
-            <DataTemplate DataType="{x:Type local:CompoundObjectViewModel}">
-               <local:CompoundObjectPropEditor
+            <DataTemplate DataType="{x:Type local:ChildObjectViewModel}">
+               <local:ChildObjectPropEditor
                   Headline="Child Object"/>
+            </DataTemplate>
+         </ItemsControl.Resources>
+         <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+               <StackPanel />
+            </ItemsPanelTemplate>
+         </ItemsControl.ItemsPanel>
+      </ItemsControl>
+      <ItemsControl 
+         ItemsSource="{Binding SelectedChildObjectStateProperties, ElementName=root}"
+         Margin="2"
+         >
+         <ItemsControl.Resources>
+            <DataTemplate DataType="{x:Type local:ChildObjectStatePropertiesViewModel}">
+               <local:ChildObjectPropEditor
+                  Headline="Child Object State Properties"/>
             </DataTemplate>
          </ItemsControl.Resources>
          <ItemsControl.ItemsPanel>

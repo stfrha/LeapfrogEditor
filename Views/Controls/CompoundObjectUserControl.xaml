@@ -69,7 +69,7 @@
             </ItemsPanelTemplate>
          </ItemsControl.ItemsPanel>
       </ItemsControl>
-      <ItemsControl ItemsSource="{Binding StateChildObjects.Children}">
+      <ItemsControl ItemsSource="{Binding StateChildObjects}">
          <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
                <Canvas/>

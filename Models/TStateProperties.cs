@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 namespace LeapfrogEditor
 {
    [Serializable]
-   public class TStateProperties<T>
+   public class TStateProperties<T> 
    {
       #region Declarations
 

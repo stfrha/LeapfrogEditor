@@ -162,6 +162,33 @@
                      ItemsSource="{Binding SpawnCompoundObject}">
                      <TextBlock Margin="2"  Text="{Binding Headline}" />
                   </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:ScenePropertiesViewModel}"
+                     ItemsSource="{Binding States}">
+                     <TextBlock Margin="2"  Text="States">
+                        <TextBlock.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Add State" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.OpenChildFile, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </TextBlock.ContextMenu>
+                     </TextBlock>
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:StateViewModel}">
+                     <TextBlock Margin="2"  Text="{Binding StateName}">
+                        <TextBlock.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Display this State" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.DisplayState, Source={StaticResource DataContextProxy}}" />
+                              <Separator />
+                              <MenuItem Header="Delete State" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.OpenChildFile, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </TextBlock.ContextMenu>
+                     </TextBlock>
+                  </HierarchicalDataTemplate>
                   <HierarchicalDataTemplate DataType="{x:Type local:StateShapeCollectionViewModel}"
                      ItemsSource="{Binding Shapes}">
                      <TextBlock Margin="2"  Text="Shapes" />
@@ -177,6 +204,14 @@
                   <HierarchicalDataTemplate DataType="{x:Type local:StateChildCollectionViewModel}"
                      ItemsSource="{Binding Children}">
                      <TextBlock Margin="2"  Text="Child Objects" />
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:ChildObjectViewModel}"
+                     ItemsSource="{Binding StateProperties}">
+                     <TextBlock Margin="2"  Text="{Binding Name}" />
+                  </HierarchicalDataTemplate>
+                  <HierarchicalDataTemplate DataType="{x:Type local:ChildObjectStatePropertiesViewModel}"
+                     ItemsSource="{Binding CompoundObjectChild}">
+                     <TextBlock Margin="2"  Text="{Binding State}" />
                   </HierarchicalDataTemplate>
                   <HierarchicalDataTemplate DataType="{x:Type local:LfShapeViewModel}" >
                      <TextBlock Margin="2"  Text="{Binding Name}" />

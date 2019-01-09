@@ -14,7 +14,7 @@ namespace LeapfrogEditor
    {
       #region Declarations
 
-      private ObservableCollection<CompoundObjectViewModel> _children = new ObservableCollection<CompoundObjectViewModel>();
+      private ObservableCollection<ChildObjectViewModel> _children = new ObservableCollection<ChildObjectViewModel>();
 
       #endregion
 
@@ -32,7 +32,7 @@ namespace LeapfrogEditor
 
       #region Properties
 
-      public ObservableCollection<CompoundObjectViewModel> Children
+      public ObservableCollection<ChildObjectViewModel> Children
       {
          get { return _children; }
          set { _children = value; }

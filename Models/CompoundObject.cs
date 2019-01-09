@@ -45,8 +45,6 @@ namespace LeapfrogEditor
       // Child objects
       private ObservableCollection<ChildObject> _childObjects = new ObservableCollection<ChildObject>();
 
-      private ObservableCollection<string> _states = new ObservableCollection<string>();
-
       // Following is special cases for landing scenes. Maybe these will be specialised 
       // xml files with specialised format. Or behaviours of a CompoundObject
       private ObservableCollection<PlanetActorRef> _planetActors = new ObservableCollection<PlanetActorRef>();
@@ -181,13 +179,6 @@ namespace LeapfrogEditor
       {
          get { return _childObjects; }
          set { _childObjects = value; }
-      }
-
-      [XmlArray("states"), XmlArrayItem("state")]
-      public ObservableCollection<string> States
-      {
-         get { return _states; }
-         set { _states = value; }
       }
 
       // Following is special cases for landing scenes. Maybe these will be specialised 

@@ -62,6 +62,7 @@ namespace LeapfrogEditor
           DependencyProperty.Register("SelectedChildren", typeof(ObservableCollection<CompoundObjectViewModel>), typeof(PropertiesEditor), new PropertyMetadata(default(ObservableCollection<CompoundObjectViewModel>)));
 
 
+      // Fortsätt här någonstans!!!!!
 
 
       public ObservableCollection<LfShapeViewModel> EditableShapes

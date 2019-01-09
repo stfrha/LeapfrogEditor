@@ -30,10 +30,8 @@ namespace LeapfrogEditor
          CompoundObjectViewModel parentVm,
          MainViewModel mainVm,
          string fileName,
-         CompoundObject modelObject,
-         ChildObjectStateProperties modelObjectProperties,
-         ChildObject childObjectOfParent) :
-         base(treeParent, parentVm, mainVm, modelObject, modelObjectProperties, childObjectOfParent)
+         CompoundObject modelObject) :
+         base(treeParent, parentVm, mainVm, modelObject)
       {
          _fileName = fileName;
       }

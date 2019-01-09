@@ -12,10 +12,6 @@
          <StackPanel Margin="2">
             <local:HeadlineControl Headline="{Binding Headline, ElementName=root}" />
             <local:StringEditorControl Headline="Name" MyValue="{Binding Name, Mode=TwoWay}" />
-            <local:CoStateEditorControl Headline="States" />
-            <local:DoubleEditorControl Headline="PosX" MyValue="{Binding PosX, Mode=TwoWay}" />
-            <local:DoubleEditorControl Headline="PosY" MyValue="{Binding PosY, Mode=TwoWay}" />
-            <local:StringEditorControl Headline="File" MyValue="{Binding ModelObjectProperties.File, Mode=TwoWay}" />
             <local:StringListSelectionEditorControl 
                Headline="Behaviour" 
                Strings="{Binding Behaviours}"
@@ -24,6 +20,9 @@
                DataContext="{Binding Behaviour.BehaviourProperties}"
                Content="{Binding}">
                <ContentControl.Resources>
+                  <DataTemplate DataType="{x:Type local:ScenePropertiesViewModel}">
+                     <local:ScenePropEditor />
+                  </DataTemplate>
                   <DataTemplate DataType="{x:Type local:SteerableObjectPropertiesViewModel}">
                      <local:SteerableBehaviourPropEditor />
                   </DataTemplate>
