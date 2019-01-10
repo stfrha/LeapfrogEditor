@@ -37,7 +37,7 @@ namespace LeapfrogEditor
 
       #region Properties
 
-      public string StateName
+      public string StateIndicator
       {
          get
          {
@@ -51,7 +51,21 @@ namespace LeapfrogEditor
          set
          {
             _stateName = value;
+            OnPropertyChanged("StateIndicator");
+         }
+      }
+
+      public string StateName
+      {
+         get
+         {
+            return _stateName;
+         }
+         set
+         {
+            _stateName = value;
             OnPropertyChanged("StateName");
+            OnPropertyChanged("StateIndicator");
          }
       }
 

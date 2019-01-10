@@ -51,18 +51,29 @@ namespace LeapfrogEditor
 
 
 
-      public ObservableCollection<CompoundObjectViewModel> SelectedChildren
+      public ObservableCollection<ChildObjectViewModel> SelectedChildren
       {
-         get { return (ObservableCollection<CompoundObjectViewModel>)GetValue(SelectedChildrenProperty); }
+         get { return (ObservableCollection<ChildObjectViewModel>)GetValue(SelectedChildrenProperty); }
          set { SetValue(SelectedChildrenProperty, value); }
       }
 
       // Using a DependencyProperty as the backing store for SelectedChildren.  This enables animation, styling, binding, etc...
       public static readonly DependencyProperty SelectedChildrenProperty =
-          DependencyProperty.Register("SelectedChildren", typeof(ObservableCollection<CompoundObjectViewModel>), typeof(PropertiesEditor), new PropertyMetadata(default(ObservableCollection<CompoundObjectViewModel>)));
+          DependencyProperty.Register("SelectedChildren", typeof(ObservableCollection<ChildObjectViewModel>), typeof(PropertiesEditor), new PropertyMetadata(default(ObservableCollection<ChildObjectViewModel>)));
 
 
-      // Fortsätt här någonstans!!!!!
+
+
+      public ObservableCollection<ChildObjectStatePropertiesViewModel> ChildObjectStateProperties
+      {
+         get { return (ObservableCollection<ChildObjectStatePropertiesViewModel>)GetValue(ChildObjectStatePropertiesProperty); }
+         set { SetValue(ChildObjectStatePropertiesProperty, value); }
+      }
+
+      // Using a DependencyProperty as the backing store for ChildObjectStateProperties.  This enables animation, styling, binding, etc...
+      public static readonly DependencyProperty ChildObjectStatePropertiesProperty =
+          DependencyProperty.Register("ChildObjectStateProperties", typeof(ObservableCollection<ChildObjectStatePropertiesViewModel>), typeof(PropertiesEditor), new PropertyMetadata(default(ObservableCollection<ChildObjectStatePropertiesViewModel>)));
+
 
 
       public ObservableCollection<LfShapeViewModel> EditableShapes

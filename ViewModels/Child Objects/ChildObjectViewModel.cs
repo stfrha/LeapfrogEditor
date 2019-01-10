@@ -40,7 +40,7 @@ namespace LeapfrogEditor
 
          foreach (TStateProperties<ChildObjectStateProperties> cosp in ModelObject.StateProperties)
          {
-            ChildObjectStatePropertiesViewModel cospvm = new ChildObjectStatePropertiesViewModel(treeParent, parentVm, mainVm, cosp);
+            ChildObjectStatePropertiesViewModel cospvm = new ChildObjectStatePropertiesViewModel(this, parentVm, mainVm, cosp);
             StateProperties.Add(cospvm);
          }
       }

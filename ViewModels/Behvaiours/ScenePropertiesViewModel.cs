@@ -17,7 +17,7 @@ namespace LeapfrogEditor
       private SceneProperties _modelObject;
       private ObservableCollection<StateViewModel> _states = new ObservableCollection<StateViewModel>();
 
-      private int _selectedStateIndex = 0;
+      private int _displayedStateIndex = 0;
 
 
       #endregion
@@ -71,21 +71,21 @@ namespace LeapfrogEditor
       }
 
 
-      public int SelectedStateIndex
+      public int DisplayedStateIndex
       {
          get
          {
-            return _selectedStateIndex;
+            return _displayedStateIndex;
          }
          set
          {
             if (value == -1)
             {
-               _selectedStateIndex = 0;
+               _displayedStateIndex = 0;
             }
             else
             {
-               _selectedStateIndex = value;
+               _displayedStateIndex = value;
             }
 
             DeselectAllChildren();
@@ -116,7 +116,7 @@ namespace LeapfrogEditor
 
       public bool IsOnDisplay(StateViewModel svm)
       {
-         return (States.IndexOf(svm) == SelectedStateIndex);
+         return (States.IndexOf(svm) == DisplayedStateIndex);
       }
 
       public void SetStateOnDisplay(StateViewModel svm)
@@ -125,11 +125,11 @@ namespace LeapfrogEditor
 
          if (i >= 0)
          {
-            SelectedStateIndex = i;
+            DisplayedStateIndex = i;
          }
          else
          {
-            SelectedStateIndex = 0;
+            DisplayedStateIndex = 0;
          }
       }
 

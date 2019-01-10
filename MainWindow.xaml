@@ -175,7 +175,7 @@
                      </TextBlock>
                   </HierarchicalDataTemplate>
                   <HierarchicalDataTemplate DataType="{x:Type local:StateViewModel}">
-                     <TextBlock Margin="2"  Text="{Binding StateName}">
+                     <TextBlock Margin="2"  Text="{Binding StateIndicator}">
                         <TextBlock.ContextMenu>
                            <ContextMenu>
                               <MenuItem Header="Display this State" 
@@ -399,6 +399,7 @@
             EditableCompoundObject="{Binding EditedCpVm}"
             EditableSpawnObject="{Binding EditableSpawnObject}"
             SelectedChildren="{Binding SelectedChildObjects}"
+            ChildObjectStateProperties="{Binding SelectedChildObjectStateProperties}"
             EditableShapes="{Binding SelectedShapes}"
             EditableJoints="{Binding SelectedJoints}"
             EditableSystems="{Binding SelectedSystems}"

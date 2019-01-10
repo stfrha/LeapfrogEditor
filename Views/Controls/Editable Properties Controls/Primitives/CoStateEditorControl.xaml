@@ -23,7 +23,12 @@
          FontSize="10" 
          Height="20"
          SelectedIndex="{Binding SelectedStateIndex}"
-         ItemsSource="{Binding States, Mode=OneTime}"
-         />
+         ItemsSource="{Binding ParentVm.Behaviour.States, Mode=OneTime}">
+         <ComboBox.Resources>
+            <DataTemplate DataType="{x:Type local:StateViewModel}">
+               <TextBlock Text="{Binding StateName}" />
+            </DataTemplate>
+         </ComboBox.Resources>
+      </ComboBox>
    </Grid>
 </UserControl>

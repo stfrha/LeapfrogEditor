@@ -19,6 +19,11 @@ namespace LeapfrogEditor
       private BreakableObjectPropertiesViewModel _breakableObjProperties;
       private ScenePropertiesViewModel _sceneProperties;
 
+
+      private ObservableCollection<StateViewModel> _defaultStates = new ObservableCollection<StateViewModel>();
+      private StateViewModel _defaultState = new StateViewModel(null, null, null, null, "default");
+
+
       #endregion
 
       #region Constructors
@@ -34,6 +39,8 @@ namespace LeapfrogEditor
          _sceneProperties = new ScenePropertiesViewModel(treeParent, parentVm, mainVm, ModelObject.SceneProperties);
          _steerableObjProperties = new SteerableObjectPropertiesViewModel(treeParent, parentVm, mainVm, ModelObject.SteerableObjProps);
          _breakableObjProperties = new BreakableObjectPropertiesViewModel(treeParent, parentVm, mainVm, ModelObject.BreakableObjProps);
+
+         _defaultStates.Add(_defaultState);
       }
 
       #endregion
@@ -61,18 +68,18 @@ namespace LeapfrogEditor
          }
       }
 
-      // To be general, all behaviour need to provide the SelectedStateIndex
+      // To be general, all behaviour need to provide the DisplayedStateIndex
       // property even though it is only scenes that actually has some
       // meaningfull content. For all other behaviour types, index 0 is returned
       // and the property can not be set.
 
-      public int SelectedStateIndex
+      public int DisplayedStateIndex
       {
          get
          {
             if (Type == "scene")
             {
-               return _sceneProperties.SelectedStateIndex;
+               return _sceneProperties.DisplayedStateIndex;
             }
 
             return 0;
@@ -81,7 +88,7 @@ namespace LeapfrogEditor
          {
             if (Type == "scene")
             {
-               _sceneProperties.SelectedStateIndex = value;
+               _sceneProperties.DisplayedStateIndex = value;
 
                OnPropertyChanged("");
             }
@@ -139,6 +146,25 @@ namespace LeapfrogEditor
       #endregion
 
       #region public Methods
+
+      public StateViewModel FindStateVM(string stateName)
+      {
+         if (Type != "scene")
+         {
+            return _defaultState;
+         }
+
+         foreach (StateViewModel svm in States)
+         {
+            if (svm.StateName == stateName)
+            {
+               return svm;
+            }
+         }
+
+         return null;
+
+      }
 
       #endregion
    }

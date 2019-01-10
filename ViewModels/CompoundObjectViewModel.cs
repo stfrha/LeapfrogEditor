@@ -323,17 +323,17 @@ namespace LeapfrogEditor
       {
          get
          {
-            if ((Behaviour.SelectedStateIndex >= 0) && (_statesWithChildObjects.Count > Behaviour.SelectedStateIndex))
+            if ((Behaviour.DisplayedStateIndex >= 0) && (_statesWithChildObjects.Count > Behaviour.DisplayedStateIndex))
             {
-               return _statesWithChildObjects[Behaviour.SelectedStateIndex];
+               return _statesWithChildObjects[Behaviour.DisplayedStateIndex];
             }
             return null;
          }
          set
          {
-            if ((Behaviour.SelectedStateIndex >= 0) && (_statesWithChildObjects.Count > Behaviour.SelectedStateIndex))
+            if ((Behaviour.DisplayedStateIndex >= 0) && (_statesWithChildObjects.Count > Behaviour.DisplayedStateIndex))
             {
-               _statesWithChildObjects[Behaviour.SelectedStateIndex] = value;
+               _statesWithChildObjects[Behaviour.DisplayedStateIndex] = value;
             }
          }
       }
@@ -637,11 +637,11 @@ namespace LeapfrogEditor
       // creates a ChildObjectStatePropertiesViewModel which's constructor creates the CompoundObjectViewModel.
       private StateChildCollectionViewModel SetChildren(CompoundObject ModelObject)
       {
-         StateChildCollectionViewModel schcvm = new StateChildCollectionViewModel(TreeParent, ParentVm, MainVm);
+         StateChildCollectionViewModel schcvm = new StateChildCollectionViewModel(this, this, MainVm);
 
          foreach (ChildObject cho in ModelObject.ChildObjects)
          {
-            ChildObjectViewModel chovm = new ChildObjectViewModel(TreeParent, this, MainVm, cho);
+            ChildObjectViewModel chovm = new ChildObjectViewModel(schcvm, this, MainVm, cho);
             schcvm.Children.Add(chovm);
          }
 
@@ -820,6 +820,14 @@ namespace LeapfrogEditor
          }
 
          return null;
+      }
+
+      public void ChildObjectChangeState(CompoundObjectViewModel compoundObjectVM, int oldStateIndex, int newStateIndex)
+      {
+         // Note: It is here assumed that the indices of the State collection in the Behaviour
+         // is the same as the _statesWithChildObjects collection
+         _statesWithChildObjects[newStateIndex].Add(compoundObjectVM);
+         _statesWithChildObjects[oldStateIndex].Remove(compoundObjectVM);
       }
 
       public void BuildViewModel(ChildObject cor)

@@ -25,6 +25,9 @@ namespace LeapfrogEditor
       private TStateProperties<ChildObjectStateProperties> _modelObject;
       private CompoundObjectViewModel _compoundObjectChild;
 
+      private int _selectedStateIndex = 0;
+
+
       #endregion
 
       #region Constructors
@@ -39,6 +42,16 @@ namespace LeapfrogEditor
          ModelObject = modelObject;
 
          CompoundObjectChild = new CompoundObjectViewModel(this, parentVm, mainVm, modelObject.Properties.CompObj);
+
+         int i = ParentVm.Behaviour.States.IndexOf(ParentVm.Behaviour.FindStateVM(ModelObject.State));
+
+         if (i < 0)
+         {
+            i = 0;
+         }
+
+         SelectedStateIndex = i;
+
       }
 
       #endregion
@@ -62,8 +75,64 @@ namespace LeapfrogEditor
          {
             _modelObject.State = value;
             OnPropertyChanged("State");
+
+            int i = ParentVm.Behaviour.States.IndexOf(ParentVm.Behaviour.FindStateVM(ModelObject.State));
+
+            if (i < 0)
+            {
+               i = 0;
+            }
+
+            SelectedStateIndex = i;
+
          }
       }
+
+      public int SelectedStateIndex
+      {
+         get
+         {
+            return _selectedStateIndex;
+         }
+         set
+         {
+            int prevI = _selectedStateIndex;
+
+            if (prevI == value)
+            {
+               return;
+            }
+
+            if ((value == -1) || (value > ParentVm.Behaviour.States.Count - 1))
+            {
+               _selectedStateIndex = 0;
+            }
+            else
+            {
+               _selectedStateIndex = value;
+            }
+
+            ModelObject.State = ParentVm.Behaviour.States[_selectedStateIndex].StateName;
+
+            ParentVm.ChildObjectChangeState(CompoundObjectChild, prevI, _selectedStateIndex);
+
+
+               ParentVm.DeselectAllChildren();
+            ParentVm.BuildTreeViewCollection();
+
+            CompoundObjectViewModel p = ParentVm;
+
+            while (p != null)
+            {
+               p.OnPropertyChanged("BoundingBox");
+               p = p.ParentVm;
+            }
+
+            ParentVm.OnPropertyChanged("");
+
+         }
+      }
+
 
 
       public string File

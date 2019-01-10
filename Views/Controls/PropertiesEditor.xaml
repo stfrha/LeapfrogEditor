@@ -11,6 +11,7 @@
              >
    <UserControl.Resources>
       <local:DebugDummyConverter x:Key="DebugDummyConverter" />
+      <local:StatePropertiesHeadlineConverter x:Key="StatePropertiesHeadlineConverter" />
    </UserControl.Resources>
    <StackPanel>
       <ContentControl
@@ -36,8 +37,7 @@
       </ContentControl>
       <ItemsControl 
          ItemsSource="{Binding SelectedChildren, ElementName=root}"
-         Margin="2"
-         >
+         Margin="2" >
          <ItemsControl.Resources>
             <DataTemplate DataType="{x:Type local:ChildObjectViewModel}">
                <local:ChildObjectPropEditor
@@ -51,13 +51,12 @@
          </ItemsControl.ItemsPanel>
       </ItemsControl>
       <ItemsControl 
-         ItemsSource="{Binding SelectedChildObjectStateProperties, ElementName=root}"
-         Margin="2"
-         >
+         ItemsSource="{Binding ChildObjectStateProperties, ElementName=root}"
+         Margin="2" >
          <ItemsControl.Resources>
             <DataTemplate DataType="{x:Type local:ChildObjectStatePropertiesViewModel}">
-               <local:ChildObjectPropEditor
-                  Headline="Child Object State Properties"/>
+               <local:ChildObjectStatePropEditor
+                  Headline="{Binding Converter={StaticResource StatePropertiesHeadlineConverter}}"/>
             </DataTemplate>
          </ItemsControl.Resources>
          <ItemsControl.ItemsPanel>
@@ -68,8 +67,7 @@
       </ItemsControl>
       <ItemsControl 
          ItemsSource="{Binding EditableShapes, ElementName=root}"
-         Margin="2"
-         >
+         Margin="2">
          <ItemsControl.Resources>
             <DataTemplate DataType="{x:Type local:LfSpriteBoxViewModel}">
                <local:SpriteBoxPropEditor />

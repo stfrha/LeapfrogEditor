@@ -64,6 +64,7 @@
     <Compile Include="Models\SpawnObject.cs" />
     <Compile Include="Models\Systems\ShieldProperties.cs" />
     <Compile Include="Models\Systems\GunProperties.cs" />
+    <Compile Include="ValueConverters\StatePropertiesHeadlineConverter.cs" />
     <Compile Include="ViewModels\Behvaiours\BehaviourViewModelBase.cs" />
     <Compile Include="ViewModels\Behvaiours\CoBehaviourViewModel.cs" />
     <Compile Include="ViewModels\Behvaiours\StateBehaviourCollectionViewModel.cs" />
