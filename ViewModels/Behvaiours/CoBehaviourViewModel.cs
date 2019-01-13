@@ -14,6 +14,8 @@ namespace LeapfrogEditor
    {
       #region Declarations
 
+      private CompoundObjectViewModel _parentVm;
+
       private CoBehaviour _modelObject;
       private SteerableObjectPropertiesViewModel _steerableObjProperties;
       private BreakableObjectPropertiesViewModel _breakableObjProperties;
@@ -36,6 +38,7 @@ namespace LeapfrogEditor
       {
          _modelObject = modelObject;
 
+         _parentVm = parentVm;
          _sceneProperties = new ScenePropertiesViewModel(treeParent, parentVm, mainVm, ModelObject.SceneProperties);
          _steerableObjProperties = new SteerableObjectPropertiesViewModel(treeParent, parentVm, mainVm, ModelObject.SteerableObjProps);
          _breakableObjProperties = new BreakableObjectPropertiesViewModel(treeParent, parentVm, mainVm, ModelObject.BreakableObjProps);
@@ -84,15 +87,6 @@ namespace LeapfrogEditor
 
             return 0;
          }
-         set
-         {
-            if (Type == "scene")
-            {
-               _sceneProperties.DisplayedStateIndex = value;
-
-               OnPropertyChanged("");
-            }
-         }
       }
 
       public ObservableCollection<StateViewModel> States
@@ -111,7 +105,6 @@ namespace LeapfrogEditor
 
             return svms;
          }
-         set { }
       }
 
       public BehaviourViewModelBase BehaviourProperties

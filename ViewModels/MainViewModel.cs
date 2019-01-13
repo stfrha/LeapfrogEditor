@@ -343,7 +343,7 @@ namespace LeapfrogEditor
 
                FileCOViewModel newCpVm = new FileCOViewModel(null, null, this, fileName, newCP);
 
-               newCpVm.BuildViewModel(newChildObject);
+               newCpVm.BuildViewModel();
 
                FileCollectionViewModel.Add(newCpVm);
 
@@ -1119,7 +1119,7 @@ namespace LeapfrogEditor
                   shape.PosY += dragVector.Y;
                }
 
-               foreach (IPositionInterface child in SelectedChildObjects)
+               foreach (IPositionInterface child in SelectedChildObjectStateProperties)
                {
                   child.PosX += dragVector.X;
                   child.PosY += dragVector.Y;
@@ -1932,6 +1932,17 @@ namespace LeapfrogEditor
          return (me.ParentVm == EditedCpVm);
       }
 
+      public StateViewModel GetEditableCoBehaviourState()
+      {
+         if (EditedCpVm == null)
+         {
+            return null;
+         }
+
+         return EditedCpVm.Behaviour.States[EditedCpVm.Behaviour.DisplayedStateIndex];
+
+      }
+
       #endregion
 
       #region private Methods
@@ -2039,7 +2050,7 @@ namespace LeapfrogEditor
          newChildObject.Name = fileName;
 
          FileCOViewModel newCpVm = new FileCOViewModel(null, null, this, fileName, newCP);
-         newCpVm.BuildViewModel(newChildObject);
+         newCpVm.BuildViewModel();
 
          return newCpVm;
 

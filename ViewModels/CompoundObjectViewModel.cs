@@ -33,18 +33,8 @@ namespace LeapfrogEditor
       private StateJointCollectionViewModel _joints;
       private StateSystemCollectionViewModel _systems;
 
-      // There are two viewmodels structures for the ChildObjects
-      // One is sorted on each individual ChildObject with each states under it (_childObjectsWithStates).
-      // This is used for the tree view where all ChildObjects are shown (regardless of what 
-      // state is displayed in the graphics window), used for creating new state properties of them
-      // and to be able to edit ChildObjects properties even if they are not shown.
-      // The other (_statesWithChildObjects) is sorted on the states and each state only contains the ChildObjects
-      // of that state. This is for showing in the graphics view. Perhaps this could be handled
-      // by a ValueConverter that sets the visibility of the object in the graphics window.
-
-
       private StateChildCollectionViewModel _childObjectsWithStates;
-      private ObservableCollection<ObservableCollection<CompoundObjectViewModel>> _statesWithChildObjects = new ObservableCollection<ObservableCollection<CompoundObjectViewModel>>();
+//      private ObservableCollection<ObservableCollection<CompoundObjectViewModel>> _statesWithChildObjects = new ObservableCollection<ObservableCollection<CompoundObjectViewModel>>();
 
       private ObservableCollection<StateCollectionViewModelBase> _treeCollection = new ObservableCollection<StateCollectionViewModelBase>();
       #endregion
@@ -316,27 +306,31 @@ namespace LeapfrogEditor
       public StateChildCollectionViewModel ChildObjectsWithStates
       {
          get { return _childObjectsWithStates; }
-         set { _childObjectsWithStates = value; }
-      }
-
-      public ObservableCollection<CompoundObjectViewModel> StateChildObjects
-      {
-         get
-         {
-            if ((Behaviour.DisplayedStateIndex >= 0) && (_statesWithChildObjects.Count > Behaviour.DisplayedStateIndex))
-            {
-               return _statesWithChildObjects[Behaviour.DisplayedStateIndex];
-            }
-            return null;
-         }
          set
          {
-            if ((Behaviour.DisplayedStateIndex >= 0) && (_statesWithChildObjects.Count > Behaviour.DisplayedStateIndex))
-            {
-               _statesWithChildObjects[Behaviour.DisplayedStateIndex] = value;
-            }
+            _childObjectsWithStates = value;
+            OnPropertyChanged("ChildObjectsWithStates");
          }
       }
+
+      //public ObservableCollection<CompoundObjectViewModel> StateChildObjects
+      //{
+      //   get
+      //   {
+      //      if ((Behaviour.DisplayedStateIndex >= 0) && (_statesWithChildObjects.Count > Behaviour.DisplayedStateIndex))
+      //      {
+      //         return _statesWithChildObjects[Behaviour.DisplayedStateIndex];
+      //      }
+      //      return null;
+      //   }
+      //   set
+      //   {
+      //      if ((Behaviour.DisplayedStateIndex >= 0) && (_statesWithChildObjects.Count > Behaviour.DisplayedStateIndex))
+      //      {
+      //         _statesWithChildObjects[Behaviour.DisplayedStateIndex] = value;
+      //      }
+      //   }
+      //}
 
       public List<string> Behaviours
       {
@@ -409,7 +403,7 @@ namespace LeapfrogEditor
          {
             if (StateShapes == null) return new Rect(0, 0, 0, 0);
 
-            if ((StateShapes.Shapes.Count == 0) && (StateChildObjects.Count == 0))
+            if ((StateShapes.Shapes.Count == 0) && (ChildObjectsWithStates.Children.Count == 0))
             {
                return new Rect(0,0,0,0);
             }
@@ -431,14 +425,15 @@ namespace LeapfrogEditor
                }
             }
 
-            if (StateChildObjects.Count > 0)
+            if (ChildObjectsWithStates.Children.Count > 0)
             {
-               foreach (CompoundObjectViewModel child in StateChildObjects)
-               {
-                  Rect cb = child.BoundingBox;
-                  cb.Offset(new Vector(child.PosX, child.PosY));
-                  bbr.AddRect(cb);
-               }
+               // TODO: Expand this to work with all Displayed ChildObjects, the uncomment
+               //foreach (CompoundObjectViewModel child in ChildObjectsWithStates.Children)
+               //{
+               //   Rect cb = child.BoundingBox;
+               //   cb.Offset(new Vector(child.PosX, child.PosY));
+               //   bbr.AddRect(cb);
+               //}
             }
 
             return bbr.BoundingBox;
@@ -447,23 +442,40 @@ namespace LeapfrogEditor
          { }
       }
 
-      //// We override the IsSelected since we want to unselect all 
-      //// if this is a newly selected CO
-      //public new bool IsSelected
-      //{
-      //   get { return _isSelected; }
-      //   set
-      //   {
-      //      _isSelected = value;
+      public string ObjectState
+      {
+         get
+         {
+            if ((TreeParent != null) && (TreeParent is ChildObjectStatePropertiesViewModel))
+            {
+               ChildObjectStatePropertiesViewModel spvm = TreeParent as ChildObjectStatePropertiesViewModel;
 
-      //      if (!_isSelected)
-      //      {
-      //         DeselectAllChildren();
-      //      }
+               return spvm.State;
+            }
 
-      //      OnPropertyChanged("IsSelected");
-      //   }
-      //}
+            return "--notDefined--";
+         }
+      }
+
+      public string DispState
+      {
+         get
+         {
+            if (MainVm != null)
+            {
+               StateViewModel svm = MainVm.GetEditableCoBehaviourState();
+
+               if (svm != null)
+               {
+                  return svm.StateName;
+               }
+            }
+
+            return "--nonExisting--";
+         }
+      }
+
+
 
       #endregion
 
@@ -642,74 +654,75 @@ namespace LeapfrogEditor
          foreach (ChildObject cho in ModelObject.ChildObjects)
          {
             ChildObjectViewModel chovm = new ChildObjectViewModel(schcvm, this, MainVm, cho);
+
             schcvm.Children.Add(chovm);
          }
 
          return schcvm;
       }
 
-      private ObservableCollection<ObservableCollection<CompoundObjectViewModel>> SetStateChildren(CompoundObject co)
-      // This method creates the collection of StateChildCollectionViewModels for each state of the
-      // CompoundObject. The StateChildCollectionViewModel for each state will hold the ChildObject that
-      // mathches the state. However, if there is no match of the state, and the ChildObject has another
-      // state that is "default", this is included in the state. If the ChildObject does not have a 
-      // default state, either, it is not included in the state.
-      // The default state is compulsory for all CompoundObjects. 
-      // This method does not create and CompoundObjectViewModels since we want the same instances of these
-      // in both the ChildObject collections.
-      // 
-      {
-         ObservableCollection<ObservableCollection<CompoundObjectViewModel>> stateChildrenCollection = new ObservableCollection<ObservableCollection<CompoundObjectViewModel>>();
+      //private ObservableCollection<ObservableCollection<CompoundObjectViewModel>> SetStateChildren(CompoundObject co)
+      //// This method creates the collection of StateChildCollectionViewModels for each state of the
+      //// CompoundObject. The StateChildCollectionViewModel for each state will hold the ChildObject that
+      //// mathches the state. However, if there is no match of the state, and the ChildObject has another
+      //// state that is "default", this is included in the state. If the ChildObject does not have a 
+      //// default state, either, it is not included in the state.
+      //// The default state is compulsory for all CompoundObjects. 
+      //// This method does not create and CompoundObjectViewModels since we want the same instances of these
+      //// in both the ChildObject collections.
+      //// 
+      //{
+      //   ObservableCollection<ObservableCollection<CompoundObjectViewModel>> stateChildrenCollection = new ObservableCollection<ObservableCollection<CompoundObjectViewModel>>();
 
-         // We iterate the list of states first
-         foreach (StateViewModel stateVm in Behaviour.States)
-         {
+      //   // We iterate the list of states first
+      //   foreach (StateViewModel stateVm in Behaviour.States)
+      //   {
 
-            ObservableCollection<CompoundObjectViewModel> stateChildren = new ObservableCollection<CompoundObjectViewModel>();
+      //      ObservableCollection<CompoundObjectViewModel> stateChildren = new ObservableCollection<CompoundObjectViewModel>();
 
-            bool matchedState = false;
+      //      bool matchedState = false;
 
-            //... then we iterate all ChildObjects of the CO and look if any of them
-            // has a matching state. 
-            foreach (ChildObject cho in co.ChildObjects)
-            {
-               // Now we iterate all state properties of this ChildObject and process it
-               // if the state of the ChildObject matches the current stateStr
-               foreach (TStateProperties<ChildObjectStateProperties> sp in cho.StateProperties)
-               {
-                  if (sp.State == stateVm.StateName)
-                  {
-                     // Now process this ChildObject and insert this ChildObject in this state
-                     CompoundObjectViewModel covm = FindCompoundObjectViewModelInChildrenObjects(sp.Properties);
-                     covm.BuildViewModel(cho);
-                     stateChildren.Add(covm);
+      //      //... then we iterate all ChildObjects of the CO and look if any of them
+      //      // has a matching state. 
+      //      foreach (ChildObject cho in co.ChildObjects)
+      //      {
+      //         // Now we iterate all state properties of this ChildObject and process it
+      //         // if the state of the ChildObject matches the current stateStr
+      //         foreach (TStateProperties<ChildObjectStateProperties> sp in cho.StateProperties)
+      //         {
+      //            if (sp.State == stateVm.StateName)
+      //            {
+      //               // Now process this ChildObject and insert this ChildObject in this state
+      //               CompoundObjectViewModel covm = FindCompoundObjectViewModelInChildrenObjects(sp.Properties);
+      //               covm.BuildViewModel(cho);
+      //               stateChildren.Add(covm);
 
-                     matchedState = true;
-                  }
-               }
+      //               matchedState = true;
+      //            }
+      //         }
 
-               if (!matchedState)
-               {
-                  // There was no match, now we iterate all state properties again and process it
-                  // if the state of the ChildObject is "default"
-                  foreach (TStateProperties<ChildObjectStateProperties> sp in cho.StateProperties)
-                  {
-                     if (sp.State == "default")
-                     {
-                        // Now process this ChildObject and insert this ChildObject in this state
-                        CompoundObjectViewModel covm = FindCompoundObjectViewModelInChildrenObjects(sp.Properties);
-                        covm.BuildViewModel(cho);
-                        stateChildren.Add(covm);
-                     }
-                  }
-               }
-            }
+      //         if (!matchedState)
+      //         {
+      //            // There was no match, now we iterate all state properties again and process it
+      //            // if the state of the ChildObject is "default"
+      //            foreach (TStateProperties<ChildObjectStateProperties> sp in cho.StateProperties)
+      //            {
+      //               if (sp.State == "default")
+      //               {
+      //                  // Now process this ChildObject and insert this ChildObject in this state
+      //                  CompoundObjectViewModel covm = FindCompoundObjectViewModelInChildrenObjects(sp.Properties);
+      //                  covm.BuildViewModel(cho);
+      //                  stateChildren.Add(covm);
+      //               }
+      //            }
+      //         }
+      //      }
 
-            stateChildrenCollection.Add(stateChildren);
-         }
+      //      stateChildrenCollection.Add(stateChildren);
+      //   }
 
-         return stateChildrenCollection;
-      }
+      //   return stateChildrenCollection;
+      //}
 
       #endregion
 
@@ -718,9 +731,6 @@ namespace LeapfrogEditor
 
       public void SetBehaviourPropertyInTreeView()
       {
-         // TODO: Since the scene is now a behaviour we should add states as treeview children of 
-         // the behaviour tree item.
-
          // Remove the current element (if any) in the TreeCollection that is of BehaviourViewModelBase
          foreach (StateCollectionViewModelBase s in TreeCollection)
          {
@@ -804,6 +814,17 @@ namespace LeapfrogEditor
          }
       }
 
+      public void InvalidateChildObjects()
+      {
+         foreach (ChildObjectViewModel chvm in _childObjectsWithStates.Children)
+         {
+            foreach (ChildObjectStatePropertiesViewModel spvm in chvm.StateProperties)
+            {
+               spvm.CompoundObjectChild.OnPropertyChanged("");
+            }
+         }
+      }
+
       public LfShapeViewModel FindShape(string name, StateShapeCollectionViewModel shapes)
       {
          foreach (object o in shapes.Shapes)
@@ -822,22 +843,14 @@ namespace LeapfrogEditor
          return null;
       }
 
-      public void ChildObjectChangeState(CompoundObjectViewModel compoundObjectVM, int oldStateIndex, int newStateIndex)
-      {
-         // Note: It is here assumed that the indices of the State collection in the Behaviour
-         // is the same as the _statesWithChildObjects collection
-         _statesWithChildObjects[newStateIndex].Add(compoundObjectVM);
-         _statesWithChildObjects[oldStateIndex].Remove(compoundObjectVM);
-      }
-
-      public void BuildViewModel(ChildObject cor)
+      public void BuildViewModel()
       // This method connects references in the COVM. At the creation of the COVM
       // the ModelObject, ModelObjectProperties, ParentVm and ChildObjectOfParent is defined.
       // Here we build the shape, joint and system collections and connect those objects 
       // with the necessary references. The ChildObjects are also added to the corresponding
       // state index in the StateChildObjects collection
       {
-         _statesWithChildObjects.Clear();
+//         _statesWithChildObjects.Clear();
          _treeCollection.Clear();
 
          _shapes = SetShapes(ModelObject);
@@ -864,8 +877,8 @@ namespace LeapfrogEditor
             }
          }
 
-         _childObjectsWithStates = SetChildren(ModelObject);
-         _statesWithChildObjects = SetStateChildren(ModelObject);
+         ChildObjectsWithStates = SetChildren(ModelObject);
+         //_statesWithChildObjects = SetStateChildren(ModelObject);
 
          BuildTreeViewCollection();
       }
@@ -898,7 +911,7 @@ namespace LeapfrogEditor
             }
          }
 
-         if (StateChildObjects != null)
+         if (ChildObjectsWithStates != null)
          {
             foreach (ChildObjectViewModel child in ChildObjectsWithStates.Children)
             {
@@ -912,24 +925,23 @@ namespace LeapfrogEditor
       public bool ChildHasFileReference(string fileName)
          // TODO: What was the purpose of this method?
       {
-         //foreach (ObservableCollection<CompoundObjectViewModel> sccvm in _statesWithChildObjects)
-         //{
-         //   foreach (CompoundObjectViewModel covm in sccvm)
-         //   {
-         //      if (covm.ModelObjectProperties.File == fileName)
-         //      {
-         //         return true;
-         //      }
-         //      else
-         //      {
-         //         if (covm.ChildHasFileReference(fileName))
-         //         {
-         //            return true;
-         //         }
-         //      }
-         //   }
-         //}
-
+         foreach (ChildObjectViewModel chovm in ChildObjectsWithStates.Children)
+         {
+            foreach (ChildObjectStatePropertiesViewModel spvm in chovm.StateProperties)
+            {
+               if (spvm.File  == fileName)
+               {
+                  return true;
+               }
+               else
+               {
+                  if (spvm.CompoundObjectChild.ChildHasFileReference(fileName))
+                  {
+                     return true;
+                  }
+               }
+            }
+         }
          return false;
       }
 

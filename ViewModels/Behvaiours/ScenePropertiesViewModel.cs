@@ -88,9 +88,16 @@ namespace LeapfrogEditor
                _displayedStateIndex = value;
             }
 
+            OnPropertyChanged("DisplayedStateIndex");
+
+            foreach (StateViewModel svm in States)
+            {
+               svm.OnPropertyChanged("StateIndicator");
+            }
+
+            ParentVm.InvalidateChildObjects();
+            //ParentVm.BuildTreeViewCollection();
             DeselectAllChildren();
-            OnPropertyChanged("");
-            ParentVm.BuildTreeViewCollection();
 
             CompoundObjectViewModel p = ParentVm;
 

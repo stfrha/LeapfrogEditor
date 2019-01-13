@@ -89,6 +89,7 @@ namespace LeapfrogEditor
       public void SetOnDisplay()
       {
          _sceneVm.SetStateOnDisplay(this);
+         OnPropertyChanged("StateIndicator");
       }
 
       #endregion

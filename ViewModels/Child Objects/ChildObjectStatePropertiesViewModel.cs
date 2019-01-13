@@ -43,6 +43,8 @@ namespace LeapfrogEditor
 
          CompoundObjectChild = new CompoundObjectViewModel(this, parentVm, mainVm, modelObject.Properties.CompObj);
 
+         CompoundObjectChild.BuildViewModel();
+
          int i = ParentVm.Behaviour.States.IndexOf(ParentVm.Behaviour.FindStateVM(ModelObject.State));
 
          if (i < 0)
@@ -71,21 +73,6 @@ namespace LeapfrogEditor
       public string State
       {
          get { return _modelObject.State; }
-         set
-         {
-            _modelObject.State = value;
-            OnPropertyChanged("State");
-
-            int i = ParentVm.Behaviour.States.IndexOf(ParentVm.Behaviour.FindStateVM(ModelObject.State));
-
-            if (i < 0)
-            {
-               i = 0;
-            }
-
-            SelectedStateIndex = i;
-
-         }
       }
 
       public int SelectedStateIndex
@@ -112,13 +99,13 @@ namespace LeapfrogEditor
                _selectedStateIndex = value;
             }
 
-            ModelObject.State = ParentVm.Behaviour.States[_selectedStateIndex].StateName;
+            _modelObject.State = ParentVm.Behaviour.States[_selectedStateIndex].StateName;
 
-            ParentVm.ChildObjectChangeState(CompoundObjectChild, prevI, _selectedStateIndex);
+            OnPropertyChanged("SelectedStateIndex");
+            OnPropertyChanged("State");
+            CompoundObjectChild.OnPropertyChanged("");
 
-
-               ParentVm.DeselectAllChildren();
-            ParentVm.BuildTreeViewCollection();
+            ParentVm.DeselectAllChildren();
 
             CompoundObjectViewModel p = ParentVm;
 
@@ -128,7 +115,6 @@ namespace LeapfrogEditor
                p = p.ParentVm;
             }
 
-            ParentVm.OnPropertyChanged("");
 
          }
       }

@@ -36,7 +36,7 @@ namespace LeapfrogEditor
          foreach (TStateProperties<ChildObjectStateProperties> sp in ModelObject.MyChildObject.StateProperties)
          {
             CompoundObjectViewModel covm = new CompoundObjectViewModel(this, parentVm, mainVm, sp.Properties.CompObj);
-            covm.BuildViewModel(ModelObject.MyChildObject);
+            covm.BuildViewModel();
             SpawnCompoundObject.Add(covm);
          }
       }
