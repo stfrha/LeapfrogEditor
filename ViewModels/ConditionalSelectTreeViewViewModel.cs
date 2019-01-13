@@ -29,7 +29,6 @@ namespace LeapfrogEditor
                if (MainVm.AmISelectable(this))
                {
                   _isSelected = value;
-
                   OnPropertyChanged("IsSelected");
 
                   if (_isSelected == true)
@@ -38,7 +37,11 @@ namespace LeapfrogEditor
                   }
                }
             }
-            _isSelected = value;
+            else
+            {
+               _isSelected = value;
+               OnPropertyChanged("IsSelected");
+            }
          }
       }
    }

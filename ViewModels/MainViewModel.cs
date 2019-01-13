@@ -401,11 +401,7 @@ namespace LeapfrogEditor
             EditedCpVm = parameter as CompoundObjectViewModel;
             EditedCpVm.OnPropertyChanged("");
             OnPropertyChanged("");
-
-            if (SelectedChildObjects.Count > 0)
-            {
-               DeselectAll();
-            }
+            DeselectAll();
 
          }
       }
@@ -987,6 +983,23 @@ namespace LeapfrogEditor
          }
       }
 
+      void DebugHaltExecute(Object parameter)
+      {
+         int a = 10;
+      }
+
+      bool CanDebugHaltExecute(Object parameter)
+      {
+         return true;
+      }
+
+      public ICommand DebugHalt
+      {
+         get
+         {
+            return new MicroMvvm.RelayCommand<Object>(parameter => DebugHaltExecute(parameter), parameter => CanDebugHaltExecute(parameter));
+         }
+      }
 
 
       #endregion
@@ -1986,15 +1999,20 @@ namespace LeapfrogEditor
 
       private void DeselectAll()
       {
-         EditedCpVm.IsSelected = false;
-
+ 
          foreach (FileCOViewModel fcovm in FileCollectionViewModel)
          {
             fcovm.DeselectAllChildren();
             fcovm.IsSelected = false;
+            fcovm.OnPropertyChanged("");
          }
 
          SelectedPoints.Clear();
+
+         EditedCpVm.IsSelected = false;
+         EditedCpVm.OnPropertyChanged("");
+
+         SelectedItems.Clear();
       }
 
       private FileCOViewModel FindOpenedFile(string fileName)

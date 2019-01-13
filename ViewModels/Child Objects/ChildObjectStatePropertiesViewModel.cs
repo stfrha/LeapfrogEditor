@@ -201,6 +201,47 @@ namespace LeapfrogEditor
          }
       }
 
+      override public bool IsSelected
+      // The CompoundObjectViewModel which is a child of this 
+      // is selected at the same time as this. So, if IsSelected is set
+      // here, the property in the child must be updated.
+      {
+         get { return _isSelected; }
+         set
+         {
+            if (value)
+            {
+               if (MainVm.AmISelectable(this))
+               {
+                  _isSelected = value;
+                  OnPropertyChanged("IsSelected");
+
+                  if (CompoundObjectChild != null)
+                  {
+                     CompoundObjectChild.OnPropertyChanged("IsSelected");
+                  }
+
+                  if (_isSelected == true)
+                  {
+                     IsExpanded = true;
+                  }
+               }
+            }
+            else
+            {
+               _isSelected = value;
+               OnPropertyChanged("IsSelected");
+
+               if (CompoundObjectChild != null)
+               {
+                  CompoundObjectChild.OnPropertyChanged("IsSelected");
+               }
+
+            }
+         }
+      }
+
+
       #endregion
 
       #region Private Methods

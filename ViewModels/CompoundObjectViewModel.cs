@@ -475,6 +475,47 @@ namespace LeapfrogEditor
          }
       }
 
+      override public bool IsSelected
+         // If the CompoundObject is a child of another object
+         // it will be the direct child of a ChildObjectStatePropertiesViewModel.
+         // At all times, we want this VM to be selected as the same time 
+         // as this object. Hence we override IsSelected here to use the
+         // parent to maintain the state. If this parent is null, 
+         // we return false (for get) and do not set the value (for set).
+      {
+         get
+         {
+            if ((TreeParent != null) && ( TreeParent is ChildObjectStatePropertiesViewModel))
+            {
+               return TreeParent.IsSelected;
+            }
+            return false;
+         }
+         set
+         {
+            if ((TreeParent != null) && (TreeParent is ChildObjectStatePropertiesViewModel))
+            {
+               if (value)
+               {
+                  if (MainVm.AmISelectable(this))
+                  {
+                     TreeParent.IsSelected = value;
+                     OnPropertyChanged("IsSelected");
+
+                     if (TreeParent.IsSelected == true)
+                     {
+                        IsExpanded = true;
+                     }
+                  }
+               }
+               else
+               {
+                  TreeParent.IsSelected = value;
+                  OnPropertyChanged("IsSelected");
+               }
+            }
+         }
+      }
 
 
       #endregion
