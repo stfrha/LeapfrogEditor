@@ -169,7 +169,7 @@ namespace LeapfrogEditor
             {
                ChildObjectStatePropertiesViewModel covm = TreeParent as ChildObjectStatePropertiesViewModel;
 
-               if ((covm.File == "") || (covm.File == "undef_file.xml"))
+               if ((covm.File != "") && (covm.File != "undef_file.xml"))
                {
                   return true;
                }
@@ -194,21 +194,21 @@ namespace LeapfrogEditor
          }
       }
 
-      //public string RefName
-      //{
-      //   get
-      //   {
-      //      if ((ModelObjectProperties.File == "") || (ModelObjectProperties.File == "undef_file.xml"))
-      //      {
-      //         return Name;
-      //      }
+      public string RefName
+      {
+         get
+         {
+            if ((ReferenceChildFileName == "") || (ReferenceChildFileName == "undef_file.xml"))
+            {
+               return Name;
+            }
 
-      //      return Name + " - " + ModelObjectProperties.File;
-      //   }
-      //   set
-      //   {
-      //   }
-      //}
+            return Name + " - " + ReferenceChildFileName;
+         }
+         set
+         {
+         }
+      }
 
       public double PosX
       {
@@ -892,6 +892,11 @@ namespace LeapfrogEditor
                if (o is LfShapeViewModel)
                {
                   LfShapeViewModel shape = (LfShapeViewModel)o;
+
+                  if (shape.IsSelected)
+                  {
+                     int a = 10;
+                  }
 
                   shape.IsSelected = false;
                }

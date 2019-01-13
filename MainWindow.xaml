@@ -210,7 +210,7 @@
                      <TextBlock Margin="2"  Text="{Binding Name}" />
                   </HierarchicalDataTemplate>
                   <HierarchicalDataTemplate DataType="{x:Type local:ChildObjectStatePropertiesViewModel}"
-                     ItemsSource="{Binding CompoundObjectChild}">
+                     ItemsSource="{Binding SingleObjectCollectionChild}">
                      <TextBlock Margin="2"  Text="{Binding State}" />
                   </HierarchicalDataTemplate>
                   <HierarchicalDataTemplate DataType="{x:Type local:LfShapeViewModel}" >

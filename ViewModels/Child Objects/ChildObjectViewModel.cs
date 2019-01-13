@@ -95,7 +95,8 @@ namespace LeapfrogEditor
          foreach (ChildObjectStatePropertiesViewModel spvm in StateProperties)
          {
             spvm.CompoundObjectChild.DeselectAllChildren();
-
+            spvm.CompoundObjectChild.IsSelected = false;
+            spvm.IsSelected = false;
          }
       }
 

@@ -24,17 +24,21 @@ namespace LeapfrogEditor
          get { return _isSelected; }
          set
          {
-            if (MainVm.AmISelectable(this))
+            if (value)
             {
-               _isSelected = value;
-
-               OnPropertyChanged("IsSelected");
-
-               if (_isSelected == true)
+               if (MainVm.AmISelectable(this))
                {
-                  IsExpanded = true;
+                  _isSelected = value;
+
+                  OnPropertyChanged("IsSelected");
+
+                  if (_isSelected == true)
+                  {
+                     IsExpanded = true;
+                  }
                }
             }
+            _isSelected = value;
          }
       }
    }
