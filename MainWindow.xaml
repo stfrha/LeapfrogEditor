@@ -160,7 +160,7 @@
                      </TextBlock>
                   </HierarchicalDataTemplate>
                   <HierarchicalDataTemplate DataType="{x:Type local:SpawnObjectViewModel}" 
-                     ItemsSource="{Binding SpawnCompoundObject}">
+                     ItemsSource="{Binding SpawnChildObject}">
                      <TextBlock Margin="2"  Text="{Binding Headline}" />
                   </HierarchicalDataTemplate>
                   <HierarchicalDataTemplate DataType="{x:Type local:ScenePropertiesViewModel}"

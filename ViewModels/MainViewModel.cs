@@ -419,6 +419,11 @@ namespace LeapfrogEditor
          {
             CompoundObjectViewModel covm = parameter as CompoundObjectViewModel;
 
+            if (!covm.IsFileReferenceChild)
+            {
+               return true;
+            }
+
             //if ((covm.ModelObjectProperties.File == "") || (covm.ModelObjectProperties.File == "undef_file.xml"))
             //{
             //   return true;
@@ -1945,6 +1950,17 @@ namespace LeapfrogEditor
          return (me.ParentVm == EditedCpVm);
       }
 
+      public int GetEditableCoBehaviourStateIndex()
+      {
+         if (EditedCpVm == null)
+         {
+            return 0;
+         }
+
+         return EditedCpVm.Behaviour.DisplayedStateIndex;
+
+      }
+
       public StateViewModel GetEditableCoBehaviourState()
       {
          if (EditedCpVm == null)
@@ -1952,9 +1968,22 @@ namespace LeapfrogEditor
             return null;
          }
 
-         return EditedCpVm.Behaviour.States[EditedCpVm.Behaviour.DisplayedStateIndex];
+         return EditedCpVm.Behaviour.States[GetEditableCoBehaviourStateIndex()];
 
       }
+
+      public string GetEditableCoBehaviourStateName()
+      {
+         StateViewModel svm = GetEditableCoBehaviourState();
+
+         if (svm != null)
+         {
+            return svm.StateName;
+         }
+
+         return "#Error should not reach here#";
+      }
+
 
       #endregion
 

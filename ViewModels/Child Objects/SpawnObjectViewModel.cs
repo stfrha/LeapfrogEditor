@@ -16,8 +16,8 @@ namespace LeapfrogEditor
 
       private SpawnObject ModelObject;
 
-      // The _spawnCompoundObject field is a collection because it must be added to the itemssource
-      private ObservableCollection<CompoundObjectViewModel> _spawnCompoundObject = new ObservableCollection<CompoundObjectViewModel>();
+      // The _spawnChildObject field is a collection because it must be added to the itemssource
+      private ObservableCollection<ChildObjectViewModel> _spawnChildObject = new ObservableCollection<ChildObjectViewModel>();
 
       #endregion
 
@@ -32,13 +32,8 @@ namespace LeapfrogEditor
       {
          ModelObject = modelObject;
 
-         // Iterate all state properties of this ChildObject and process it
-         foreach (TStateProperties<ChildObjectStateProperties> sp in ModelObject.MyChildObject.StateProperties)
-         {
-            CompoundObjectViewModel covm = new CompoundObjectViewModel(this, parentVm, mainVm, sp.Properties.CompObj);
-            covm.BuildViewModel();
-            SpawnCompoundObject.Add(covm);
-         }
+         ChildObjectViewModel chvm = new ChildObjectViewModel(this, parentVm, mainVm, modelObject.MyChildObject);
+         SpawnChildObject.Add(chvm);
       }
 
       #endregion
@@ -61,10 +56,10 @@ namespace LeapfrogEditor
          }
       }
 
-      public ObservableCollection<CompoundObjectViewModel> SpawnCompoundObject
+      public ObservableCollection<ChildObjectViewModel> SpawnChildObject
       {
-         get { return _spawnCompoundObject; }
-         set { _spawnCompoundObject = value; }
+         get { return _spawnChildObject; }
+         set { _spawnChildObject = value; }
       }
 
       public string Headline
@@ -72,16 +67,16 @@ namespace LeapfrogEditor
          get { return LocalModelObject.MyChildObject.Name + "(" + LocalModelObject.ProbabilityFactor.ToString() + ")";  }
       }
 
-      public ChildObject MyChildObject
-      {
-         get { return LocalModelObject.MyChildObject; }
-         set
-         {
-            LocalModelObject.MyChildObject = value;
-            OnPropertyChanged("MyChildObject");
-            OnPropertyChanged("Headline");
-         }
-      }
+      //public ChildObject MyChildObject
+      //{
+      //   get { return LocalModelObject.MyChildObject; }
+      //   set
+      //   {
+      //      LocalModelObject.MyChildObject = value;
+      //      OnPropertyChanged("MyChildObject");
+      //      OnPropertyChanged("Headline");
+      //   }
+      //}
 
       #endregion
 

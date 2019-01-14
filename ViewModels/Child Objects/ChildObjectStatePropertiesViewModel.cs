@@ -51,8 +51,8 @@ namespace LeapfrogEditor
 
          CompoundObjectChild.BuildViewModel();
 
-         int i = ParentVm.Behaviour.States.IndexOf(ParentVm.Behaviour.FindStateVM(ModelObject.State));
-
+         int i = mainVm.GetEditableCoBehaviourStateIndex();
+            
          if (i < 0)
          {
             i = 0;
@@ -105,7 +105,7 @@ namespace LeapfrogEditor
                _selectedStateIndex = value;
             }
 
-            _modelObject.State = ParentVm.Behaviour.States[_selectedStateIndex].StateName;
+            _modelObject.State = MainVm.GetEditableCoBehaviourStateName();
 
             OnPropertyChanged("SelectedStateIndex");
             OnPropertyChanged("State");
