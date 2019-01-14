@@ -1999,7 +1999,8 @@ namespace LeapfrogEditor
 
       private void DeselectAll()
       {
- 
+         EditedCpVm.IsSelected = false;
+
          foreach (FileCOViewModel fcovm in FileCollectionViewModel)
          {
             fcovm.DeselectAllChildren();
@@ -2009,10 +2010,9 @@ namespace LeapfrogEditor
 
          SelectedPoints.Clear();
 
-         EditedCpVm.IsSelected = false;
-         EditedCpVm.OnPropertyChanged("");
+         //EditedCpVm.OnPropertyChanged("");
 
-         SelectedItems.Clear();
+         //SelectedItems.Clear();
       }
 
       private FileCOViewModel FindOpenedFile(string fileName)
