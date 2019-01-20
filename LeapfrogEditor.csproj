@@ -59,6 +59,8 @@
     <Compile Include="Models\Behaviours\SceneProperties.cs" />
     <Compile Include="Models\Behaviours\SteerableObjectProperties.cs" />
     <Compile Include="Models\ChildObject.cs" />
+    <Compile Include="Models\Shape and bodies\BorderTexture.cs" />
+    <Compile Include="Models\Shape and bodies\PolygonBorder.cs" />
     <Compile Include="Models\Systems\CoSystem.cs" />
     <Compile Include="Models\Systems\FlameEmitterProperties.cs" />
     <Compile Include="Models\SpawnObject.cs" />
@@ -79,6 +81,7 @@
     <Compile Include="ViewModels\DataBindingProxy.cs" />
     <Compile Include="ViewModels\Interfaces\IParentVmInterface.cs" />
     <Compile Include="ViewModels\Joints\StateJointCollectionViewModel.cs" />
+    <Compile Include="ViewModels\Shape and bodies\BorderTextureViewModel.cs" />
     <Compile Include="ViewModels\Shape and bodies\StateShapeCollectionViewModel.cs" />
     <Compile Include="ViewModels\Child Objects\SpawnObjectViewModel.cs" />
     <Compile Include="ViewModels\StateCollectionViewModelBase.cs" />
@@ -109,13 +112,19 @@
     <Compile Include="Views\Controls\Editable Properties Controls\Primitives\StringListSelectionEditorControl.xaml.cs">
       <DependentUpon>StringListSelectionEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\Editable Properties Controls\Shape Properties Controls\TextureBorderPropEditor.xaml.cs">
+      <DependentUpon>TextureBorderPropEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\Editable Properties Controls\SpawnObjectPropEditor.xaml.cs">
       <DependentUpon>SpawnObjectPropEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Controls\Editable Properties Controls\SpritePolygonPropEditor.xaml.cs">
+    <Compile Include="Views\Controls\Editable Properties Controls\Shape Properties Controls\StaticPolygonPropEditor.xaml.cs">
+      <DependentUpon>StaticPolygonPropEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Editable Properties Controls\Shape Properties Controls\SpritePolygonPropEditor.xaml.cs">
       <DependentUpon>SpritePolygonPropEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Controls\Editable Properties Controls\SpriteBoxPropEditor.xaml.cs">
+    <Compile Include="Views\Controls\Editable Properties Controls\Shape Properties Controls\SpriteBoxPropEditor.xaml.cs">
       <DependentUpon>SpriteBoxPropEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\Editable Properties Controls\CompoundObjectPropEditor.xaml.cs">
@@ -310,15 +319,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\Controls\Editable Properties Controls\Shape Properties Controls\TextureBorderPropEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\Controls\Editable Properties Controls\SpawnObjectPropEditor.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Controls\Editable Properties Controls\SpritePolygonPropEditor.xaml">
+    <Page Include="Views\Controls\Editable Properties Controls\Shape Properties Controls\StaticPolygonPropEditor.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Controls\Editable Properties Controls\SpriteBoxPropEditor.xaml">
+    <Page Include="Views\Controls\Editable Properties Controls\Shape Properties Controls\SpritePolygonPropEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\Editable Properties Controls\Shape Properties Controls\SpriteBoxPropEditor.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

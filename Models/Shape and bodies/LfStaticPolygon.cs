@@ -13,6 +13,8 @@ namespace LeapfrogEditor
    {
       #region Declarations
 
+      private PolygonBorder _polygonBorder = new PolygonBorder();
+
       #endregion
 
       #region Constructors
@@ -25,6 +27,12 @@ namespace LeapfrogEditor
 
       #region Properties
 
+      [XmlElement("border")]
+      public PolygonBorder PolygonBorder
+      {
+         get { return _polygonBorder; }
+         set { _polygonBorder = value; }
+      }
 
       #endregion
 
