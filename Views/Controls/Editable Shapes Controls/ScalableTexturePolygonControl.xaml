@@ -31,7 +31,7 @@
             <ImageBrush
                      ViewportUnits="Absolute"
                      TileMode="Tile"
-                     Stretch="None"
+                     Stretch="Uniform"
                      AlignmentX="Center"
                      AlignmentY="Center" 
                      ImageSource="{Binding Texture, Converter={StaticResource TexturePathValueConverter}}" >
@@ -55,6 +55,16 @@
             </TransformGroup>
          </Polygon.RenderTransform>
       </Polygon>
-      <local:PolygonBorderControl />
+      <ContentControl
+         Content="{Binding}">
+         <ContentControl.Resources>
+            <DataTemplate DataType="{x:Type local:LfStaticPolygonViewModel}">
+               <local:DecoratedPolygonBorderControl />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type local:LfDynamicPolygonViewModel}">
+               <local:PolygonBorderControl />
+            </DataTemplate>
+         </ContentControl.Resources>
+      </ContentControl>
    </Grid>
 </UserControl>

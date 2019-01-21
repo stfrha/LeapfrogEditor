@@ -67,6 +67,7 @@
     <Compile Include="Models\Systems\ShieldProperties.cs" />
     <Compile Include="Models\Systems\GunProperties.cs" />
     <Compile Include="ValueConverters\MatchingStateVisibilityConverter.cs" />
+    <Compile Include="ValueConverters\TextureBorderValueConverters.cs" />
     <Compile Include="ValueConverters\StatePropertiesHeadlineConverter.cs" />
     <Compile Include="ViewModels\Behvaiours\BehaviourViewModelBase.cs" />
     <Compile Include="ViewModels\Behvaiours\CoBehaviourViewModel.cs" />
@@ -156,6 +157,9 @@
     </Compile>
     <Compile Include="Views\Controls\Editable Shapes Controls\LabeledBoxControl.xaml.cs">
       <DependentUpon>LabeledBoxControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Editable Shapes Controls\DecoratedPolygonBorderControl.xaml.cs">
+      <DependentUpon>DecoratedPolygonBorderControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\Editable Shapes Controls\PolygonBorderControl.xaml.cs">
       <DependentUpon>PolygonBorderControl.xaml</DependentUpon>
@@ -356,6 +360,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Controls\Editable Shapes Controls\LabeledBoxControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\Editable Shapes Controls\DecoratedPolygonBorderControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

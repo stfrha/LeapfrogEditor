@@ -9,7 +9,7 @@ using System.Windows.Media;
 
 namespace LeapfrogEditor
 {
-   class LfScalableTexturePolygonViewModel : LfPolygonViewModel
+   public class LfScalableTexturePolygonViewModel : LfPolygonViewModel
    {
       #region Declarations
 

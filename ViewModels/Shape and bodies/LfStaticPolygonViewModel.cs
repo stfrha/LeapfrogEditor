@@ -9,7 +9,7 @@ using System.Windows.Media;
 
 namespace LeapfrogEditor
 {
-   class LfStaticPolygonViewModel : LfScalableTexturePolygonViewModel
+   public class LfStaticPolygonViewModel : LfScalableTexturePolygonViewModel
    {
       #region Declarations
 
@@ -31,10 +31,10 @@ namespace LeapfrogEditor
       {
          ModelObject = modelObject;
 
-         GroundBorder = new BorderTextureViewModel(modelObject.PolygonBorder.GroundBorder);
-         CeilingBorder = new BorderTextureViewModel(modelObject.PolygonBorder.CeilingBorder);
-         LeftWallBorder = new BorderTextureViewModel(modelObject.PolygonBorder.LeftWallBorder);
-         RightWallBorder = new BorderTextureViewModel(modelObject.PolygonBorder.RightWallBorder);
+         GroundBorder = new BorderTextureViewModel(this, modelObject.PolygonBorder.GroundBorder);
+         CeilingBorder = new BorderTextureViewModel(this, modelObject.PolygonBorder.CeilingBorder);
+         LeftWallBorder = new BorderTextureViewModel(this, modelObject.PolygonBorder.LeftWallBorder);
+         RightWallBorder = new BorderTextureViewModel(this, modelObject.PolygonBorder.RightWallBorder);
       }
 
       #endregion
@@ -53,6 +53,7 @@ namespace LeapfrogEditor
          {
             ((LfStaticPolygon)ModelObject).PolygonBorder.LeftGroundAngle = value;
             OnPropertyChanged("LeftGroundAngle");
+            InvalidateAllVertices();
          }
       }
 
@@ -63,6 +64,7 @@ namespace LeapfrogEditor
          {
             ((LfStaticPolygon)ModelObject).PolygonBorder.RightGroundAngle = value;
             OnPropertyChanged("RightGroundAngle");
+            InvalidateAllVertices();
          }
       }
 
@@ -73,6 +75,7 @@ namespace LeapfrogEditor
          {
             ((LfStaticPolygon)ModelObject).PolygonBorder.LeftCeilingAngle = value;
             OnPropertyChanged("LeftCeilingAngle");
+            InvalidateAllVertices();
          }
       }
 
@@ -83,6 +86,7 @@ namespace LeapfrogEditor
          {
             ((LfStaticPolygon)ModelObject).PolygonBorder.RightCeilingAngle = value;
             OnPropertyChanged("RightCeilingAngle");
+            InvalidateAllVertices();
          }
       }
 
@@ -93,6 +97,7 @@ namespace LeapfrogEditor
          {
             _groundBorder = value;
             OnPropertyChanged("GroundBorder");
+            InvalidateAllVertices();
          }
       }
 
@@ -103,6 +108,7 @@ namespace LeapfrogEditor
          {
             _ceilingBorder = value;
             OnPropertyChanged("CeilingBorder");
+            InvalidateAllVertices();
          }
       }
 
@@ -113,6 +119,7 @@ namespace LeapfrogEditor
          {
             _leftWallBorder = value;
             OnPropertyChanged("LeftWallBorder");
+            InvalidateAllVertices();
          }
       }
 
@@ -123,10 +130,28 @@ namespace LeapfrogEditor
          {
             _rightWallBorder = value;
             OnPropertyChanged("RightWallBorder");
+            InvalidateAllVertices();
          }
       }
 
       #endregion
 
+      #region public methods
+
+      public void InvalidateAllVertices()
+      // If there is a change in any of the properties
+      // that affects the border decorations, all the
+      // vertices need to be updated. This is done here
+      {
+         foreach (LfDragablePointViewModel dpvm in PointVms)
+         {
+            dpvm.OnPropertyChanged("");
+         }
+         OnPropertyChanged("Points");
+
+      }
+
+
+      #endregion
    }
 }

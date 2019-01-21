@@ -11,20 +11,34 @@ namespace LeapfrogEditor
    {
       #region Declarations
 
+      private LfStaticPolygonViewModel _parentVm;
+
       private BorderTexture _modelObject;
 
       #endregion
 
       #region Constructors
 
-      public BorderTextureViewModel(BorderTexture modelObject)
+      public BorderTextureViewModel(LfStaticPolygonViewModel parentVm, BorderTexture modelObject)
       {
+         _parentVm = parentVm;
          _modelObject = modelObject;
       }
 
       #endregion
 
       #region Properties
+
+      public LfStaticPolygonViewModel ParentVm
+      {
+         get { return _parentVm; }
+         set
+         {
+            _parentVm = value;
+            OnPropertyChanged("ParentVm");
+         }
+      }
+
 
       public BorderTexture ModelObject
       {
@@ -33,8 +47,14 @@ namespace LeapfrogEditor
          {
             _modelObject = value;
             OnPropertyChanged("ModelObject");
+            ParentVm.InvalidateAllVertices();
          }
       }
+
+
+      // Changes to any of the properties below must be reflected
+      // to all vertices of the polygon. 
+      // Lets do that in a private method.
 
       public string Texture
       {
@@ -43,6 +63,7 @@ namespace LeapfrogEditor
          {
             _modelObject.Texture = value;
             OnPropertyChanged("Texture");
+            ParentVm.InvalidateAllVertices();
          }
       }
 
@@ -53,6 +74,7 @@ namespace LeapfrogEditor
          {
             _modelObject.HorisontalOffset = value;
             OnPropertyChanged("HorisontalOffset");
+            ParentVm.InvalidateAllVertices();
          }
       }
 
@@ -63,6 +85,7 @@ namespace LeapfrogEditor
          {
             _modelObject.TextureWidth = value;
             OnPropertyChanged("TextureWidth");
+            ParentVm.InvalidateAllVertices();
          }
       }
 
@@ -73,6 +96,7 @@ namespace LeapfrogEditor
          {
             _modelObject.TextureHeight = value;
             OnPropertyChanged("TextureHeight");
+            ParentVm.InvalidateAllVertices();
          }
       }
 
