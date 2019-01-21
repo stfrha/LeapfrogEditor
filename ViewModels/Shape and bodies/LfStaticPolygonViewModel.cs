@@ -26,8 +26,9 @@ namespace LeapfrogEditor
          TreeViewViewModel treeParent, 
          CompoundObjectViewModel parentVm, 
          MainViewModel mainVm, 
-         LfStaticPolygon modelObject) :
-         base(treeParent, parentVm, mainVm)
+         LfStaticPolygon modelObject,
+         bool enabled = true) :
+         base(treeParent, parentVm, mainVm, enabled)
       {
          ModelObject = modelObject;
 

@@ -10,7 +10,8 @@ using System.Windows.Media;
 
 namespace LeapfrogEditor
 {
-   public class WeldJointViewModel : ConditionalSelectTreeViewViewModel
+   // Used to be ConditionalSelectTreeViewViewModel
+   public class WeldJointViewModel : TreeViewViewModel
    {
       #region Declarations
 
@@ -22,8 +23,13 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public WeldJointViewModel(TreeViewViewModel treeParent, CompoundObjectViewModel parentVm,  MainViewModel mainVm, WeldJoint modelObject) :
-         base(treeParent, parentVm, mainVm)
+      public WeldJointViewModel(
+         TreeViewViewModel treeParent, 
+         CompoundObjectViewModel parentVm,  
+         MainViewModel mainVm, 
+         WeldJoint modelObject,
+         bool enabled = true) :
+         base(treeParent, parentVm, mainVm, enabled)
       {
          ModelObject = modelObject;
       }

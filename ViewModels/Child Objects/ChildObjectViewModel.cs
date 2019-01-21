@@ -18,7 +18,8 @@ using System.Windows.Media;
 
 namespace LeapfrogEditor
 {
-   public class ChildObjectViewModel : ConditionalSelectTreeViewViewModel
+   // Used to be ConditionalSelectTreeViewViewModel
+   public class ChildObjectViewModel : TreeViewViewModel
    {
       #region Declarations
 
@@ -33,14 +34,15 @@ namespace LeapfrogEditor
          TreeViewViewModel treeParent,
          CompoundObjectViewModel parentVm,
          MainViewModel mainVm, 
-         ChildObject modelObject ) :
-         base(treeParent, parentVm, mainVm)
+         ChildObject modelObject,
+         bool enabled = true) :
+         base(treeParent, parentVm, mainVm, enabled)
       {
          ModelObject = modelObject;
 
          foreach (TStateProperties<ChildObjectStateProperties> cosp in ModelObject.StateProperties)
          {
-            ChildObjectStatePropertiesViewModel cospvm = new ChildObjectStatePropertiesViewModel(this, parentVm, mainVm, cosp);
+            ChildObjectStatePropertiesViewModel cospvm = new ChildObjectStatePropertiesViewModel(this, parentVm, mainVm, cosp, enabled);
             StateProperties.Add(cospvm);
          }
       }
@@ -94,9 +96,9 @@ namespace LeapfrogEditor
       {
          foreach (ChildObjectStatePropertiesViewModel spvm in StateProperties)
          {
-            spvm.CompoundObjectChild.DeselectAllChildren();
-            spvm.CompoundObjectChild.IsSelected = false;
             spvm.IsSelected = false;
+            spvm.CompoundObjectChild.IsSelected = false;
+            spvm.CompoundObjectChild.DeselectAllChildren();
          }
       }
 

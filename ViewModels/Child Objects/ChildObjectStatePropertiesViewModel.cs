@@ -37,19 +37,32 @@ namespace LeapfrogEditor
          TreeViewViewModel treeParent,
          CompoundObjectViewModel parentVm,
          MainViewModel mainVm,
-         TStateProperties<ChildObjectStateProperties> modelObject) :
-         base(treeParent, parentVm, mainVm)
+         TStateProperties<ChildObjectStateProperties> modelObject,
+         bool enabled = true) :
+         base(treeParent, parentVm, mainVm, enabled)
       {
          ModelObject = modelObject;
 
-         CompoundObjectViewModel covm = new CompoundObjectViewModel(this, parentVm, mainVm, modelObject.Properties.CompObj);
+         CompoundObjectViewModel covm = new CompoundObjectViewModel(this, parentVm, mainVm, modelObject.Properties.CompObj, enabled);
 
          SingleObjectCollectionChild.Add(covm);
          OnPropertyChanged("CompoundObjectChild");
 
          SingleObjectCollectionChild.CollectionChanged += this.OnCollectionChanged;
 
-         CompoundObjectChild.BuildViewModel();
+         // Since this COVM is the child of another COVM we need to check if the COVM
+         // is a reference to a file or not. If it is, the children of the COVM shall 
+         // not be selectable, i.e. they shall be disabled. If it it is not a file ref
+         // it shall be selectable.
+         if (CompoundObjectChild.IsFileReferenceChild)
+         {
+            CompoundObjectChild.BuildViewModel(false);
+         }
+         else
+         {
+            CompoundObjectChild.BuildViewModel(true);
+         }
+
 
          int i = mainVm.GetEditableCoBehaviourStateIndex();
             
@@ -201,45 +214,45 @@ namespace LeapfrogEditor
          }
       }
 
-      override public bool IsSelected
-      // The CompoundObjectViewModel which is a child of this 
-      // is selected at the same time as this. So, if IsSelected is set
-      // here, the property in the child must be updated.
-      {
-         get { return _isSelected; }
-         set
-         {
-            if (value)
-            {
-               if (MainVm.AmISelectable(this))
-               {
-                  _isSelected = value;
-                  OnPropertyChanged("IsSelected");
+      //override public bool IsSelected
+      //// The CompoundObjectViewModel which is a child of this 
+      //// is selected at the same time as this. So, if IsSelected is set
+      //// here, the property in the child must be updated.
+      //{
+      //   get { return _isSelected; }
+      //   set
+      //   {
+      //      if (value)
+      //      {
+      //         if (MainVm.AmISelectable(this))
+      //         {
+      //            _isSelected = value;
+      //            OnPropertyChanged("IsSelected");
 
-                  if (CompoundObjectChild != null)
-                  {
-                     CompoundObjectChild.OnPropertyChanged("IsSelected");
-                  }
+      //            if (CompoundObjectChild != null)
+      //            {
+      //               CompoundObjectChild.OnPropertyChanged("IsSelected");
+      //            }
 
-                  if (_isSelected == true)
-                  {
-                     IsExpanded = true;
-                  }
-               }
-            }
-            else
-            {
-               _isSelected = value;
-               OnPropertyChanged("IsSelected");
+      //            if (_isSelected == true)
+      //            {
+      //               IsExpanded = true;
+      //            }
+      //         }
+      //      }
+      //      else
+      //      {
+      //         _isSelected = value;
+      //         OnPropertyChanged("IsSelected");
 
-               if (CompoundObjectChild != null)
-               {
-                  CompoundObjectChild.OnPropertyChanged("IsSelected");
-               }
+      //         if (CompoundObjectChild != null)
+      //         {
+      //            CompoundObjectChild.OnPropertyChanged("IsSelected");
+      //         }
 
-            }
-         }
-      }
+      //      }
+      //   }
+      //}
 
 
       #endregion

@@ -21,8 +21,9 @@ namespace LeapfrogEditor
          TreeViewViewModel treeParent, 
          CompoundObjectViewModel parentVm, 
          MainViewModel mainVm, 
-         LfDynamicBox modelObject) :
-         base(treeParent, parentVm, mainVm, modelObject)
+         LfDynamicBox modelObject,
+         bool enabled = true) :
+         base(treeParent, parentVm, mainVm, modelObject, enabled)
       {
          ModelObject = modelObject;
       }

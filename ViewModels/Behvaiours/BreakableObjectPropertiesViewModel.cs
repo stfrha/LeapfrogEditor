@@ -26,8 +26,9 @@ namespace LeapfrogEditor
          TreeViewViewModel treeParent, 
          CompoundObjectViewModel parentVm, 
          MainViewModel mainVm, 
-         BreakableObjectProperties modelObject) :
-         base(treeParent, parentVm, mainVm)
+         BreakableObjectProperties modelObject,
+         bool enabled = true) :
+         base(treeParent, parentVm, mainVm, enabled)
       {
          ModelObject = modelObject;
                   

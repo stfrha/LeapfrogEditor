@@ -26,8 +26,9 @@ namespace LeapfrogEditor
          CompoundObjectViewModel parentVm,
          MainViewModel mainVm,
          ScenePropertiesViewModel sceneVm,
-         string stateName) :
-         base(treeParent, parentVm, mainVm)
+         string stateName,
+         bool enabled = true) :
+         base(treeParent, parentVm, mainVm, enabled)
       {
          _sceneVm = sceneVm;
          StateName = stateName;

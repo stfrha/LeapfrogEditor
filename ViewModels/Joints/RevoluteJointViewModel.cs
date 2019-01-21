@@ -23,8 +23,9 @@ namespace LeapfrogEditor
          TreeViewViewModel treeParent, 
          CompoundObjectViewModel parentVm, 
          MainViewModel mainVm, 
-         RevoluteJoint modelObject)  :
-         base(treeParent, parentVm, mainVm, modelObject)
+         RevoluteJoint modelObject,
+         bool enabled = true)  :
+         base(treeParent, parentVm, mainVm, modelObject, enabled)
       {
          ModelObject = modelObject;
 

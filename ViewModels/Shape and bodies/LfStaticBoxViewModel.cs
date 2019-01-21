@@ -24,8 +24,9 @@ namespace LeapfrogEditor
          TreeViewViewModel treeParent, 
          CompoundObjectViewModel parentVm, 
          MainViewModel mainVm, 
-         LfStaticBox modelObject) :
-         base(treeParent, parentVm, mainVm)
+         LfStaticBox modelObject,
+         bool enabled = true) :
+         base(treeParent, parentVm, mainVm, enabled)
       {
          ModelObject = modelObject;
          UpdateCornerPoints();

@@ -17,8 +17,8 @@ using System.Windows.Media;
 
 
 namespace LeapfrogEditor
-{
-   public class CompoundObjectViewModel : ConditionalSelectTreeViewViewModel, IPositionInterface
+{   // used to be: ConditionalSelectTreeViewViewModel
+   public class CompoundObjectViewModel : TreeViewViewModel, IPositionInterface
    {
       #region Declarations
 
@@ -45,8 +45,9 @@ namespace LeapfrogEditor
          TreeViewViewModel treeParent,
          CompoundObjectViewModel parentVm,
          MainViewModel mainVm, 
-         CompoundObject modelObject ) :
-         base(treeParent, parentVm, mainVm)
+         CompoundObject modelObject,
+         bool enabled = true) :
+         base(treeParent, parentVm, mainVm, enabled)
       {
          ModelObject = modelObject;
 
@@ -475,70 +476,70 @@ namespace LeapfrogEditor
          }
       }
 
-      override public bool IsSelected
-         // If the CompoundObject is a child of another object
-         // it will be the direct child of a ChildObjectStatePropertiesViewModel.
-         // At all times, we want this VM to be selected as the same time 
-         // as this object. Hence we override IsSelected here to use the
-         // parent to maintain the state. If this parent is null, 
-         // we return false (for get) and do not set the value (for set).
-      {
-         get
-         {
-            if ((TreeParent != null) && ( TreeParent is ChildObjectStatePropertiesViewModel))
-            {
-               return TreeParent.IsSelected;
-            }
-            return false;
-         }
-         set
-         {
-            if ((TreeParent != null) && (TreeParent is ChildObjectStatePropertiesViewModel))
-            {
-               if (value)
-               {
-                  if (MainVm.AmISelectable(this))
-                  {
-                     TreeParent.IsSelected = value;
-                     OnPropertyChanged("IsSelected");
+      //override public bool IsSelected
+      //   // If the CompoundObject is a child of another object
+      //   // it will be the direct child of a ChildObjectStatePropertiesViewModel.
+      //   // At all times, we want this VM to be selected as the same time 
+      //   // as this object. Hence we override IsSelected here to use the
+      //   // parent to maintain the state. If this parent is null, 
+      //   // we return false (for get) and do not set the value (for set).
+      //{
+      //   get
+      //   {
+      //      if ((TreeParent != null) && ( TreeParent is ChildObjectStatePropertiesViewModel))
+      //      {
+      //         return TreeParent.IsSelected;
+      //      }
+      //      return false;
+      //   }
+      //   set
+      //   {
+      //      if ((TreeParent != null) && (TreeParent is ChildObjectStatePropertiesViewModel))
+      //      {
+      //         if (value)
+      //         {
+      //            if (MainVm.AmISelectable(this))
+      //            {
+      //               TreeParent.IsSelected = value;
+      //               OnPropertyChanged("IsSelected");
 
-                     if (TreeParent.IsSelected == true)
-                     {
-                        IsExpanded = true;
-                     }
-                  }
-               }
-               else
-               {
-                  TreeParent.IsSelected = value;
-                  OnPropertyChanged("IsSelected");
-               }
-            }
-         }
-      }
+      //               if (TreeParent.IsSelected == true)
+      //               {
+      //                  IsExpanded = true;
+      //               }
+      //            }
+      //         }
+      //         else
+      //         {
+      //            TreeParent.IsSelected = value;
+      //            OnPropertyChanged("IsSelected");
+      //         }
+      //      }
+      //   }
+      //}
 
 
       #endregion
 
       #region Private Methods
 
-      private StateShapeCollectionViewModel SetShapes(CompoundObject co)
+      private StateShapeCollectionViewModel SetShapes(CompoundObject co, bool enabledChildren = true)
       {
-         StateShapeCollectionViewModel shapes = new StateShapeCollectionViewModel(this, this, MainVm);
+         StateShapeCollectionViewModel shapes = new StateShapeCollectionViewModel(this, this, MainVm, enabledChildren);
 
          foreach (LfSpriteBox sb in co.SpriteBoxes)
          {
-            LfSpriteBoxViewModel shapevm = new LfSpriteBoxViewModel(shapes, this, MainVm, sb);
+            LfSpriteBoxViewModel shapevm = new LfSpriteBoxViewModel(shapes, this, MainVm, sb, enabledChildren);
             shapes.Shapes.Add(shapevm);
          }
 
          foreach (LfSpritePolygon sp in co.SpritePolygons)
          {
-            LfSpritePolygonViewModel shapevm = new LfSpritePolygonViewModel(shapes, this, MainVm, sp);
+            LfSpritePolygonViewModel shapevm = new LfSpritePolygonViewModel(shapes, this, MainVm, sp, enabledChildren);
 
             foreach (LfDragablePoint dragPoint in sp.Points)
             {
-               LfDragablePointViewModel dragPointVm = new LfDragablePointViewModel(MainVm, shapevm, dragPoint);
+               LfDragablePointViewModel dragPointVm = new LfDragablePointViewModel(shapevm, this, MainVm, shapevm, dragPoint, enabledChildren);
                shapevm.PointVms.Add(dragPointVm);
             }
 
@@ -547,23 +548,23 @@ namespace LeapfrogEditor
 
          foreach (LfStaticBox sb in co.StaticBoxes)
          {
-            LfStaticBoxViewModel shapevm = new LfStaticBoxViewModel(shapes, this, MainVm, sb);
+            LfStaticBoxViewModel shapevm = new LfStaticBoxViewModel(shapes, this, MainVm, sb, enabledChildren);
             shapes.Shapes.Add(shapevm);
          }
 
          foreach (LfStaticCircle sb in co.StaticCircles)
          {
-            LfStaticCircleViewModel shapevm = new LfStaticCircleViewModel(shapes, this, MainVm, sb);
+            LfStaticCircleViewModel shapevm = new LfStaticCircleViewModel(shapes, this, MainVm, sb, enabledChildren);
             shapes.Shapes.Add(shapevm);
          }
 
          foreach (LfStaticPolygon sp in co.StaticPolygons)
          {
-            LfStaticPolygonViewModel shapevm = new LfStaticPolygonViewModel(shapes, this, MainVm, sp);
+            LfStaticPolygonViewModel shapevm = new LfStaticPolygonViewModel(shapes, this, MainVm, sp, enabledChildren);
 
             foreach (LfDragablePoint dragPoint in sp.Points)
             {
-               LfDragablePointViewModel dragPointVm = new LfDragablePointViewModel(MainVm, shapevm, dragPoint);
+               LfDragablePointViewModel dragPointVm = new LfDragablePointViewModel(shapevm, this, MainVm, shapevm, dragPoint, enabledChildren);
                shapevm.PointVms.Add(dragPointVm);
             }
 
@@ -572,23 +573,23 @@ namespace LeapfrogEditor
 
          foreach (LfDynamicBox db in co.DynamicBoxes)
          {
-            LfDynamicBoxViewModel shapevm = new LfDynamicBoxViewModel(shapes, this, MainVm, db);
+            LfDynamicBoxViewModel shapevm = new LfDynamicBoxViewModel(shapes, this, MainVm, db, enabledChildren);
             shapes.Shapes.Add(shapevm);
          }
 
          foreach (LfDynamicCircle db in co.DynamicCircles)
          {
-            LfDynamicCircleViewModel shapevm = new LfDynamicCircleViewModel(shapes, this, MainVm, db);
+            LfDynamicCircleViewModel shapevm = new LfDynamicCircleViewModel(shapes, this, MainVm, db, enabledChildren);
             shapes.Shapes.Add(shapevm);
          }
 
          foreach (LfDynamicPolygon dp in co.DynamicPolygons)
          {
-            LfDynamicPolygonViewModel shapevm = new LfDynamicPolygonViewModel(shapes, this, MainVm, dp);
+            LfDynamicPolygonViewModel shapevm = new LfDynamicPolygonViewModel(shapes, this, MainVm, dp, enabledChildren);
 
             foreach (LfDragablePoint dragPoint in dp.Points)
             {
-               LfDragablePointViewModel dragPointVm = new LfDragablePointViewModel(MainVm, shapevm, dragPoint);
+               LfDragablePointViewModel dragPointVm = new LfDragablePointViewModel(shapevm, this, MainVm, shapevm, dragPoint, enabledChildren);
                shapevm.PointVms.Add(dragPointVm);
             }
 
@@ -597,11 +598,11 @@ namespace LeapfrogEditor
 
          foreach (LfStaticBoxedSpritePolygon bsp in co.StaticBoxedSpritePolygons)
          {
-            LfStaticBoxedSpritePolygonViewModel shapevm = new LfStaticBoxedSpritePolygonViewModel(shapes, this, MainVm, bsp);
+            LfStaticBoxedSpritePolygonViewModel shapevm = new LfStaticBoxedSpritePolygonViewModel(shapes, this, MainVm, bsp, enabledChildren);
 
             foreach (LfDragablePoint dragPoint in bsp.Points)
             {
-               LfDragablePointViewModel dragPointVm = new LfDragablePointViewModel(MainVm, shapevm, dragPoint);
+               LfDragablePointViewModel dragPointVm = new LfDragablePointViewModel(shapevm, this, MainVm, shapevm, dragPoint, enabledChildren);
                shapevm.PointVms.Add(dragPointVm);
             }
 
@@ -610,11 +611,11 @@ namespace LeapfrogEditor
 
          foreach (LfDynamicBoxedSpritePolygon bsp in co.DynamicBoxedSpritePolygons)
          {
-            LfDynamicBoxedSpritePolygonViewModel shapevm = new LfDynamicBoxedSpritePolygonViewModel(shapes, this, MainVm, bsp);
+            LfDynamicBoxedSpritePolygonViewModel shapevm = new LfDynamicBoxedSpritePolygonViewModel(shapes, this, MainVm, bsp, enabledChildren);
 
             foreach (LfDragablePoint dragPoint in bsp.Points)
             {
-               LfDragablePointViewModel dragPointVm = new LfDragablePointViewModel(MainVm, shapevm, dragPoint);
+               LfDragablePointViewModel dragPointVm = new LfDragablePointViewModel(shapevm, this, MainVm, shapevm, dragPoint, enabledChildren);
                shapevm.PointVms.Add(dragPointVm);
             }
 
@@ -625,44 +626,44 @@ namespace LeapfrogEditor
 
       }
 
-      private StateJointCollectionViewModel SetJoints(CompoundObject co)
+      private StateJointCollectionViewModel SetJoints(CompoundObject co, bool enabledChildren = true)
       {
-         StateJointCollectionViewModel joints = new StateJointCollectionViewModel(this, this, MainVm);
+         StateJointCollectionViewModel joints = new StateJointCollectionViewModel(this, this, MainVm, enabledChildren);
 
          foreach (WeldJoint wj in co.WeldJoints)
          {
-            WeldJointViewModel wjvm = new WeldJointViewModel(joints, this, MainVm, wj);
+            WeldJointViewModel wjvm = new WeldJointViewModel(joints, this, MainVm, wj, enabledChildren);
             joints.Joints.Add(wjvm);
          }
 
          foreach (RevoluteJoint rj in co.RevoluteJoints)
          {
-            RevoluteJointViewModel rjvm = new RevoluteJointViewModel(joints, this, MainVm, rj);
+            RevoluteJointViewModel rjvm = new RevoluteJointViewModel(joints, this, MainVm, rj, enabledChildren);
             joints.Joints.Add(rjvm);
          }
 
          foreach (PrismaticJoint pj in co.PrismaticJoints)
          {
-            PrismaticJointViewModel pjvm = new PrismaticJointViewModel(joints, this, MainVm, pj);
+            PrismaticJointViewModel pjvm = new PrismaticJointViewModel(joints, this, MainVm, pj, enabledChildren);
             joints.Joints.Add(pjvm);
          }
 
          foreach (Rope r in co.Ropes)
          {
-            RopeViewModel rvm = new RopeViewModel(joints, this, MainVm, r);
+            RopeViewModel rvm = new RopeViewModel(joints, this, MainVm, r, enabledChildren);
             joints.Joints.Add(rvm);
          }
 
          return joints;
       }
 
-      private StateSystemCollectionViewModel SetSystems(CompoundObject co)
+      private StateSystemCollectionViewModel SetSystems(CompoundObject co, bool enabledChildren = true)
       {
-         StateSystemCollectionViewModel systems = new StateSystemCollectionViewModel(this, this, MainVm);
+         StateSystemCollectionViewModel systems = new StateSystemCollectionViewModel(this, this, MainVm, enabledChildren);
 
          foreach (CoSystem s in co.Systems)
          {
-            CoSystemViewModel svm = new CoSystemViewModel(systems, this, MainVm, s);
+            CoSystemViewModel svm = new CoSystemViewModel(systems, this, MainVm, s, enabledChildren);
             systems.Systems.Add(svm);
          }
 
@@ -688,13 +689,13 @@ namespace LeapfrogEditor
 
       // All children CompoundObjectViewModels are created here. The constructor of the ChildObjectViewModel
       // creates a ChildObjectStatePropertiesViewModel which's constructor creates the CompoundObjectViewModel.
-      private StateChildCollectionViewModel SetChildren(CompoundObject ModelObject)
+      private StateChildCollectionViewModel SetChildren(CompoundObject ModelObject, bool enabledChildren = true)
       {
-         StateChildCollectionViewModel schcvm = new StateChildCollectionViewModel(this, this, MainVm);
+         StateChildCollectionViewModel schcvm = new StateChildCollectionViewModel(this, this, MainVm, enabledChildren);
 
          foreach (ChildObject cho in ModelObject.ChildObjects)
          {
-            ChildObjectViewModel chovm = new ChildObjectViewModel(schcvm, this, MainVm, cho);
+            ChildObjectViewModel chovm = new ChildObjectViewModel(schcvm, this, MainVm, cho, enabledChildren);
 
             schcvm.Children.Add(chovm);
          }
@@ -884,7 +885,7 @@ namespace LeapfrogEditor
          return null;
       }
 
-      public void BuildViewModel()
+      public void BuildViewModel(bool enabledChildren = true)
       // This method connects references in the COVM. At the creation of the COVM
       // the ModelObject, ModelObjectProperties, ParentVm and ChildObjectOfParent is defined.
       // Here we build the shape, joint and system collections and connect those objects 
@@ -894,9 +895,9 @@ namespace LeapfrogEditor
 //         _statesWithChildObjects.Clear();
          _treeCollection.Clear();
 
-         _shapes = SetShapes(ModelObject);
-         _joints = SetJoints(ModelObject);
-         _systems = SetSystems(ModelObject);
+         _shapes = SetShapes(ModelObject, enabledChildren);
+         _joints = SetJoints(ModelObject, enabledChildren);
+         _systems = SetSystems(ModelObject, enabledChildren);
 
          // Only now is the Joints property valid for this state
          foreach (object o in _joints.Joints)
@@ -918,26 +919,32 @@ namespace LeapfrogEditor
             }
          }
 
-         ChildObjectsWithStates = SetChildren(ModelObject);
-         //_statesWithChildObjects = SetStateChildren(ModelObject);
+         ChildObjectsWithStates = SetChildren(ModelObject, enabledChildren);
 
          BuildTreeViewCollection();
       }
 
       public void DeselectAllChildren()
       {
+         if ((Behaviour != null) && (Behaviour.BehaviourProperties != null))
+         {
+            Behaviour.BehaviourProperties.IsSelected = false;
+         }
+
          if ((StateShapes != null) && (StateShapes.Shapes != null))
          {
             foreach (object o in StateShapes.Shapes)
             {
-               if (o is LfShapeViewModel)
+               if (o is LfPolygonViewModel)
                {
-                  LfShapeViewModel shape = (LfShapeViewModel)o;
+                  LfPolygonViewModel pvm = o as LfPolygonViewModel;
 
-                  if (shape.IsSelected)
-                  {
-                     int a = 10;
-                  }
+                  pvm.DeselectAllPoints();
+                  pvm.IsSelected = false;
+               }
+               else if (o is LfShapeViewModel)
+               {
+                  LfShapeViewModel shape = o as LfShapeViewModel;
 
                   shape.IsSelected = false;
                }

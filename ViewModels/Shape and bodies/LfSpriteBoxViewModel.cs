@@ -20,8 +20,13 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public LfSpriteBoxViewModel(TreeViewViewModel treeParent, CompoundObjectViewModel parentVm, MainViewModel mainVm, LfSpriteBox modelObject) :
-         base(treeParent, parentVm, mainVm)
+      public LfSpriteBoxViewModel(
+         TreeViewViewModel treeParent, 
+         CompoundObjectViewModel parentVm, 
+         MainViewModel mainVm, 
+         LfSpriteBox modelObject,
+         bool enabled = true) :
+         base(treeParent, parentVm, mainVm, enabled)
       {
          ModelObject = modelObject;
          UpdateCornerPoints();

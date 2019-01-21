@@ -14,36 +14,40 @@ namespace LeapfrogEditor
    public class ConditionalSelectTreeViewViewModel : TreeViewViewModel
    {
 
-      public ConditionalSelectTreeViewViewModel(TreeViewViewModel treeParent, CompoundObjectViewModel parentVm, MainViewModel mainVm) :
-         base(treeParent, parentVm, mainVm)
+      public ConditionalSelectTreeViewViewModel(
+         TreeViewViewModel treeParent, 
+         CompoundObjectViewModel parentVm, 
+         MainViewModel mainVm,
+         bool enabled = true) :
+         base(treeParent, parentVm, mainVm, enabled)
       {
       }
 
-      override public bool IsSelected
-      {
-         get { return _isSelected; }
-         set
-         {
-            if (value)
-            {
-               if (MainVm.AmISelectable(this))
-               {
-                  _isSelected = value;
-                  OnPropertyChanged("IsSelected");
+   //   override public bool IsSelected
+   //   {
+   //      get { return _isSelected; }
+   //      set
+   //      {
+   //         if (value)
+   //         {
+   //            if (MainVm.AmISelectable(this))
+   //            {
+   //               _isSelected = value;
+   //               OnPropertyChanged("IsSelected");
 
-                  if (_isSelected == true)
-                  {
-                     IsExpanded = true;
-                  }
-               }
-            }
-            else
-            {
-               _isSelected = value;
-               OnPropertyChanged("IsSelected");
-            }
-         }
-      }
+   //               if (_isSelected == true)
+   //               {
+   //                  IsExpanded = true;
+   //               }
+   //            }
+   //         }
+   //         else
+   //         {
+   //            _isSelected = value;
+   //            OnPropertyChanged("IsSelected");
+   //         }
+   //      }
+   //   }
    }
 }
 

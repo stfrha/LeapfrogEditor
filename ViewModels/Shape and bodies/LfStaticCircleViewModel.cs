@@ -21,8 +21,9 @@ namespace LeapfrogEditor
          TreeViewViewModel treeParent, 
          CompoundObjectViewModel parentVm, 
          MainViewModel mainVm, 
-         LfStaticCircle modelObject) :
-         base(treeParent, parentVm, mainVm)
+         LfStaticCircle modelObject,
+         bool enabled = true) :
+         base(treeParent, parentVm, mainVm, enabled)
       {
          ModelObject = modelObject;
       }

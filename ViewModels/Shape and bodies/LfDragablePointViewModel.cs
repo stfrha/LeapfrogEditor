@@ -5,23 +5,27 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace LeapfrogEditor
-{
-   public class LfDragablePointViewModel : MicroMvvm.ViewModelBase, IPositionInterface
+{  // used to be MicroMvvm.ViewModelBase
+   public class LfDragablePointViewModel : TreeViewViewModel, IPositionInterface
    {
       #region Declarations
 
-      private MainViewModel _mainVm;
       private LfDragablePoint _modelObject;
       private LfPolygonViewModel _parent;
-
-      private bool _isSelected;
 
 
       #endregion
 
       #region Constructors
 
-      public LfDragablePointViewModel(MainViewModel mainVm, LfPolygonViewModel parent, LfDragablePoint modelObject)
+      public LfDragablePointViewModel(
+         TreeViewViewModel treeParent,
+         CompoundObjectViewModel parentVm,
+         MainViewModel mainVm, 
+         LfPolygonViewModel parent, 
+         LfDragablePoint modelObject,
+         bool enabled = true) :
+         base(treeParent, parentVm, mainVm, enabled)
       {
          MainVm = mainVm;
          Parent = parent;
@@ -33,10 +37,14 @@ namespace LeapfrogEditor
 
       #region Properties
 
-      public MainViewModel MainVm
+      public LfPolygonViewModel Parent
       {
-         get { return _mainVm; }
-         set { _mainVm = value; }
+         get { return _parent; }
+         set
+         {
+            _parent = value;
+            OnPropertyChanged("");
+         }
       }
 
       public LfDragablePoint ModelObject
@@ -45,16 +53,6 @@ namespace LeapfrogEditor
          set
          {
             _modelObject = value;
-            OnPropertyChanged("");
-         }
-      }
-
-      public LfPolygonViewModel Parent
-      {
-         get { return _parent; }
-         set
-         {
-            _parent = value;
             OnPropertyChanged("");
          }
       }
@@ -173,15 +171,15 @@ namespace LeapfrogEditor
          }
       }
 
-      public bool IsSelected
-      {
-         get { return _isSelected; }
-         set
-         {
-            _isSelected = value;
-            OnPropertyChanged("IsSelected");
-         }
-      }
+      //public bool IsSelected
+      //{
+      //   get { return _isSelected; }
+      //   set
+      //   {
+      //      _isSelected = value;
+      //      OnPropertyChanged("IsSelected");
+      //   }
+      //}
 
       #endregion
    }

@@ -21,8 +21,9 @@ namespace LeapfrogEditor
          TreeViewViewModel treeParent, 
          CompoundObjectViewModel parentVm, 
          MainViewModel mainVm, 
-         LfSpritePolygon modelObject) :
-         base(treeParent, parentVm, mainVm)
+         LfSpritePolygon modelObject,
+         bool enabled = true) :
+         base(treeParent, parentVm, mainVm, enabled)
       {
          ModelObject = modelObject;
       }

@@ -11,7 +11,7 @@ namespace LeapfrogEditor
    {
       #region Declarations
 
-      protected bool _isSelected;
+//      protected bool _isSelected;
       private double _posX;
       private double _posY;
 
@@ -28,7 +28,7 @@ namespace LeapfrogEditor
          PosY = p.Y;
          MainVm = mainVm;
          PointsParent = parent;
-         IsSelected = false;
+//         IsSelected = false;
       }
 
       #endregion
@@ -78,15 +78,15 @@ namespace LeapfrogEditor
          }
       }
 
-      public bool IsSelected
-      {
-         get { return _isSelected; }
-         set
-         {
-            _isSelected = value;
-            OnPropertyChanged("IsSelected");
-         }
-      }
+      //public bool IsSelected
+      //{
+      //   get { return _isSelected; }
+      //   set
+      //   {
+      //      _isSelected = value;
+      //      OnPropertyChanged("IsSelected");
+      //   }
+      //}
 
 
       #endregion

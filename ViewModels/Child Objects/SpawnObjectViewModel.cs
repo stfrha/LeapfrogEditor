@@ -27,7 +27,8 @@ namespace LeapfrogEditor
          TreeViewViewModel treeParent, 
          CompoundObjectViewModel parentVm, 
          MainViewModel mainVm, 
-         SpawnObject modelObject) :
+         SpawnObject modelObject,
+         bool enabled = true) :
          base(treeParent, parentVm, mainVm)
       {
          ModelObject = modelObject;

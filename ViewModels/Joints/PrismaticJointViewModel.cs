@@ -23,8 +23,9 @@ namespace LeapfrogEditor
          TreeViewViewModel treeParent, 
          CompoundObjectViewModel parentVm, 
          MainViewModel mainVm, 
-         PrismaticJoint modelObject) : 
-         base(treeParent, parentVm, mainVm, modelObject)
+         PrismaticJoint modelObject,
+         bool enabled = true) : 
+         base(treeParent, parentVm, mainVm, modelObject, enabled)
       {
          ModelObject = modelObject;
 

@@ -23,8 +23,9 @@ namespace LeapfrogEditor
       public StateChildCollectionViewModel(
          TreeViewViewModel treeParent,
          CompoundObjectViewModel parentVm,
-         MainViewModel mainVm) :
-         base(treeParent, parentVm, mainVm)
+         MainViewModel mainVm,
+         bool enabled = true) :
+         base(treeParent, parentVm, mainVm, enabled)
       {
       }
 

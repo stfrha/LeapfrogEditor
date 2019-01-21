@@ -280,16 +280,6 @@ namespace LeapfrogEditor
    {
       public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
       {
-         if (parameter as string == "debug")
-         {
-            int a = 10;
-         }
-
-         if (parameter as string == "debug2")
-         {
-            int a = 10;
-         }
-
          if (value is LfDragablePointViewModel)
          {
             LfDragablePointViewModel vertex = (LfDragablePointViewModel)value;

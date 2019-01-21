@@ -9,7 +9,8 @@ using System.Windows.Media;
 
 namespace LeapfrogEditor
 {
-   public class LfShapeViewModel : ConditionalSelectTreeViewViewModel, IPositionInterface
+   // Used to be ConditionalSelectTreeViewViewModel
+   public class LfShapeViewModel : TreeViewViewModel, IPositionInterface
    {
       #region Declarations
 
@@ -19,8 +20,12 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public LfShapeViewModel(TreeViewViewModel treeParent, CompoundObjectViewModel parentVm, MainViewModel mainVm) :
-         base(treeParent, parentVm, mainVm)
+      public LfShapeViewModel(
+         TreeViewViewModel treeParent, 
+         CompoundObjectViewModel parentVm, 
+         MainViewModel mainVm,
+         bool enabled = true) :
+         base(treeParent, parentVm, mainVm, enabled)
       {
          ModelObject = null;
       }

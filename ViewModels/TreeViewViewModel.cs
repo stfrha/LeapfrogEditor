@@ -17,15 +17,22 @@ namespace LeapfrogEditor
       protected TreeViewViewModel _treeParent;
       protected bool _isSelected;
       protected bool _isExpanded;
+      private bool _isEnabled;
+
       private MainViewModel _mainVm;
 
-      public TreeViewViewModel(TreeViewViewModel treeParent, CompoundObjectViewModel parentVm, MainViewModel mainVm)
+      public TreeViewViewModel(
+         TreeViewViewModel treeParent, 
+         CompoundObjectViewModel parentVm, 
+         MainViewModel mainVm,
+         bool enabled = true)
       {
          _treeParent = treeParent;
          _parentVm = parentVm;
          _mainVm = mainVm;
          _isSelected = false;
          _isExpanded = false;
+         _isEnabled = enabled;
       }
 
       public TreeViewViewModel TreeParent
@@ -44,7 +51,7 @@ namespace LeapfrogEditor
          }
       }
 
-      virtual public bool IsSelected
+      public bool IsSelected
       {
          get { return _isSelected; }
          set
@@ -54,7 +61,10 @@ namespace LeapfrogEditor
 
             if (_isSelected == true)
             {
-               IsExpanded = true;
+               if (_treeParent != null)
+               {
+                  _treeParent.IsExpanded = true;
+               }
             }
          }
       }
@@ -70,6 +80,19 @@ namespace LeapfrogEditor
             if (_isExpanded && _treeParent != null)
             {
                _treeParent.IsExpanded = true;
+            }
+         }
+      }
+
+      public bool IsEnabled
+      {
+         get { return _isEnabled; }
+         set
+         {
+            if (value != _isEnabled)
+            {
+               _isEnabled = value;
+               OnPropertyChanged("IsEnabled");
             }
          }
       }

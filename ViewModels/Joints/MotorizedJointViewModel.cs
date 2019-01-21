@@ -23,8 +23,9 @@ namespace LeapfrogEditor
          TreeViewViewModel treeParent, 
          CompoundObjectViewModel parentVm, 
          MainViewModel mainVm, 
-         MotorizedJoint modelObject) :
-         base(treeParent, parentVm, mainVm, modelObject)
+         MotorizedJoint modelObject,
+         bool enabled = true) :
+         base(treeParent, parentVm, mainVm, modelObject, enabled)
       {
          ModelObject = modelObject;
 

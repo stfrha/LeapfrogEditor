@@ -15,7 +15,6 @@ namespace LeapfrogEditor
    {
       #region Declarations
 
-      private MainViewModel _mainVm;
       private ObjectFactoryProperties _modelObject;
       private CompoundObjectViewModel _parent;
       private ObservableCollection<LfPointViewModel> _points = new ObservableCollection<LfPointViewModel>();

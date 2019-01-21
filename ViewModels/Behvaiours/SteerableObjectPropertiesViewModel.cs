@@ -24,8 +24,9 @@ namespace LeapfrogEditor
          TreeViewViewModel treeParent,
          CompoundObjectViewModel parentVm,
          MainViewModel mainVm,
-         SteerableObjectProperties modelObject) :
-         base(treeParent, parentVm, mainVm)
+         SteerableObjectProperties modelObject,
+         bool enabled = true) :
+         base(treeParent, parentVm, mainVm, enabled)
       {
          ModelObject = modelObject;
       }

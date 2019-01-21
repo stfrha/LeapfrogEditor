@@ -72,13 +72,6 @@ namespace LeapfrogEditor
        * CompoundObjectViewModel, called TreeTop.
        */
 
-      // These are the top level objects that holds the loaded file
-      // after loading, these must be the same as the object being
-      // edited
-      //private ChildObject _myChildObject = new ChildObject();
-      //private TStateProperties<ChildObjectStateProperties> _myStateProp = new TStateProperties<ChildObjectStateProperties>();
-      //private CompoundObject _myCP;
-      //private CompoundObjectViewModel _myCpVm;
       private ObservableCollection<FileCOViewModel> _fileCollectionViewModel = new ObservableCollection<FileCOViewModel>();
 
       // Object VM that is being edited
@@ -1076,14 +1069,11 @@ namespace LeapfrogEditor
                   {
                      if (!ctrl)
                      {
-                        foreach (LfDragablePointViewModel selpoint in _selectedPoints)
-                        {
-                           selpoint.IsSelected = false;
-                        }
-                        _selectedPoints.Clear();
+                        // We dont want to deselect absolutly everything here,
+                        // only the selected points 
+                        DeselectAllPoints();
                      }
 
-                     _selectedPoints.Add(dpvm);
                      dpvm.IsSelected = true;
                   }
 
@@ -1366,13 +1356,11 @@ namespace LeapfrogEditor
                      Point rotShapePoint = dpvm.Parent.LocalPointFromRotated(unrotatedShapePoint);
 
                      LfDragablePointViewModel newPoint = dpvm.Parent.InsertPoint(rotShapePoint, dpvm);
-                     foreach (LfDragablePointViewModel selpoint in _selectedPoints)
-                     {
-                        selpoint.IsSelected = false;
-                     }
-                     _selectedPoints.Clear();
 
-                     _selectedPoints.Add(newPoint);
+                     // We dont want to deselect absolutly everything here,
+                     // only the selected points 
+                     DeselectAllPoints();
+
                      newPoint.IsSelected = true;
                   }
 
@@ -1879,6 +1867,7 @@ namespace LeapfrogEditor
          SelectedShapes.Clear();
          SelectedJoints.Clear();
          SelectedSystems.Clear();
+         SelectedPoints.Clear();
          EditableSpawnObject = null;
 
          foreach (TreeViewViewModel tvvm in SelectedItems)
@@ -1941,6 +1930,18 @@ namespace LeapfrogEditor
             if (tvvm is SpawnObjectViewModel)
             {
                EditableSpawnObject = tvvm as SpawnObjectViewModel;
+            }
+
+
+            if (tvvm is LfDragablePointViewModel)
+            {
+               LfDragablePointViewModel dpvm = tvvm as LfDragablePointViewModel;
+
+               if (dpvm.ParentVm == EditedCpVm)
+               {
+                  // This is the shape of the object being edited, 
+                  SelectedPoints.Add(dpvm);
+               }
             }
          }
       }
@@ -2028,20 +2029,26 @@ namespace LeapfrogEditor
 
       private void DeselectAll()
       {
-         EditedCpVm.IsSelected = false;
-
-         foreach (FileCOViewModel fcovm in FileCollectionViewModel)
+         foreach (FileCOViewModel coFile in FileCollectionViewModel)
          {
-            fcovm.DeselectAllChildren();
-            fcovm.IsSelected = false;
-            fcovm.OnPropertyChanged("");
+            coFile.IsSelected = false;
+            coFile.DeselectAllChildren();
          }
+      }
 
-         SelectedPoints.Clear();
+      private void DeselectAllPoints()
+      {
+         // Loop like this since deselecting points will alter
+         // the collection.
+         for (int i = SelectedItems.Count - 1; i >= 0; i--)
+         {
+            if (SelectedItems[i] is LfDragablePointViewModel)
+            {
+               LfDragablePointViewModel ptvm = SelectedItems[i] as LfDragablePointViewModel;
 
-         //EditedCpVm.OnPropertyChanged("");
-
-         //SelectedItems.Clear();
+               ptvm.IsSelected = false;
+            }
+         }
       }
 
       private FileCOViewModel FindOpenedFile(string fileName)

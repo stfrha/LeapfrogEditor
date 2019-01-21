@@ -30,8 +30,13 @@ namespace LeapfrogEditor
 
       #region Constructors
 
-      public CoSystemViewModel(TreeViewViewModel treeParent, CompoundObjectViewModel parentVm, MainViewModel mainVm, CoSystem modelObject) :
-         base(treeParent, parentVm, mainVm)
+      public CoSystemViewModel(
+         TreeViewViewModel treeParent, 
+         CompoundObjectViewModel parentVm, 
+         MainViewModel mainVm, 
+         CoSystem modelObject,
+         bool enabled = true) :
+         base(treeParent, parentVm, mainVm, enabled)
       {
          LocalModelObject = modelObject;
 
