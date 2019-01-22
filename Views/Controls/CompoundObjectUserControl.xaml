@@ -54,8 +54,8 @@
             </ItemsControl.ItemContainerStyle>
          </ItemsControl>
       </DataTemplate>
-      <DataTemplate DataType="{x:Type local:ChildObjectStatePropertiesViewModel}">
-         <local:CompoundObjectUserControl DataContext="{Binding CompoundObjectChild}">
+      <DataTemplate DataType="{x:Type local:ChildCOViewModel}">
+         <local:CompoundObjectUserControl>
             <local:CompoundObjectUserControl.Visibility>
                <MultiBinding Converter="{StaticResource MatchingStateVisibilityConverter}" >
                   <Binding Path="ObjectState" />

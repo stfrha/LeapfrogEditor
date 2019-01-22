@@ -54,7 +54,7 @@
          ItemsSource="{Binding ChildObjectStateProperties, ElementName=root}"
          Margin="2" >
          <ItemsControl.Resources>
-            <DataTemplate DataType="{x:Type local:ChildObjectStatePropertiesViewModel}">
+            <DataTemplate DataType="{x:Type local:ChildCOViewModel}">
                <local:ChildObjectStatePropEditor
                   Headline="{Binding Converter={StaticResource StatePropertiesHeadlineConverter}}"/>
             </DataTemplate>

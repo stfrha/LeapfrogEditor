@@ -128,7 +128,7 @@
                         </TextBlock.ContextMenu>
                      </TextBlock>
                   </HierarchicalDataTemplate>
-                  <HierarchicalDataTemplate DataType="{x:Type local:CompoundObjectViewModel}"
+                  <HierarchicalDataTemplate DataType="{x:Type local:ChildCOViewModel}"
                      ItemsSource="{Binding TreeCollection}">
                      <TextBlock Margin="2"  Text="{Binding RefName}">
                         <TextBlock.ContextMenu>
@@ -210,10 +210,6 @@
                   <HierarchicalDataTemplate DataType="{x:Type local:ChildObjectViewModel}"
                      ItemsSource="{Binding StateProperties}">
                      <TextBlock Margin="2"  Text="{Binding Name}" />
-                  </HierarchicalDataTemplate>
-                  <HierarchicalDataTemplate DataType="{x:Type local:ChildObjectStatePropertiesViewModel}"
-                     ItemsSource="{Binding SingleObjectCollectionChild}">
-                     <TextBlock Margin="2"  Text="{Binding State}" />
                   </HierarchicalDataTemplate>
                   <HierarchicalDataTemplate DataType="{x:Type local:LfShapeViewModel}" >
                      <TextBlock Margin="2"  Text="{Binding Name}" />

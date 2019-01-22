@@ -64,15 +64,15 @@ namespace LeapfrogEditor
 
 
 
-      public ObservableCollection<ChildObjectStatePropertiesViewModel> ChildObjectStateProperties
+      public ObservableCollection<ChildCOViewModel> ChildObjectStateProperties
       {
-         get { return (ObservableCollection<ChildObjectStatePropertiesViewModel>)GetValue(ChildObjectStatePropertiesProperty); }
+         get { return (ObservableCollection<ChildCOViewModel>)GetValue(ChildObjectStatePropertiesProperty); }
          set { SetValue(ChildObjectStatePropertiesProperty, value); }
       }
 
       // Using a DependencyProperty as the backing store for ChildObjectStateProperties.  This enables animation, styling, binding, etc...
       public static readonly DependencyProperty ChildObjectStatePropertiesProperty =
-          DependencyProperty.Register("ChildObjectStateProperties", typeof(ObservableCollection<ChildObjectStatePropertiesViewModel>), typeof(PropertiesEditor), new PropertyMetadata(default(ObservableCollection<ChildObjectStatePropertiesViewModel>)));
+          DependencyProperty.Register("ChildObjectStateProperties", typeof(ObservableCollection<ChildCOViewModel>), typeof(PropertiesEditor), new PropertyMetadata(default(ObservableCollection<ChildCOViewModel>)));
 
 
 

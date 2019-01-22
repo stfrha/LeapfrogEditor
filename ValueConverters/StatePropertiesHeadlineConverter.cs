@@ -12,9 +12,9 @@ namespace LeapfrogEditor
    {
       public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
       {
-         if (value is ChildObjectStatePropertiesViewModel) 
+         if (value is ChildCOViewModel) 
          {
-            ChildObjectStatePropertiesViewModel vm = (ChildObjectStatePropertiesViewModel)value;
+            ChildCOViewModel vm = value as ChildCOViewModel;
             ChildObjectViewModel chvm = vm.TreeParent as ChildObjectViewModel;
 
             string s = chvm.Name + " State Properties";

@@ -18,12 +18,11 @@ using System.Windows.Media;
 
 namespace LeapfrogEditor
 {   // used to be: ConditionalSelectTreeViewViewModel
-   public class CompoundObjectViewModel : TreeViewViewModel, IPositionInterface
+   public class CompoundObjectViewModel : TreeViewViewModel
    {
       #region Declarations
 
       private CompoundObject _modelObject;
-      private ChildObjectStatePropertiesViewModel _objectPropertiesVm;
 
 
       private CoBehaviourViewModel _behaviour;
@@ -50,15 +49,6 @@ namespace LeapfrogEditor
          base(treeParent, parentVm, mainVm, enabled)
       {
          ModelObject = modelObject;
-
-         if (TreeParent is ChildObjectStatePropertiesViewModel)
-         {
-            _objectPropertiesVm = TreeParent as ChildObjectStatePropertiesViewModel;
-         }
-         else
-         {
-            _objectPropertiesVm = null;
-         }
 
          Behaviour = new CoBehaviourViewModel(TreeParent, this, MainVm, ModelObject.Behaviour);
 
@@ -107,16 +97,6 @@ namespace LeapfrogEditor
          }
       }
 
-      public ChildObjectStatePropertiesViewModel ObjectPropertiesVm
-      {
-         get { return _objectPropertiesVm; }
-         set
-         {
-            _objectPropertiesVm = value;
-            OnPropertyChanged("");
-         }
-      }
-
       public CoBehaviourViewModel Behaviour
       {
          get { return _behaviour; }
@@ -127,7 +107,10 @@ namespace LeapfrogEditor
          }
       }
 
-      public string Name
+      public virtual string Name
+         // For a FileCOViewModel, this property supplies the file name and it can not be set.
+         // The ChildCOViewModel overrides this Property to return the 
+         // Child name  (and to be able to set it)
       {
          get
          {
@@ -140,136 +123,11 @@ namespace LeapfrogEditor
                return fileName;
             }
 
-            if ((TreeParent != null) && (TreeParent.TreeParent != null) && (TreeParent.TreeParent is ChildObjectViewModel))
-            {
-               ChildObjectViewModel covm = TreeParent.TreeParent as ChildObjectViewModel;
-
-               return covm.Name;
-            }
-
             return "Error: could not resolve name";
          }
          set
          {
-            if ((TreeParent != null) && (TreeParent.TreeParent != null) && (TreeParent.TreeParent is ChildObjectViewModel))
-            {
-               ChildObjectViewModel covm = TreeParent.TreeParent as ChildObjectViewModel;
-
-               covm.Name = value;
-               OnPropertyChanged("Name");
-               covm.OnPropertyChanged("Name");
-            }
-         }
-      }
-
-      public bool IsFileReferenceChild
-      {
-         get
-         {
-            if ((TreeParent != null) && (TreeParent is ChildObjectStatePropertiesViewModel))
-            {
-               ChildObjectStatePropertiesViewModel covm = TreeParent as ChildObjectStatePropertiesViewModel;
-
-               if ((covm.File != "") && (covm.File != "undef_file.xml"))
-               {
-                  return true;
-               }
-            }
-
-            return false;
-         }
-      }
-
-      public string ReferenceChildFileName
-      {
-         get
-         {
-            if ((TreeParent != null) && (TreeParent is ChildObjectStatePropertiesViewModel))
-            {
-               ChildObjectStatePropertiesViewModel covm = TreeParent as ChildObjectStatePropertiesViewModel;
-
-               return covm.File;
-            }
-
-            return "";
-         }
-      }
-
-      public string RefName
-      {
-         get
-         {
-            if ((ReferenceChildFileName == "") || (ReferenceChildFileName == "undef_file.xml"))
-            {
-               return Name;
-            }
-
-            return Name + " - " + ReferenceChildFileName;
-         }
-         set
-         {
-         }
-      }
-
-      public double PosX
-      {
-         get
-         {
-            if (ObjectPropertiesVm == null)
-            {
-               return 0;
-            }
-
-            return ObjectPropertiesVm.PosX;
-         }
-         set
-         {
-            if (ObjectPropertiesVm == null)
-            {
-               ObjectPropertiesVm.PosX = value;
-
-               OnPropertyChanged("PosX");
-               OnPropertyChanged("BoundingBox");
-
-               CompoundObjectViewModel p = ParentVm;
-
-               while (p != null)
-               {
-                  p.OnPropertyChanged("BoundingBox");
-                  p = p.ParentVm;
-               }
-            }
-         }
-      }
-
-      public double PosY
-      {
-         get
-         {
-            if (ObjectPropertiesVm == null)
-            {
-               return 0;
-            }
-
-            return ObjectPropertiesVm.PosY;
-         }
-         set
-         {
-            if (ObjectPropertiesVm == null)
-            {
-               ObjectPropertiesVm.PosY = value;
-
-               OnPropertyChanged("PosY");
-               OnPropertyChanged("BoundingBox");
-
-               CompoundObjectViewModel p = ParentVm;
-
-               while (p != null)
-               {
-                  p.OnPropertyChanged("BoundingBox");
-                  p = p.ParentVm;
-               }
-            }
+            // Name of top level Compound Object can not be set
          }
       }
 
@@ -313,25 +171,6 @@ namespace LeapfrogEditor
             OnPropertyChanged("ChildObjectsWithStates");
          }
       }
-
-      //public ObservableCollection<CompoundObjectViewModel> StateChildObjects
-      //{
-      //   get
-      //   {
-      //      if ((Behaviour.DisplayedStateIndex >= 0) && (_statesWithChildObjects.Count > Behaviour.DisplayedStateIndex))
-      //      {
-      //         return _statesWithChildObjects[Behaviour.DisplayedStateIndex];
-      //      }
-      //      return null;
-      //   }
-      //   set
-      //   {
-      //      if ((Behaviour.DisplayedStateIndex >= 0) && (_statesWithChildObjects.Count > Behaviour.DisplayedStateIndex))
-      //      {
-      //         _statesWithChildObjects[Behaviour.DisplayedStateIndex] = value;
-      //      }
-      //   }
-      //}
 
       public List<string> Behaviours
       {
@@ -398,66 +237,6 @@ namespace LeapfrogEditor
          set { _treeCollection = value; }
       }
 
-      public Rect BoundingBox
-      {
-         get
-         {
-            if (StateShapes == null) return new Rect(0, 0, 0, 0);
-
-            if ((StateShapes.Shapes.Count == 0) && (ChildObjectsWithStates.Children.Count == 0))
-            {
-               return new Rect(0,0,0,0);
-            }
-
-            BoundingBoxRect bbr = new BoundingBoxRect();
-
-            if (StateShapes.Shapes.Count > 0)
-            {
-               foreach (object o in StateShapes.Shapes)
-               {
-                  if (o is LfShapeViewModel)
-                  {
-                     LfShapeViewModel shape = (LfShapeViewModel)o;
-
-                     Rect cb = shape.BoundingBox;
-                     cb.Offset(new Vector(shape.PosX, shape.PosY));
-                     bbr.AddRect(cb);
-                  }
-               }
-            }
-
-            if (ChildObjectsWithStates.Children.Count > 0)
-            {
-               // TODO: Expand this to work with all Displayed ChildObjects, the uncomment
-               //foreach (CompoundObjectViewModel child in ChildObjectsWithStates.Children)
-               //{
-               //   Rect cb = child.BoundingBox;
-               //   cb.Offset(new Vector(child.PosX, child.PosY));
-               //   bbr.AddRect(cb);
-               //}
-            }
-
-            return bbr.BoundingBox;
-         }
-         set
-         { }
-      }
-
-      public string ObjectState
-      {
-         get
-         {
-            if ((TreeParent != null) && (TreeParent is ChildObjectStatePropertiesViewModel))
-            {
-               ChildObjectStatePropertiesViewModel spvm = TreeParent as ChildObjectStatePropertiesViewModel;
-
-               return spvm.State;
-            }
-
-            return "--notDefined--";
-         }
-      }
-
       public string DispState
       {
          get
@@ -476,48 +255,38 @@ namespace LeapfrogEditor
          }
       }
 
-      //override public bool IsSelected
-      //   // If the CompoundObject is a child of another object
-      //   // it will be the direct child of a ChildObjectStatePropertiesViewModel.
-      //   // At all times, we want this VM to be selected as the same time 
-      //   // as this object. Hence we override IsSelected here to use the
-      //   // parent to maintain the state. If this parent is null, 
-      //   // we return false (for get) and do not set the value (for set).
-      //{
-      //   get
-      //   {
-      //      if ((TreeParent != null) && ( TreeParent is ChildObjectStatePropertiesViewModel))
-      //      {
-      //         return TreeParent.IsSelected;
-      //      }
-      //      return false;
-      //   }
-      //   set
-      //   {
-      //      if ((TreeParent != null) && (TreeParent is ChildObjectStatePropertiesViewModel))
-      //      {
-      //         if (value)
-      //         {
-      //            if (MainVm.AmISelectable(this))
-      //            {
-      //               TreeParent.IsSelected = value;
-      //               OnPropertyChanged("IsSelected");
+      // Some functions can not differntiate between CompoundObjectViewMode
+      // or ChildCOViewModel so these properties provide interface to the 
+      // ChildCOVM if this instance is of that type
+      public double PosX
+      {
+         get
+         {
+            if (this is ChildCOViewModel)
+            {
+               ChildCOViewModel vm = this as ChildCOViewModel;
 
-      //               if (TreeParent.IsSelected == true)
-      //               {
-      //                  IsExpanded = true;
-      //               }
-      //            }
-      //         }
-      //         else
-      //         {
-      //            TreeParent.IsSelected = value;
-      //            OnPropertyChanged("IsSelected");
-      //         }
-      //      }
-      //   }
-      //}
+               return vm.PosX;
+            }
 
+            return 0;
+         }
+      }
+
+      public double PosY
+      {
+         get
+         {
+            if (this is ChildCOViewModel)
+            {
+               ChildCOViewModel vm = this as ChildCOViewModel;
+
+               return vm.PosY;
+            }
+
+            return 0;
+         }
+      }
 
       #endregion
 
@@ -675,11 +444,11 @@ namespace LeapfrogEditor
       {
          foreach (ChildObjectViewModel childvm in ChildObjectsWithStates.Children)
          {
-            foreach (ChildObjectStatePropertiesViewModel chospvm in childvm.StateProperties)
+            foreach (ChildCOViewModel chospvm in childvm.StateProperties)
             {
-               if (chospvm.ModelObject.Properties == findMe)
+               if (chospvm.ChildStateModelObject.Properties == findMe)
                {
-                  return chospvm.CompoundObjectChild;
+                  return chospvm;
                }
             }
          }
@@ -860,9 +629,9 @@ namespace LeapfrogEditor
       {
          foreach (ChildObjectViewModel chvm in _childObjectsWithStates.Children)
          {
-            foreach (ChildObjectStatePropertiesViewModel spvm in chvm.StateProperties)
+            foreach (ChildCOViewModel spvm in chvm.StateProperties)
             {
-               spvm.CompoundObjectChild.OnPropertyChanged("");
+               spvm.OnPropertyChanged("");
             }
          }
       }
@@ -980,7 +749,7 @@ namespace LeapfrogEditor
       {
          foreach (ChildObjectViewModel chovm in ChildObjectsWithStates.Children)
          {
-            foreach (ChildObjectStatePropertiesViewModel spvm in chovm.StateProperties)
+            foreach (ChildCOViewModel spvm in chovm.StateProperties)
             {
                if (spvm.File  == fileName)
                {
@@ -988,7 +757,7 @@ namespace LeapfrogEditor
                }
                else
                {
-                  if (spvm.CompoundObjectChild.ChildHasFileReference(fileName))
+                  if (spvm.ChildHasFileReference(fileName))
                   {
                      return true;
                   }
@@ -1015,6 +784,16 @@ namespace LeapfrogEditor
          return coPoint;
       }
 
+      // This method returns with the supplied point (expressed in this CompoundObject's
+      // coordinate system) converted to the parent CompoundObjects coordinate system.
+      // This is done by adding the Position of this CompoundObject.
+      public virtual Point ParentCoPoint(Point coPoint)
+      {
+         // Since the top CO is always located at 0,0 there is no
+         // coordinate transform at this level. Simply return the supplied point.
+         return coPoint;
+      }
+
       // This method returns with the point of the CO's coordinate system
       // in this Shape's coordinate system. 
       // The position of the shape is subtracted from the CO point. 
@@ -1027,30 +806,6 @@ namespace LeapfrogEditor
          shapePoint.Offset(-shape.PosX, -shape.PosY);
 
          return shapePoint;
-      }
-
-      // This method returns with the supplied point (expressed in this CompoundObject's
-      // coordinate system) converted to the parent CompoundObjects coordinate system.
-      // This is done by adding the Position of this CompoundObject.
-      public Point ParentCoPoint(Point coPoint)
-      {
-         Point parentPoint = coPoint;
-
-         parentPoint.Offset(PosX, PosY);
-
-         return parentPoint;
-      }
-
-      // This method returns with the supplied point (expressed in the parent of this 
-      // CompoundObject's coordinate system) converted to this CompoundObjects coordinate system.
-      // This is done by subtracting the parentPoint with the position of this CompoundObject.
-      public Point CoPointFromParent(Point parentPoint)
-      {
-         Point coPoint = parentPoint;
-
-         coPoint.Offset(-PosX, -PosY);
-
-         return coPoint;
       }
 
       // This method returns with the supplied point in the scene's coordinate system
@@ -1071,11 +826,13 @@ namespace LeapfrogEditor
          }
       }
 
-      public Point GetCoPointFromScenePoint(Point scenePoint)
+      public virtual Point GetCoPointFromScenePoint(Point scenePoint)
       {
-         if (ParentVm != null)
+         if (this is ChildCOViewModel)
          {
-            Point parentPoint = CoPointFromParent(scenePoint);
+            ChildCOViewModel vm = this as ChildCOViewModel;
+
+            Point parentPoint = vm.CoPointFromParent(scenePoint);
             return GetCoPointFromScenePoint(parentPoint);
          }
          else
@@ -1098,9 +855,9 @@ namespace LeapfrogEditor
 
          foreach (ChildObjectViewModel covm in ChildObjectsWithStates.Children)
          {
-            foreach (ChildObjectStatePropertiesViewModel propvm in covm.StateProperties)
+            foreach (ChildCOViewModel propvm in covm.StateProperties)
             {
-               propvm.CompoundObjectChild.GenerateTriangles();
+               propvm.GenerateTriangles();
             }
          }
       }

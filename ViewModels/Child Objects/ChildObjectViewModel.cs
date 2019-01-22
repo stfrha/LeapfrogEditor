@@ -24,7 +24,7 @@ namespace LeapfrogEditor
       #region Declarations
 
       private ChildObject _modelObject;
-      private ObservableCollection<ChildObjectStatePropertiesViewModel> _stateProperties = new ObservableCollection<ChildObjectStatePropertiesViewModel>();
+      private ObservableCollection<ChildCOViewModel> _stateProperties = new ObservableCollection<ChildCOViewModel>();
       
       #endregion
 
@@ -42,7 +42,7 @@ namespace LeapfrogEditor
 
          foreach (TStateProperties<ChildObjectStateProperties> cosp in ModelObject.StateProperties)
          {
-            ChildObjectStatePropertiesViewModel cospvm = new ChildObjectStatePropertiesViewModel(this, parentVm, mainVm, cosp, enabled);
+            ChildCOViewModel cospvm = new ChildCOViewModel(this, parentVm, mainVm, cosp, enabled);
             StateProperties.Add(cospvm);
          }
       }
@@ -76,7 +76,7 @@ namespace LeapfrogEditor
          }
       }
 
-      public ObservableCollection<ChildObjectStatePropertiesViewModel> StateProperties
+      public ObservableCollection<ChildCOViewModel> StateProperties
       {
          get { return _stateProperties; }
          set { _stateProperties = value; }
@@ -94,11 +94,10 @@ namespace LeapfrogEditor
 
       public void DeselectAllChildren()
       {
-         foreach (ChildObjectStatePropertiesViewModel spvm in StateProperties)
+         foreach (ChildCOViewModel spvm in StateProperties)
          {
             spvm.IsSelected = false;
-            spvm.CompoundObjectChild.IsSelected = false;
-            spvm.CompoundObjectChild.DeselectAllChildren();
+            spvm.DeselectAllChildren();
          }
       }
 

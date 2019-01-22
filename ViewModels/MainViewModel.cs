@@ -80,7 +80,7 @@ namespace LeapfrogEditor
       private ObservableCollection<TreeViewViewModel> _selectedItems = new ObservableCollection<TreeViewViewModel>();
 
       private ObservableCollection<ChildObjectViewModel> _selectedChildObjects = new ObservableCollection<ChildObjectViewModel>();
-      private ObservableCollection<ChildObjectStatePropertiesViewModel> _selectedChildObjectStateProperties = new ObservableCollection<ChildObjectStatePropertiesViewModel>();
+      private ObservableCollection<ChildCOViewModel> _selectedChildObjectStateProperties = new ObservableCollection<ChildCOViewModel>();
       private ObservableCollection<LfShapeViewModel> _selectedShapes = new ObservableCollection<LfShapeViewModel>();
       private ObservableCollection<WeldJointViewModel> _selectedJoints = new ObservableCollection<WeldJointViewModel>();
       private ObservableCollection<CoSystemViewModel> _selectedSystems = new ObservableCollection<CoSystemViewModel>();
@@ -212,7 +212,7 @@ namespace LeapfrogEditor
          set { _selectedChildObjects = value; }
       }
 
-      public ObservableCollection<ChildObjectStatePropertiesViewModel> SelectedChildObjectStateProperties
+      public ObservableCollection<ChildCOViewModel> SelectedChildObjectStateProperties
       {
          get { return _selectedChildObjectStateProperties; }
          set { _selectedChildObjectStateProperties = value; }
@@ -408,9 +408,9 @@ namespace LeapfrogEditor
             return true;
          }
 
-         if (parameter is CompoundObjectViewModel)
+         if (parameter is ChildCOViewModel)
          {
-            CompoundObjectViewModel covm = parameter as CompoundObjectViewModel;
+            ChildCOViewModel covm = parameter as ChildCOViewModel;
 
             if (!covm.IsFileReferenceChild)
             {
@@ -437,9 +437,9 @@ namespace LeapfrogEditor
       void OpenChildFileExecute(Object parameter)
       {
          // What object is we pointing at?
-         if (parameter is CompoundObjectViewModel)
+         if (parameter is ChildCOViewModel)
          {
-            CompoundObjectViewModel covm = parameter as CompoundObjectViewModel;
+            ChildCOViewModel covm = parameter as ChildCOViewModel;
 
             OpenFileToEdit(covm.ReferenceChildFileName);
          }
@@ -447,9 +447,9 @@ namespace LeapfrogEditor
 
       bool CanOpenChildFileExecute(Object parameter)
       {
-         if (parameter is CompoundObjectViewModel)
+         if (parameter is ChildCOViewModel)
          {
-            CompoundObjectViewModel covm = parameter as CompoundObjectViewModel;
+            ChildCOViewModel covm = parameter as ChildCOViewModel;
 
             if (covm == EditedCpVm)
             {
@@ -1416,7 +1416,7 @@ namespace LeapfrogEditor
             {
                // The first point of this polygon will be the PosX and PosY of the 
                // new shape, and thus, the first polygon vertex should be at 0,0.
-               Point parentOrigo = new Point(EditedCpVm.PosX, EditedCpVm.PosY);
+               Point parentOrigo = new Point(0, 0);
                Point localClickPoint = new Point();
                localClickPoint = (Point)(clickPoint - parentOrigo);
 
@@ -1481,7 +1481,7 @@ namespace LeapfrogEditor
             {
                // The first point of this polygon will be the PosX and PosY of the 
                // new shape, and thus, the first polygon vertex should be at 0,0.
-               Point parentOrigo = new Point(EditedCpVm.PosX, EditedCpVm.PosY);
+               Point parentOrigo = new Point(0, 0);
                Point localClickPoint = new Point();
                localClickPoint = (Point)(clickPoint - parentOrigo);
 
@@ -1534,7 +1534,7 @@ namespace LeapfrogEditor
             {
                // The first point of this polygon will be the PosX and PosY of the 
                // new shape, and thus, the first polygon vertex should be at 0,0.
-               Point parentOrigo = new Point(EditedCpVm.PosX, EditedCpVm.PosY);
+               Point parentOrigo = new Point(0, 0);
                Point localClickPoint = new Point();
                localClickPoint = (Point)(clickPoint - parentOrigo);
 
@@ -1623,7 +1623,7 @@ namespace LeapfrogEditor
 
                wjvm.ConnectToShapes(EditedCpVm.StateShapes);
 
-               Point parentObjectOrigo = new Point(EditedCpVm.PosX, EditedCpVm.PosY);
+               Point parentObjectOrigo = new Point(0, 0);
 
                // Shape A point
                Point shapeAOrigo = new Point(wjvm.AShapeObject.PosX, wjvm.AShapeObject.PosY);
@@ -1694,7 +1694,7 @@ namespace LeapfrogEditor
 
                rpvm.ConnectToShapes(EditedCpVm.StateShapes);
 
-               Point parentObjectOrigo = new Point(EditedCpVm.PosX, EditedCpVm.PosY);
+               Point parentObjectOrigo = new Point(0, 0);
 
                // Shape A point
                Point shapeAOrigo = new Point(rpvm.AShapeObject.PosX, rpvm.AShapeObject.PosY);
@@ -1883,9 +1883,9 @@ namespace LeapfrogEditor
                }
             }
 
-            if (tvvm is ChildObjectStatePropertiesViewModel)
+            if (tvvm is ChildCOViewModel)
             {
-               ChildObjectStatePropertiesViewModel cospvm = tvvm as ChildObjectStatePropertiesViewModel;
+               ChildCOViewModel cospvm = tvvm as ChildCOViewModel;
 
                if (cospvm.ParentVm == EditedCpVm)
                {

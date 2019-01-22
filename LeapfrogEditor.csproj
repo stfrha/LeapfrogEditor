@@ -76,8 +76,8 @@
     <Compile Include="ViewModels\Behvaiours\SteerableObjectPropertiesViewModel.cs" />
     <Compile Include="ViewModels\Behvaiours\BreakableObjectPropertiesViewModel.cs" />
     <Compile Include="ViewModels\Behvaiours\StateViewModel.cs" />
-    <Compile Include="ViewModels\Child Objects\ChildObjectStatePropertiesViewModel.cs" />
     <Compile Include="ViewModels\Child Objects\ChildObjectViewModel.cs" />
+    <Compile Include="ViewModels\Child Objects\ChildCOViewModel.cs" />
     <Compile Include="ViewModels\FileCOViewModel.cs" />
     <Compile Include="ViewModels\DataBindingProxy.cs" />
     <Compile Include="ViewModels\Interfaces\IParentVmInterface.cs" />
