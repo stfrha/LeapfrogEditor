@@ -222,13 +222,10 @@ namespace LeapfrogEditor
 
             CompoundObjectViewModel p = ParentVm;
 
-            while (p != null)
+            while ((p != null) && (p is ChildCOViewModel))
             {
-               if (p is ChildCOViewModel)
-               {
-                  p.OnPropertyChanged("BoundingBox");
-                  p = p.ParentVm;
-               }
+               p.OnPropertyChanged("BoundingBox");
+               p = p.ParentVm;
             }
          }
       }
@@ -248,13 +245,10 @@ namespace LeapfrogEditor
 
             CompoundObjectViewModel p = ParentVm;
 
-            while (p != null)
-            {
-               if (p is ChildCOViewModel)
-               {
-                  p.OnPropertyChanged("BoundingBox");
-                  p = p.ParentVm;
-               }
+            while ((p != null) && (p is ChildCOViewModel))
+            { 
+               p.OnPropertyChanged("BoundingBox");
+               p = p.ParentVm;
             }
          }
       }

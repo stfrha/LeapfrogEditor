@@ -95,6 +95,9 @@
     <Compile Include="ViewModels\Systems\FlameEmitterPropertiesViewModel.cs" />
     <Compile Include="ViewModels\ConditionalSelectTreeViewViewModel.cs" />
     <Compile Include="ViewModels\TreeViewViewModel.cs" />
+    <Compile Include="Views\Controls\ChildCOObjectUserControl.xaml.cs">
+      <DependentUpon>ChildCOObjectUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\Editable Properties Controls\Behaviour Properties Control\ScenePropEditor.xaml.cs">
       <DependentUpon>ScenePropEditor.xaml</DependentUpon>
     </Compile>
@@ -299,6 +302,10 @@
       <DependentUpon>CompoundObjectUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\Editable Shapes Controls\TriangleShape.cs" />
+    <Page Include="Views\Controls\ChildCOObjectUserControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\Controls\Editable Properties Controls\Behaviour Properties Control\ScenePropEditor.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
