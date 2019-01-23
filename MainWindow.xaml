@@ -383,17 +383,15 @@
 					uses to specify an area to zoom in on.
 					-->
                      <Canvas
-						x:Name="dragZoomCanvas"
-						Visibility="Collapsed"
-						>
+						      x:Name="dragZoomCanvas"
+						      Visibility="Collapsed" >
                         <Border 
-							x:Name="dragZoomBorder"
-							BorderBrush="Black"
-							BorderThickness="1"
-							Background="Silver"
-							CornerRadius="1"
-							Opacity="0"
-							/>
+							      x:Name="dragZoomBorder"
+							      BorderBrush="Black"
+							      BorderThickness="1"
+							      Background="Silver"
+							      CornerRadius="1"
+							      Opacity="0" />
                      </Canvas>
                   </Grid>
                </ZoomAndPan:ZoomAndPanControl>
@@ -401,14 +399,13 @@
          </DockPanel>
          <ScrollViewer Grid.Column="3">
             <local:PropertiesEditor 
-            EditableCompoundObject="{Binding EditedCpVm}"
-            EditableSpawnObject="{Binding EditableSpawnObject}"
-            SelectedChildren="{Binding SelectedChildObjects}"
-            ChildObjectStateProperties="{Binding SelectedChildObjectStateProperties}"
-            EditableShapes="{Binding SelectedShapes}"
-            EditableJoints="{Binding SelectedJoints}"
-            EditableSystems="{Binding SelectedSystems}"
-            />
+               EditableCompoundObject="{Binding EditedCpVm}"
+               EditableSpawnObject="{Binding EditableSpawnObject}"
+               SelectedChildren="{Binding SelectedChildObjects}"
+               ChildObjectStateProperties="{Binding SelectedChildObjectStateProperties}"
+               EditableShapes="{Binding SelectedShapes}"
+               EditableJoints="{Binding SelectedJoints}"
+               EditableSystems="{Binding SelectedSystems}" />
          </ScrollViewer>
       </Grid>
       <!--<StackPanel Grid.Row="0" HorizontalAlignment="Left" Orientation="Horizontal">

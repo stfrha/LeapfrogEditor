@@ -2029,6 +2029,8 @@ namespace LeapfrogEditor
 
       private void DeselectAll()
       {
+         //((MainWindow)System.Windows.Application.Current.MainWindow).TheTreeView.ClearSelection();
+
          foreach (FileCOViewModel coFile in FileCollectionViewModel)
          {
             coFile.IsSelected = false;

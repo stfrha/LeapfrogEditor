@@ -93,7 +93,6 @@
     <Compile Include="ViewModels\Systems\ShieldPropertiesViewModel.cs" />
     <Compile Include="ViewModels\Systems\GunPropertiesViewModel.cs" />
     <Compile Include="ViewModels\Systems\FlameEmitterPropertiesViewModel.cs" />
-    <Compile Include="ViewModels\ConditionalSelectTreeViewViewModel.cs" />
     <Compile Include="ViewModels\TreeViewViewModel.cs" />
     <Compile Include="Views\Controls\ChildCOObjectUserControl.xaml.cs">
       <DependentUpon>ChildCOObjectUserControl.xaml</DependentUpon>

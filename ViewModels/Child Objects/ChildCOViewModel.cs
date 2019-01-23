@@ -84,9 +84,9 @@ namespace LeapfrogEditor
       {
          get
          {
-            if ((TreeParent != null) && (TreeParent.TreeParent != null) && (TreeParent.TreeParent is ChildObjectViewModel))
+            if ((TreeParent != null) && (TreeParent is ChildObjectViewModel))
             {
-               ChildObjectViewModel covm = TreeParent.TreeParent as ChildObjectViewModel;
+               ChildObjectViewModel covm = TreeParent as ChildObjectViewModel;
 
                return covm.Name;
             }
