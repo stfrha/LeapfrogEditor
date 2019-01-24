@@ -25,18 +25,8 @@
             </DataTemplate>
          </ContentControl.Resources>
       </ContentControl>
-      <ContentControl
-         DataContext="{Binding EditableSpawnObject, ElementName=root}"
-         Content="{Binding}" 
-         Margin="2" >
-         <ContentControl.Resources>
-            <DataTemplate DataType="{x:Type local:SpawnObjectViewModel}">
-               <local:SpawnObjectPropEditor />
-            </DataTemplate>
-         </ContentControl.Resources>
-      </ContentControl>
       <ItemsControl 
-         ItemsSource="{Binding SelectedChildren, ElementName=root}"
+         ItemsSource="{Binding EditableChildren, ElementName=root}"
          Margin="2" >
          <ItemsControl.Resources>
             <DataTemplate DataType="{x:Type local:ChildObjectViewModel}">
@@ -57,6 +47,34 @@
             <DataTemplate DataType="{x:Type local:ChildCOViewModel}">
                <local:ChildObjectStatePropEditor
                   Headline="{Binding Name, Converter={StaticResource StatePropertiesHeadlineConverter}}"/>
+            </DataTemplate>
+         </ItemsControl.Resources>
+         <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+               <StackPanel />
+            </ItemsPanelTemplate>
+         </ItemsControl.ItemsPanel>
+      </ItemsControl>
+      <ItemsControl 
+         ItemsSource="{Binding EditableStates, ElementName=root}"
+         Margin="2" >
+         <ItemsControl.Resources>
+            <DataTemplate DataType="{x:Type local:StateViewModel}">
+               <local:StatePropEditor />
+            </DataTemplate>
+         </ItemsControl.Resources>
+         <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+               <StackPanel />
+            </ItemsPanelTemplate>
+         </ItemsControl.ItemsPanel>
+      </ItemsControl>
+      <ItemsControl 
+         ItemsSource="{Binding EditableSpawnObjects, ElementName=root}"
+         Margin="2" >
+         <ItemsControl.Resources>
+            <DataTemplate DataType="{x:Type local:SpawnObjectViewModel}">
+               <local:SpawnObjectPropEditor />
             </DataTemplate>
          </ItemsControl.Resources>
          <ItemsControl.ItemsPanel>

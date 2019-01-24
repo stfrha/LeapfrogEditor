@@ -83,7 +83,8 @@ namespace LeapfrogEditor
       private ObservableCollection<WeldJointViewModel> _selectedJoints = new ObservableCollection<WeldJointViewModel>();
       private ObservableCollection<CoSystemViewModel> _selectedSystems = new ObservableCollection<CoSystemViewModel>();
       private ObservableCollection<LfDragablePointViewModel> _selectedPoints = new ObservableCollection<LfDragablePointViewModel>();
-      private SpawnObjectViewModel _editableSpawnObject = null;
+      private ObservableCollection<StateViewModel> _selectedStates = new ObservableCollection<StateViewModel>();
+      private ObservableCollection<SpawnObjectViewModel> _selectedSpawnObjects = new ObservableCollection<SpawnObjectViewModel>();
 
       private ZLevels _zLevels = new ZLevels();
       private CollisionEntities _collEnts = new CollisionEntities();
@@ -205,14 +206,16 @@ namespace LeapfrogEditor
          set { _selectedPoints = value; }
       }
 
-      public SpawnObjectViewModel EditableSpawnObject
+      public ObservableCollection<StateViewModel> SelectedStates
       {
-         get { return _editableSpawnObject; }
-         set
-         {
-            _editableSpawnObject = value;
-            OnPropertyChanged("EditableSpawnObject");
-         }
+         get { return _selectedStates; }
+         set { _selectedStates = value; }
+      }
+
+      public ObservableCollection<SpawnObjectViewModel> SelectedSpawnObjects
+      {
+         get { return _selectedSpawnObjects; }
+         set { _selectedSpawnObjects = value; }
       }
 
       public LeftClickState LeftClickState
@@ -977,6 +980,194 @@ namespace LeapfrogEditor
             return new MicroMvvm.RelayCommand<Object>(parameter => AddChildObjectExecute(parameter), parameter => CanAddChildObjectExecute(parameter));
          }
       }
+
+      void AddSpawnObjectExecute(Object parameter)
+      {
+         if (parameter is BreakableObjectPropertiesViewModel)
+         {
+            BreakableObjectPropertiesViewModel bovm = parameter as BreakableObjectPropertiesViewModel;
+
+            SpawnObject so = new SpawnObject();
+
+            ChildObject ch = new ChildObject();
+
+            so.MyChildObject = ch;
+
+            bovm.LocalModelObject.SpawnObjects.Add(so);
+
+            SpawnObjectViewModel spvm = new SpawnObjectViewModel(bovm, EditedCpVm, this, so);
+
+            bovm.SpawnObjects.Add(spvm);
+         }
+
+         if (parameter is ChildObjectViewModel)
+         {
+            ChildObjectViewModel chvm = parameter as ChildObjectViewModel;
+
+            TStateProperties<ChildObjectStateProperties> sp = new TStateProperties<ChildObjectStateProperties>();
+            chvm.ModelObject.StateProperties.Add(sp);
+
+            sp.Properties = new ChildObjectStateProperties();
+            sp.Properties.CompObj = new CompoundObject();
+
+            ChildCOViewModel covm = new ChildCOViewModel(chvm, EditedCpVm, this, sp);
+            covm.BuildViewModel(true);
+
+            chvm.StateProperties.Add(covm);
+         }
+      }
+
+      bool CanAddSpawnObjectExecute(Object parameter)
+      {
+         if (parameter == null)
+         {
+            return false;
+         }
+
+         if ((EditedCpVm != null) && (parameter is BreakableObjectPropertiesViewModel))
+         {
+            return true;
+         }
+
+         return false;
+      }
+
+      public ICommand AddSpawnObject
+      {
+         get
+         {
+            return new MicroMvvm.RelayCommand<Object>(parameter => AddSpawnObjectExecute(parameter), parameter => CanAddSpawnObjectExecute(parameter));
+         }
+      }
+
+      
+
+      void AddStateExecute(Object parameter)
+      {
+         if (parameter is ScenePropertiesViewModel)
+         {
+            string newStateName = "newState";
+
+            ScenePropertiesViewModel spvm = parameter as ScenePropertiesViewModel;
+
+            spvm.ModelObject.States.Add(newStateName);
+
+            StateViewModel svp = new StateViewModel(spvm, EditedCpVm, this, spvm, newStateName);
+
+            spvm.States.Add(svp);
+         }
+      }
+
+      bool CanAddStateExecute(Object parameter)
+      {
+         if (parameter == null)
+         {
+            return false;
+         }
+
+         if ((EditedCpVm != null) && (parameter is ScenePropertiesViewModel))
+         {
+            return true;
+         }
+
+         return false;
+      }
+
+      public ICommand AddState
+      {
+         get
+         {
+            return new MicroMvvm.RelayCommand<Object>(parameter => AddStateExecute(parameter), parameter => CanAddStateExecute(parameter));
+         }
+      }
+
+      void DeleteStateExecute(Object parameter)
+      {
+         if (parameter is StateViewModel)
+         {
+            StateViewModel svm = parameter as StateViewModel;
+
+            if (svm.StateName == "default")
+            {
+               MessageBox.Show("The default state may not be deleted", "Cannot delete default state", MessageBoxButton.OK, MessageBoxImage.Error);
+               return;
+            }
+
+            // Test if state is used, print where it is used
+            // if not used, delete it. Now all indices must be updated
+            List<string> stateUsers = new List<string>();
+
+            foreach (ChildObjectViewModel covm in EditedCpVm.ChildObjectsWithStates.Children)
+            {
+               foreach (ChildCOViewModel chvm in covm.StateProperties)
+               {
+                  if (chvm.ChildStateModelObject.State == svm.StateName)
+                  {
+                     stateUsers.Add(chvm.Name);
+                  }
+               }
+            }
+
+            if (stateUsers.Count > 0)
+            {
+               string errorMsg = "The state cannot be deleted since it is used in the following Child Objects: ";
+
+               foreach (string s in stateUsers)
+               {
+                  errorMsg += s + ", ";
+               }
+
+               errorMsg = errorMsg.Substring(0, errorMsg.Length - 2);
+
+               errorMsg += ". Remove these children or change their states, and delete this state again.";
+
+               MessageBox.Show(errorMsg, "Cannot delete state", MessageBoxButton.OK, MessageBoxImage.Error);
+
+               return;
+            }
+
+            // State is not used. Now we can delete it.
+
+            EditedCpVm.Behaviour.ModelObject.SceneProperties.States.Remove(svm.StateName);
+            EditedCpVm.Behaviour.States.Remove(svm);
+
+            // Must then update the selected state index
+            // in all children state properties. The ViewModel has the state index
+            // which is changed, and the ModelObject has the state names that are
+            // not changed
+            foreach (ChildObjectViewModel covm in EditedCpVm.ChildObjectsWithStates.Children)
+            {
+               foreach (ChildCOViewModel chvm in covm.StateProperties)
+               {
+                  chvm.SelectedStateIndex = GetEditableCoBehaviourIndexOf(chvm.State);
+               }
+            }
+         }
+      }
+
+      bool CanDeleteStateExecute(Object parameter)
+      {
+         if (parameter == null)
+         {
+            return false;
+         }
+
+         if ((EditedCpVm != null) && (parameter is StateViewModel))
+         {
+            return true;
+         }
+
+         return false;
+      }
+
+      public ICommand DeleteState
+      {
+         get
+         {
+            return new MicroMvvm.RelayCommand<Object>(parameter => DeleteStateExecute(parameter), parameter => CanDeleteStateExecute(parameter));
+         }
+      }
+
       
 
 
@@ -1913,7 +2104,12 @@ namespace LeapfrogEditor
 
       public int GetEditableCoBehaviourIndexOf(string state)
       {
-         return EditedCpVm.Behaviour.States.IndexOf(EditedCpVm.Behaviour.FindStateVM(state));
+         if (EditedCpVm != null)
+         {
+            return EditedCpVm.Behaviour.States.IndexOf(EditedCpVm.Behaviour.FindStateVM(state));
+         }
+
+         return 0;
       }
 
       public void BuildSelectionCollections()
@@ -1927,7 +2123,8 @@ namespace LeapfrogEditor
          SelectedJoints.Clear();
          SelectedSystems.Clear();
          SelectedPoints.Clear();
-         EditableSpawnObject = null;
+         SelectedStates.Clear();
+         SelectedSpawnObjects.Clear();
 
          foreach (TreeViewViewModel tvvm in EditedCpVm.ChildObjectsWithStates.Children)
          {
@@ -1958,6 +2155,7 @@ namespace LeapfrogEditor
                }
             }
          }
+
 
          foreach (object o in EditedCpVm.StateShapes.Shapes)
          {
@@ -2024,13 +2222,108 @@ namespace LeapfrogEditor
             }
          }
 
+         foreach (object o in EditedCpVm.Behaviour.States)
+         {
+            if (o is StateViewModel)
+            {
+               StateViewModel svm = o as StateViewModel;
 
-         //if (tvvm is SpawnObjectViewModel)
-         //{
-         //   EditableSpawnObject = tvvm as SpawnObjectViewModel;
-         //}
+               if (svm.ParentVm == EditedCpVm)
+               {
+                  if (svm.IsSelected)
+                  {
+                     // This is the shape of the object being edited, 
+                     SelectedStates.Add(svm);
+                  }
+               }
+            }
+         }
+
+         // Spawn objects may exists in behaviour BreakableObject 
+         // and in ObjectFactory systems (so far)
+         if (EditedCpVm.Behaviour.Type == "breakableObject")
+         {
+            BreakableObjectPropertiesViewModel bovm = EditedCpVm.Behaviour.BehaviourProperties as BreakableObjectPropertiesViewModel;
+
+            foreach (SpawnObjectViewModel sovm in bovm.SpawnObjects)
+            {
+               if (sovm.IsSelected)
+               {
+                  // This is the shape of the object being edited, 
+                  SelectedSpawnObjects.Add(sovm);
+               }
+
+               // This is the child object of the object being edited, 
+               if (sovm.SpawnChildObject[0].IsSelected)
+               {
+                  SelectedChildObjects.Add(sovm.SpawnChildObject[0]);
+               }
+
+               foreach (ChildCOViewModel chvm in sovm.SpawnChildObject[0].StateProperties)
+               {
+                  if (chvm is ChildCOViewModel)
+                  {
+                     ChildCOViewModel cospvm = chvm as ChildCOViewModel;
+
+                     if (cospvm.IsSelected)
+                     {
+                        SelectedChildObjectStateProperties.Add(cospvm);
+                     }
+                  }
+               }
+            }
+
+            foreach (TreeViewViewModel tvvm in bovm.SpawnObjects)
+            {
+               if (tvvm is ChildObjectViewModel)
+               {
+                  ChildObjectViewModel covm = tvvm as ChildObjectViewModel;
+
+                  if (covm.ParentVm == EditedCpVm)
+                  {
+                     // This is the child object of the object being edited, 
+                     if (covm.IsSelected)
+                     {
+                        SelectedChildObjects.Add(covm);
+                     }
+
+                     foreach (ChildCOViewModel chvm in covm.StateProperties)
+                     {
+                        if (chvm is ChildCOViewModel)
+                        {
+                           ChildCOViewModel cospvm = chvm as ChildCOViewModel;
+
+                           if (cospvm.IsSelected)
+                           {
+                              SelectedChildObjectStateProperties.Add(cospvm);
+                           }
+                        }
+                     }
+                  }
+               }
+            }
+
+         }
+
+         // TODO: Loop all ObjectFactory systems
       }
 
+      public void InvalidateAllStates()
+      {
+         if (EditedCpVm == null)
+         {
+            return;
+         }
+
+         foreach (ChildObjectViewModel covm in EditedCpVm.ChildObjectsWithStates.Children)
+         {
+            foreach (ChildCOViewModel chvm in covm.StateProperties)
+            {
+               chvm.ChildStateModelObject.State = EditedCpVm.Behaviour.States[chvm.SelectedStateIndex].StateName;
+               chvm.OnPropertyChanged("");
+            }
+         }
+      }
 
       #endregion
 

@@ -154,7 +154,7 @@
                            <ContextMenu>
                               <MenuItem Header="Add Spawn object..." 
                                  CommandParameter="{Binding}"
-                                 Command="{Binding Path=Data.OpenChildFile, Source={StaticResource DataContextProxy}}" />
+                                 Command="{Binding Path=Data.AddSpawnObject, Source={StaticResource DataContextProxy}}" />
                            </ContextMenu>
                         </TextBlock.ContextMenu>
                      </TextBlock>
@@ -170,7 +170,7 @@
                            <ContextMenu>
                               <MenuItem Header="Add State" 
                                  CommandParameter="{Binding}"
-                                 Command="{Binding Path=Data.OpenChildFile, Source={StaticResource DataContextProxy}}" />
+                                 Command="{Binding Path=Data.AddState, Source={StaticResource DataContextProxy}}" />
                            </ContextMenu>
                         </TextBlock.ContextMenu>
                      </TextBlock>
@@ -185,7 +185,7 @@
                               <Separator />
                               <MenuItem Header="Delete State" 
                                  CommandParameter="{Binding}"
-                                 Command="{Binding Path=Data.OpenChildFile, Source={StaticResource DataContextProxy}}" />
+                                 Command="{Binding Path=Data.DeleteState, Source={StaticResource DataContextProxy}}" />
                            </ContextMenu>
                         </TextBlock.ContextMenu>
                      </TextBlock>
@@ -382,12 +382,13 @@
          <ScrollViewer Grid.Column="3">
             <local:PropertiesEditor 
                EditableCompoundObject="{Binding EditedCpVm}"
-               EditableSpawnObject="{Binding EditableSpawnObject}"
-               SelectedChildren="{Binding SelectedChildObjects}"
+               EditableSpawnObjects="{Binding SelectedSpawnObjects}"
+               EditableChildren="{Binding SelectedChildObjects}"
                ChildObjectStateProperties="{Binding SelectedChildObjectStateProperties}"
                EditableShapes="{Binding SelectedShapes}"
                EditableJoints="{Binding SelectedJoints}"
-               EditableSystems="{Binding SelectedSystems}" />
+               EditableSystems="{Binding SelectedSystems}"
+               EditableStates="{Binding SelectedStates}"/>
          </ScrollViewer>
       </Grid>
       <!--<StackPanel Grid.Row="0" HorizontalAlignment="Left" Orientation="Horizontal">

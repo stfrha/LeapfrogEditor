@@ -100,6 +100,9 @@
     <Compile Include="Views\Controls\Editable Properties Controls\Behaviour Properties Control\ScenePropEditor.xaml.cs">
       <DependentUpon>ScenePropEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\Editable Properties Controls\Behaviour Properties Control\StatePropEditor.xaml.cs">
+      <DependentUpon>StatePropEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\Editable Properties Controls\Behaviour Properties Control\SteerableBehaviourPropEditor.xaml.cs">
       <DependentUpon>SteerableBehaviourPropEditor.xaml</DependentUpon>
     </Compile>
@@ -306,6 +309,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Controls\Editable Properties Controls\Behaviour Properties Control\ScenePropEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\Editable Properties Controls\Behaviour Properties Control\StatePropEditor.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

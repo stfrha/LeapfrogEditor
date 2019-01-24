@@ -67,6 +67,11 @@ namespace LeapfrogEditor
             _stateName = value;
             OnPropertyChanged("StateName");
             OnPropertyChanged("StateIndicator");
+
+            if (MainVm != null)
+            {
+               MainVm.InvalidateAllStates();
+            }
          }
       }
 

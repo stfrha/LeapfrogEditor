@@ -38,29 +38,26 @@ namespace LeapfrogEditor
 
 
 
-      public SpawnObjectViewModel EditableSpawnObject
+      public ObservableCollection<ChildObjectViewModel> EditableChildren
       {
-         get { return (SpawnObjectViewModel)GetValue(EditableSpawnObjectProperty); }
-         set { SetValue(EditableSpawnObjectProperty, value); }
+         get { return (ObservableCollection<ChildObjectViewModel>)GetValue(EditableChildrenProperty); }
+         set { SetValue(EditableChildrenProperty, value); }
       }
 
-      // Using a DependencyProperty as the backing store for EditableSpawnObject.  This enables animation, styling, binding, etc...
-      public static readonly DependencyProperty EditableSpawnObjectProperty =
-          DependencyProperty.Register("EditableSpawnObject", typeof(SpawnObjectViewModel), typeof(PropertiesEditor), new PropertyMetadata(default(SpawnObjectViewModel)));
+      // Using a DependencyProperty as the backing store for EditableChildren.  This enables animation, styling, binding, etc...
+      public static readonly DependencyProperty EditableChildrenProperty =
+          DependencyProperty.Register("EditableChildren", typeof(ObservableCollection<ChildObjectViewModel>), typeof(PropertiesEditor), new PropertyMetadata(default(ObservableCollection<ChildObjectViewModel>)));
 
 
-
-
-      public ObservableCollection<ChildObjectViewModel> SelectedChildren
+      public ObservableCollection<StateViewModel> EditableStates
       {
-         get { return (ObservableCollection<ChildObjectViewModel>)GetValue(SelectedChildrenProperty); }
-         set { SetValue(SelectedChildrenProperty, value); }
+         get { return (ObservableCollection<StateViewModel>)GetValue(EditableStatesProperty); }
+         set { SetValue(EditableStatesProperty, value); }
       }
 
-      // Using a DependencyProperty as the backing store for SelectedChildren.  This enables animation, styling, binding, etc...
-      public static readonly DependencyProperty SelectedChildrenProperty =
-          DependencyProperty.Register("SelectedChildren", typeof(ObservableCollection<ChildObjectViewModel>), typeof(PropertiesEditor), new PropertyMetadata(default(ObservableCollection<ChildObjectViewModel>)));
-
+      // Using a DependencyProperty as the backing store for EditableStates.  This enables animation, styling, binding, etc...
+      public static readonly DependencyProperty EditableStatesProperty =
+          DependencyProperty.Register("EditableStates", typeof(ObservableCollection<StateViewModel>), typeof(PropertiesEditor), new PropertyMetadata(default(ObservableCollection<StateViewModel>)));
 
 
 
@@ -110,6 +107,19 @@ namespace LeapfrogEditor
       // Using a DependencyProperty as the backing store for EditableSystems.  This enables animation, styling, binding, etc...
       public static readonly DependencyProperty EditableSystemsProperty =
           DependencyProperty.Register("EditableSystems", typeof(ObservableCollection<CoSystemViewModel>), typeof(PropertiesEditor), new PropertyMetadata(default(ObservableCollection<CoSystemViewModel>)));
+
+
+
+      public ObservableCollection<SpawnObjectViewModel> EditableSpawnObjects
+      {
+         get { return (ObservableCollection<SpawnObjectViewModel>)GetValue(EditableSpawnObjectsProperty); }
+         set { SetValue(EditableSpawnObjectsProperty, value); }
+      }
+
+      // Using a DependencyProperty as the backing store for EditableSpawnObjects.  This enables animation, styling, binding, etc...
+      public static readonly DependencyProperty EditableSpawnObjectsProperty =
+          DependencyProperty.Register("EditableSpawnObjects", typeof(ObservableCollection<SpawnObjectViewModel>), typeof(PropertiesEditor), new PropertyMetadata(default(ObservableCollection<SpawnObjectViewModel>)));
+
 
    }
 }

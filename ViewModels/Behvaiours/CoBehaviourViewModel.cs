@@ -23,7 +23,7 @@ namespace LeapfrogEditor
 
 
       private ObservableCollection<StateViewModel> _defaultStates = new ObservableCollection<StateViewModel>();
-      private StateViewModel _defaultState = new StateViewModel(null, null, null, null, "default");
+      private StateViewModel _defaultState = null;
 
 
       #endregion
@@ -43,6 +43,7 @@ namespace LeapfrogEditor
          _steerableObjProperties = new SteerableObjectPropertiesViewModel(treeParent, parentVm, mainVm, ModelObject.SteerableObjProps);
          _breakableObjProperties = new BreakableObjectPropertiesViewModel(treeParent, parentVm, mainVm, ModelObject.BreakableObjProps);
 
+         _defaultState = new StateViewModel(_sceneProperties, parentVm, mainVm, null,  "default");
          _defaultStates.Add(_defaultState);
       }
 
