@@ -255,50 +255,50 @@ namespace LeapfrogEditor
          }
       }
 
-      public Rect BoundingBox
-      {
-         get
-         {
-            if (StateShapes == null) return new Rect(0, 0, 0, 0);
+      //public Rect BoundingBox
+      //{
+      //   get
+      //   {
+      //      if (StateShapes == null) return new Rect(0, 0, 100, 100);
 
-            if ((StateShapes.Shapes.Count == 0) && (ChildObjectsWithStates.Children.Count == 0))
-            {
-               return new Rect(0,0,0,0);
-            }
+      //      if ((StateShapes.Shapes.Count == 0) && (ChildObjectsWithStates.Children.Count == 0))
+      //      {
+      //         return new Rect(0,0,0,0);
+      //      }
 
-            BoundingBoxRect bbr = new BoundingBoxRect();
+      //      BoundingBoxRect bbr = new BoundingBoxRect();
 
-            if (StateShapes.Shapes.Count > 0)
-            {
-               foreach (object o in StateShapes.Shapes)
-               {
-                  if (o is LfShapeViewModel)
-                  {
-                     LfShapeViewModel shape = (LfShapeViewModel)o;
+      //      if (StateShapes.Shapes.Count > 0)
+      //      {
+      //         foreach (object o in StateShapes.Shapes)
+      //         {
+      //            if (o is LfShapeViewModel)
+      //            {
+      //               LfShapeViewModel shape = (LfShapeViewModel)o;
 
-                     Rect cb = shape.BoundingBox;
-                     cb.Offset(new Vector(shape.PosX, shape.PosY));
-                     bbr.AddRect(cb);
-                  }
-               }
-            }
+      //               Rect cb = shape.BoundingBox;
+      //               cb.Offset(new Vector(shape.PosX, shape.PosY));
+      //               bbr.AddRect(cb);
+      //            }
+      //         }
+      //      }
 
-            if (ChildObjectsWithStates.Children.Count > 0)
-            {
-               // TODO: Expand this to work with all Displayed ChildObjects, the uncomment
-               //foreach (ChildCOViewModel child in ChildObjectsWithStates.Children)
-               //{
-               //   Rect cb = child.BoundingBox;
-               //   cb.Offset(new Vector(child.PosX, child.PosY));
-               //   bbr.AddRect(cb);
-               //}
-            }
+      //      if (ChildObjectsWithStates.Children.Count > 0)
+      //      {
+      //         // TODO: Expand this to work with all Displayed ChildObjects, the uncomment
+      //         //foreach (ChildCOViewModel child in ChildObjectsWithStates.Children)
+      //         //{
+      //         //   Rect cb = child.BoundingBox;
+      //         //   cb.Offset(new Vector(child.PosX, child.PosY));
+      //         //   bbr.AddRect(cb);
+      //         //}
+      //      }
 
-            return bbr.BoundingBox;
-         }
-         set
-         { }
-      }
+      //      return bbr.BoundingBox;
+      //   }
+      //   set
+      //   { }
+      //}
 
       #endregion
 

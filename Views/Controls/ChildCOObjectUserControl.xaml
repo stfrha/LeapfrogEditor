@@ -9,6 +9,8 @@
              x:Name="root"
              d:DesignHeight="1000" d:DesignWidth="1000">
    <UserControl.Resources>
+      <local:BindingProxy x:Key="DataContextProxy" 
+         Data="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" />
       <local:ZoomThicknessValueConverter x:Key="ZoomThicknessValueConverter" />
       <local:BoolToVisibilityValueConverter x:Key="BoolToVisibilityValueConverter" />
       <local:MatchingStateVisibilityConverter x:Key="MatchingStateVisibilityConverter" />
@@ -25,7 +27,8 @@
          <local:RopeControl />
       </DataTemplate>
       <DataTemplate DataType="{x:Type local:LfScalableTexturePolygonViewModel}">
-         <local:ScalableTexturePolygonControl />
+         <local:ScalableTexturePolygonControl>
+         </local:ScalableTexturePolygonControl>
       </DataTemplate>
       <DataTemplate DataType="{x:Type local:LfStaticBoxedSpritePolygonViewModel}">
          <local:BoxedSpritePolygonControl />
@@ -52,6 +55,14 @@
                   <Setter Property="Canvas.Top" Value="{Binding PosY}"/>
                </Style>
             </ItemsControl.ItemContainerStyle>
+            <ItemsControl.ContextMenu>
+               <ContextMenu>
+                  <Separator />
+                  <MenuItem Header="Delete" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.DeleteThisObject, Source={StaticResource DataContextProxy}}" />
+               </ContextMenu>
+            </ItemsControl.ContextMenu>
          </ItemsControl>
       </DataTemplate>
       <DataTemplate DataType="{x:Type local:ChildCOViewModel}">
@@ -61,7 +72,15 @@
                   <Binding Path="ObjectState" />
                   <Binding Path="DispState" />
                </MultiBinding>
-            </local:ChildCOObjectUserControl.Visibility>   
+            </local:ChildCOObjectUserControl.Visibility>
+            <local:ChildCOObjectUserControl.ContextMenu>
+               <ContextMenu>
+                  <Separator />
+                  <MenuItem Header="Delete" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.DeleteThisObject, Source={StaticResource DataContextProxy}}" />
+               </ContextMenu>
+            </local:ChildCOObjectUserControl.ContextMenu>
          </local:ChildCOObjectUserControl>
       </DataTemplate>
       <!--

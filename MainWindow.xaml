@@ -64,11 +64,8 @@
                <MenuItem Header="Zoom Actual Size" />
                <MenuItem Header="Zoom In" />
                <MenuItem Header="Zoom Out" />
-
             </MenuItem>
-
-            <MenuItem Header="Swap states" Command="{Binding State}" />
-            <MenuItem Header="Create Triangles" Command="{Binding CreateTriangles}" />
+            <MenuItem Header="Generate Triangles" Command="{Binding CreateTriangles}" />
             <MenuItem Header="Show">
                <MenuItem Header="Joints" IsCheckable="True" IsChecked="{Binding ShowJoints}" />
                <MenuItem Header="Triangles" IsCheckable="True" IsChecked="{Binding ShowTriangles}" />
@@ -137,6 +134,10 @@
                               <MenuItem Header="Edit this object" 
                                  CommandParameter="{Binding}"
                                  Command="{Binding Path=Data.ChangeEditableObject, Source={StaticResource DataContextProxy}}" />
+                              <Separator />
+                              <MenuItem Header="Delete" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.DeleteThisObject, Source={StaticResource DataContextProxy}}" />
                            </ContextMenu>
                         </TextBlock.ContextMenu>
                      </TextBlock>
@@ -191,39 +192,108 @@
                   </HierarchicalDataTemplate>
                   <HierarchicalDataTemplate DataType="{x:Type local:StateShapeCollectionViewModel}"
                      ItemsSource="{Binding Shapes}">
-                     <TextBlock Margin="2"  Text="Shapes" />
+                     <TextBlock Margin="2"  Text="Shapes">
+                     </TextBlock>
                   </HierarchicalDataTemplate>
                   <HierarchicalDataTemplate DataType="{x:Type local:StateJointCollectionViewModel}"
                      ItemsSource="{Binding Joints}">
-                     <TextBlock Margin="2"  Text="Joints" />
+                     <TextBlock Margin="2"  Text="Joints">
+                     </TextBlock>
                   </HierarchicalDataTemplate>
                   <HierarchicalDataTemplate DataType="{x:Type local:StateSystemCollectionViewModel}"
                      ItemsSource="{Binding Systems}">
-                     <TextBlock Margin="2"  Text="Systems" />
+                     <TextBlock Margin="2"  Text="Systems">
+                     </TextBlock>
                   </HierarchicalDataTemplate>
                   <HierarchicalDataTemplate DataType="{x:Type local:StateChildCollectionViewModel}"
                      ItemsSource="{Binding Children}">
-                     <TextBlock Margin="2"  Text="Child Objects" />
+                     <TextBlock Margin="2"  Text="Child Objects">
+                        <TextBlock.ContextMenu>
+                           <ContextMenu>
+                              <Separator />
+                              <MenuItem Header="Add Child Object" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.AddChildObject, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </TextBlock.ContextMenu>
+                     </TextBlock>
                   </HierarchicalDataTemplate>
                   <HierarchicalDataTemplate DataType="{x:Type local:ChildObjectViewModel}"
                      ItemsSource="{Binding StateProperties}">
-                     <TextBlock Margin="2"  Text="{Binding Name}" />
+                     <TextBlock Margin="2"  Text="{Binding Name}">
+                        <TextBlock.ContextMenu>
+                           <ContextMenu>
+                              <MenuItem Header="Add Child Object for a Scene state" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.AddChildObject, Source={StaticResource DataContextProxy}}" />
+                              <Separator />
+                              <MenuItem Header="Delete" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.DeleteThisObject, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </TextBlock.ContextMenu>
+                     </TextBlock>
                   </HierarchicalDataTemplate>
                   <HierarchicalDataTemplate DataType="{x:Type local:LfShapeViewModel}" >
-                     <TextBlock Margin="2"  Text="{Binding Name}" />
+                     <TextBlock Margin="2"  Text="{Binding Name}">
+                        <TextBlock.ContextMenu>
+                           <ContextMenu>
+                              <Separator />
+                              <MenuItem Header="Delete" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.DeleteThisObject, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </TextBlock.ContextMenu>
+                     </TextBlock>
                   </HierarchicalDataTemplate>
                   <HierarchicalDataTemplate DataType="{x:Type local:LfPolygonViewModel}"
                      ItemsSource="{Binding PointVms}">
-                     <TextBlock Margin="2"  Text="{Binding Name}" />
+                     <TextBlock Margin="2"  Text="{Binding Name}" >
+                        <TextBlock.ContextMenu>
+                           <ContextMenu>
+                              <Separator />
+                              <MenuItem Header="Delete" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.DeleteThisObject, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </TextBlock.ContextMenu>
+                     </TextBlock>
                   </HierarchicalDataTemplate>
                   <HierarchicalDataTemplate DataType="{x:Type local:LfDragablePointViewModel}">
-                     <TextBlock Margin="2"  Text="{Binding Id}" />
+                     <TextBlock Margin="2"  Text="{Binding Id}">
+                        <TextBlock.ContextMenu>
+                           <ContextMenu>
+                              <Separator />
+                              <MenuItem Header="Delete" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.DeleteThisObject, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </TextBlock.ContextMenu>
+                     </TextBlock>
                   </HierarchicalDataTemplate>
                   <HierarchicalDataTemplate DataType="{x:Type local:WeldJointViewModel}" >
-                     <TextBlock Margin="2"  Text="{Binding Name}" />
+                     <TextBlock Margin="2"  Text="{Binding Name}">
+                        <TextBlock.ContextMenu>
+                           <ContextMenu>
+                              <Separator />
+                              <MenuItem Header="Delete" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.DeleteThisObject, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </TextBlock.ContextMenu>
+                     </TextBlock>
                   </HierarchicalDataTemplate>
                   <HierarchicalDataTemplate DataType="{x:Type local:CoSystemViewModel}" >
-                     <TextBlock Margin="2"  Text="{Binding Name}" />
+                     <TextBlock Margin="2"  Text="{Binding Name}">
+                        <TextBlock.ContextMenu>
+                           <ContextMenu>
+                              <Separator />
+                              <MenuItem Header="Delete" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.DeleteThisObject, Source={StaticResource DataContextProxy}}" />
+                           </ContextMenu>
+                        </TextBlock.ContextMenu>
+                     </TextBlock>
                   </HierarchicalDataTemplate>
                </Controls:MultiSelectTreeView.Resources>
             </Controls:MultiSelectTreeView>

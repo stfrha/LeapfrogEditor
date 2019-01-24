@@ -288,6 +288,61 @@ namespace LeapfrogEditor
          }
       }
 
+      public Rect BoundingBox
+      {
+         get
+         {
+            if (StateShapes == null) return new Rect(0, 0, 100, 100);
+
+            List<LfShapeViewModel> c = StateShapes.Shapes.OfType<LfShapeViewModel>().ToList();
+
+            if ((c.Count == 0) && (ChildObjectsWithStates.Children.Count == 0))
+            {
+               return new Rect(0, 0, 100, 100);
+            }
+
+            BoundingBoxRect bbr = new BoundingBoxRect();
+
+            if (StateShapes.Shapes.Count > 0)
+            {
+               foreach (object o in StateShapes.Shapes)
+               {
+                  if (o is LfShapeViewModel)
+                  {
+                     LfShapeViewModel shape = (LfShapeViewModel)o;
+
+                     Rect cb = shape.BoundingBox;
+                     cb.Offset(new Vector(shape.PosX, shape.PosY));
+                     bbr.AddRect(cb);
+                  }
+               }
+            }
+
+            if (ChildObjectsWithStates.Children.Count > 0)
+            {
+               foreach (ChildObjectViewModel child in ChildObjectsWithStates.Children)
+               {
+                  foreach (ChildCOViewModel chvm in child.StateProperties)
+                  {
+                     if (chvm.State == MainVm.GetEditableCoBehaviourState().StateName)
+                     {
+                        Rect cb = chvm.BoundingBox;
+                        cb.Offset(new Vector(chvm.PosX, chvm.PosY));
+                        bbr.AddRect(cb);
+                     }
+                  }
+               }
+            }
+
+            if (bbr.BoundingBox.IsEmpty)
+            {
+               return new Rect(0, 0, 100, 100);
+            }
+
+            return bbr.BoundingBox;
+         }
+      }
+
       #endregion
 
       #region Private Methods

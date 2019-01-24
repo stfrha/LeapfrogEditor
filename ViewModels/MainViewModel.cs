@@ -306,6 +306,11 @@ namespace LeapfrogEditor
                EditedCpVm = newCpVm;
                EditedCpVm.OnPropertyChanged("");
                OnPropertyChanged("");
+
+               Rect bb = EditedCpVm.BoundingBox;
+               ((MainWindow)System.Windows.Application.Current.MainWindow).ShowThisRect(bb);
+
+
             }
          }
       }
@@ -358,6 +363,9 @@ namespace LeapfrogEditor
             EditedCpVm.OnPropertyChanged("");
             OnPropertyChanged("");
             DeselectAll();
+
+            Rect bb = EditedCpVm.BoundingBox;
+            ((MainWindow)System.Windows.Application.Current.MainWindow).ShowThisRect(bb);
 
          }
       }
@@ -451,14 +459,12 @@ namespace LeapfrogEditor
             // lets look if any object has this object as a child, in which case we 
             // update that child (by reloading it).
             UpdateFileReferences(fcovm);
-
-
          }
       }
 
       bool CanSaveThisObjectExecute(Object parameter)
       {
-         return true;
+         return (parameter is FileCOViewModel);
       }
 
       public ICommand SaveThisObject
@@ -500,12 +506,6 @@ namespace LeapfrogEditor
          }
       }
 
-
-
-
-
-
-
       void SaveExecute(Object parameter)
       {
          // Generate Triangles before saving
@@ -516,6 +516,11 @@ namespace LeapfrogEditor
             EditedCpVm.GenerateTriangles();
 
             EditedCpVm.ModelObject.WriteToFile(fvm.FullPathFileName);
+
+            // Now, since we potentially have changed the contents of this file,
+            // lets look if any object has this object as a child, in which case we 
+            // update that child (by reloading it).
+            UpdateFileReferences(fvm);
          }
 
       }
@@ -728,97 +733,9 @@ namespace LeapfrogEditor
          }
       }
 
-      void StateExecute(Object parameter)
-      {
-         //CompoundObjectViewModel covm = EditedCpVm.StateChildObjects.Children[0];
-
-         //if (covm.Behaviour.SelectedStateIndex == 0)
-         //{
-         //   covm.Behaviour.SelectedStateIndex = 1;
-         //}
-         //else
-         //{
-         //   covm.Behaviour.SelectedStateIndex = 0;
-         //}
-      }
-
-      bool CanStateExecute(Object parameter)
-      {
-         return true;
-      }
-
-      public ICommand State
-      {
-         get
-         {
-            return new MicroMvvm.RelayCommand<Object>(parameter => StateExecute(parameter), parameter => CanStateExecute(parameter));
-         }
-      }
-
-       
-
-      //void NewStaticPolygonExecute(Object parameter)
-      //{
-      //   // Deselect all other shapes when generating a new polygon
-      //   foreach (LfShapeViewModel shape in SelectedShapes)
-      //   {
-      //      shape.IsSelected = false;
-      //   }
-
-      //   SelectedShapes.Clear();
-
-      //   _LeftClickState = LeftClickState.staticPolygon;
-      //}
-
-      //bool CanNewStaticPolygonExecute(Object parameter)
-      //{
-      //   return (SelectedChildObjects != null);
-      //}
-
-      //public ICommand NewStaticPolygon
-      //{
-      //   get
-      //   {
-      //      return new MicroMvvm.RelayCommand<Object>(parameter => NewStaticPolygonExecute(parameter), parameter => CanNewStaticPolygonExecute(parameter));
-      //   }
-      //}
-
-      //void NewDynamicPolygonExecute(Object parameter)
-      //{
-      //   // Deselect all other shapes when generating a new polygon
-      //   foreach (LfShapeViewModel shape in SelectedShapes)
-      //   {
-      //      shape.IsSelected = false;
-      //   }
-
-      //   SelectedShapes.Clear();
-
-      //   _LeftClickState = LeftClickState.dynamicPolygon;
-      //}
-
-      //bool CanNewDynamicPolygonExecute(Object parameter)
-      //{
-      //   return (SelectedChildObjects != null);
-      //}
-
-      //public ICommand NewDynamicPolygon
-      //{
-      //   get
-      //   {
-      //      return new MicroMvvm.RelayCommand<Object>(parameter => NewDynamicPolygonExecute(parameter), parameter => CanNewDynamicPolygonExecute(parameter));
-      //   }
-      //}
-
-
       void NewShapeExecute(Object parameter)
       {
-         // Deselect all other shapes when generating a new polygon
-         foreach (LfShapeViewModel shape in SelectedShapes)
-         {
-            shape.IsSelected = false;
-         }
-
-         SelectedShapes.Clear();
+         DeselectAll();
 
          string param = parameter as string;
 
@@ -944,6 +861,125 @@ namespace LeapfrogEditor
          }
       }
 
+      void DeleteThisObjectExecute(Object parameter)
+      {
+         if (parameter is WeldJointViewModel)
+         {
+            WeldJointViewModel jvm = parameter as WeldJointViewModel;
+            CompoundObjectViewModel covm = jvm.ParentVm;
+
+            covm.ModelObject.RemoveJoint(jvm.ModelObject);
+            covm.StateJoints.Joints.Remove(jvm);
+         }
+
+         if (parameter is LfShapeViewModel)
+         {
+            LfShapeViewModel svm = parameter as LfShapeViewModel;
+            CompoundObjectViewModel covm = svm.ParentVm;
+
+            covm.ModelObject.RemoveShape(svm.ModelObject);
+            covm.RemoveShape(svm);
+         }
+
+         if (parameter is ChildCOViewModel)
+         {
+            ChildCOViewModel chvm = parameter as ChildCOViewModel;
+            ChildObjectViewModel covm = chvm.TreeParent as ChildObjectViewModel;
+
+            covm.ModelObject.StateProperties.Remove(chvm.ChildStateModelObject);
+            covm.StateProperties.Remove(chvm);
+         }
+
+         if (parameter is ChildObjectViewModel)
+         {
+            ChildObjectViewModel chvm = parameter as ChildObjectViewModel;
+            CompoundObjectViewModel covm = chvm.ParentVm as CompoundObjectViewModel;
+
+            covm.ModelObject.ChildObjects.Remove(chvm.ModelObject);
+            covm.ChildObjectsWithStates.Children.Remove(chvm);
+         }
+      }
+
+      bool CanDeleteThisObjectExecute(Object parameter)
+      {
+         if (parameter == null)
+         {
+            return false;
+         }
+
+         if ((EditedCpVm != null) && ((parameter is LfShapeViewModel) || 
+            (parameter is WeldJointViewModel) || (parameter is ChildCOViewModel) ||
+            (parameter is ChildObjectViewModel)))
+         {
+            return true;
+         }
+        
+         return false;
+      }
+
+      public ICommand DeleteThisObject
+      {
+         get
+         {
+            return new MicroMvvm.RelayCommand<Object>(parameter => DeleteThisObjectExecute(parameter), parameter => CanDeleteThisObjectExecute(parameter));
+         }
+      }
+
+      void AddChildObjectExecute(Object parameter)
+      {
+         if (parameter is StateChildCollectionViewModel)
+         {
+            StateChildCollectionViewModel scvm = parameter as StateChildCollectionViewModel;
+
+            ChildObject ch = new ChildObject();
+            ChildObjectViewModel chvm = new ChildObjectViewModel(scvm, EditedCpVm, this, ch, true);
+
+            EditedCpVm.ModelObject.ChildObjects.Add(ch);
+            scvm.Children.Add(chvm);
+         }
+
+         if (parameter is ChildObjectViewModel)
+         {
+            ChildObjectViewModel chvm = parameter as ChildObjectViewModel;
+
+            TStateProperties<ChildObjectStateProperties> sp = new TStateProperties<ChildObjectStateProperties>();
+            chvm.ModelObject.StateProperties.Add(sp);
+
+            sp.Properties = new ChildObjectStateProperties();
+            sp.Properties.CompObj = new CompoundObject();
+
+            ChildCOViewModel covm = new ChildCOViewModel(chvm, EditedCpVm, this, sp);
+            covm.BuildViewModel(true);
+
+            chvm.StateProperties.Add(covm);
+         }
+      }
+
+      bool CanAddChildObjectExecute(Object parameter)
+      {
+         if (parameter == null)
+         {
+            return false;
+         }
+
+         if ((EditedCpVm != null) && ((parameter is StateChildCollectionViewModel) || (parameter is ChildObjectViewModel)))
+         {
+            return true;
+         }
+
+         return false;
+      }
+
+      public ICommand AddChildObject
+      {
+         get
+         {
+            return new MicroMvvm.RelayCommand<Object>(parameter => AddChildObjectExecute(parameter), parameter => CanAddChildObjectExecute(parameter));
+         }
+      }
+      
+
+
       void DebugHaltExecute(Object parameter)
       {
          int a = 10;
@@ -1007,7 +1043,10 @@ namespace LeapfrogEditor
             {
                return false;
             }
+         }
 
+         if ((button == MouseButton.Left) || (button == MouseButton.Right))
+         {
             // Decode target ViewModel and view object that was clicked
             switch (objectType)
             {
@@ -1246,6 +1285,10 @@ namespace LeapfrogEditor
                return false;
             }
 
+         }
+
+         if ((button == MouseButton.Left) || (button == MouseButton.Right))
+         { 
             // Decode target ViewModel and view oobject that was clicked
             switch (objectType)
             {
@@ -1281,7 +1324,10 @@ namespace LeapfrogEditor
                      shvm.ParentVm.IsSelected = true;
                   }
 
-                  return true;
+                  // If we pressed right click to select, we want to the rest
+                  // of the even handling to handle context menu, so we does
+                  // not mark the event as handled if we right click
+                  return (button != MouseButton.Right);
 
                case MouseEventObjectType.jointAnchorA:
                case MouseEventObjectType.jointAnchorB:
@@ -1298,7 +1344,10 @@ namespace LeapfrogEditor
                      jvm.IsSelected = true;
                   }
 
-                  return true;
+                  // If we pressed right click to select, we want to the rest
+                  // of the even handling to handle context menu, so we does
+                  // not mark the event as handled if we right click
+                  return (button != MouseButton.Right);
 
 
                case MouseEventObjectType.dragablePolygonBorder:
@@ -1327,7 +1376,10 @@ namespace LeapfrogEditor
                      newPoint.IsSelected = true;
                   }
 
-                  return true;
+                  // If we pressed right click to select, we want to the rest
+                  // of the even handling to handle context menu, so we does
+                  // not mark the event as handled if we right click
+                  return (button != MouseButton.Right);
 
                case MouseEventObjectType.dragableBorder:
 
@@ -2119,6 +2171,9 @@ namespace LeapfrogEditor
             EditedCpVm.OnPropertyChanged("");
             OnPropertyChanged("");
 
+            Rect bib = EditedCpVm.BoundingBox;
+            ((MainWindow)System.Windows.Application.Current.MainWindow).ShowThisRect(bib);
+
             return;
          }
 
@@ -2130,6 +2185,10 @@ namespace LeapfrogEditor
          EditedCpVm.BuildViewModel();
          EditedCpVm.OnPropertyChanged("");
          OnPropertyChanged("");
+
+         Rect bb = EditedCpVm.BoundingBox;
+         ((MainWindow)System.Windows.Application.Current.MainWindow).ShowThisRect(bb);
+
 
          //((MainWindow)System.Windows.Application.Current.MainWindow).TheTreeView.
       }

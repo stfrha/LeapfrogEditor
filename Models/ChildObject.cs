@@ -23,6 +23,7 @@ namespace LeapfrogEditor
 
       public ChildObject()
       {
+         _name = "noName";
 
       }
 

@@ -9,35 +9,145 @@
              x:Name="root"
              d:DesignHeight="1000" d:DesignWidth="1000">
    <UserControl.Resources>
+      <local:BindingProxy x:Key="DataContextProxy" 
+         Data="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" />
       <local:ZoomThicknessValueConverter x:Key="ZoomThicknessValueConverter" />
       <local:BoolToVisibilityValueConverter x:Key="BoolToVisibilityValueConverter" />
       <local:MatchingStateVisibilityConverter x:Key="MatchingStateVisibilityConverter" />
       <DataTemplate DataType="{x:Type local:WeldJointViewModel}">
-         <local:WeldJointControl />
+         <local:WeldJointControl>
+            <local:WeldJointControl.ContextMenu>
+               <ContextMenu>
+                  <MenuItem Header="Locate in browser" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.LocateInBrowser, Source={StaticResource DataContextProxy}}" />
+                  <Separator />
+                  <MenuItem Header="Delete" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.DeleteThisObject, Source={StaticResource DataContextProxy}}" />
+               </ContextMenu>
+            </local:WeldJointControl.ContextMenu>
+         </local:WeldJointControl>
       </DataTemplate>
       <DataTemplate DataType="{x:Type local:RevoluteJointViewModel}">
-         <local:RevoluteJointControl />
+         <local:RevoluteJointControl>
+            <local:RevoluteJointControl.ContextMenu>
+               <ContextMenu>
+                  <MenuItem Header="Locate in browser" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.LocateInBrowser, Source={StaticResource DataContextProxy}}" />
+                  <Separator />
+                  <MenuItem Header="Delete" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.DeleteThisObject, Source={StaticResource DataContextProxy}}" />
+               </ContextMenu>
+            </local:RevoluteJointControl.ContextMenu>
+         </local:RevoluteJointControl>
       </DataTemplate>
       <DataTemplate DataType="{x:Type local:PrismaticJointViewModel}">
-         <local:PrismaticJointControl />
+         <local:PrismaticJointControl>
+            <local:PrismaticJointControl.ContextMenu>
+               <ContextMenu>
+                  <MenuItem Header="Locate in browser" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.LocateInBrowser, Source={StaticResource DataContextProxy}}" />
+                  <Separator />
+                  <MenuItem Header="Delete" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.DeleteThisObject, Source={StaticResource DataContextProxy}}" />
+               </ContextMenu>
+            </local:PrismaticJointControl.ContextMenu>
+         </local:PrismaticJointControl>
       </DataTemplate>
       <DataTemplate DataType="{x:Type local:RopeViewModel}">
-         <local:RopeControl />
+         <local:RopeControl>
+            <local:RopeControl.ContextMenu>
+               <ContextMenu>
+                  <MenuItem Header="Locate in browser" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.LocateInBrowser, Source={StaticResource DataContextProxy}}" />
+                  <Separator />
+                  <MenuItem Header="Delete" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.DeleteThisObject, Source={StaticResource DataContextProxy}}" />
+               </ContextMenu>
+            </local:RopeControl.ContextMenu>
+         </local:RopeControl>
       </DataTemplate>
       <DataTemplate DataType="{x:Type local:LfScalableTexturePolygonViewModel}">
-         <local:ScalableTexturePolygonControl />
+         <local:ScalableTexturePolygonControl>
+            <local:ScalableTexturePolygonControl.ContextMenu>
+               <ContextMenu>
+                  <MenuItem Header="Locate in browser" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.LocateInBrowser, Source={StaticResource DataContextProxy}}" />
+                  <Separator />
+                  <MenuItem Header="Delete" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.DeleteThisObject, Source={StaticResource DataContextProxy}}" />
+               </ContextMenu>
+            </local:ScalableTexturePolygonControl.ContextMenu>
+         </local:ScalableTexturePolygonControl>
       </DataTemplate>
       <DataTemplate DataType="{x:Type local:LfStaticBoxedSpritePolygonViewModel}">
-         <local:BoxedSpritePolygonControl />
+         <local:BoxedSpritePolygonControl >
+            <local:BoxedSpritePolygonControl.ContextMenu>
+               <ContextMenu>
+                  <MenuItem Header="Locate in browser" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.LocateInBrowser, Source={StaticResource DataContextProxy}}" />
+                  <Separator />
+                  <MenuItem Header="Delete" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.DeleteThisObject, Source={StaticResource DataContextProxy}}" />
+               </ContextMenu>
+            </local:BoxedSpritePolygonControl.ContextMenu>
+         </local:BoxedSpritePolygonControl>
       </DataTemplate>
       <DataTemplate DataType="{x:Type local:LfStaticBoxViewModel}">
-         <local:RotatableBoxControl />
+         <local:RotatableBoxControl >
+            <local:RotatableBoxControl.ContextMenu>
+               <ContextMenu>
+                  <MenuItem Header="Locate in browser" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.LocateInBrowser, Source={StaticResource DataContextProxy}}" />
+                  <Separator />
+                  <MenuItem Header="Delete" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.DeleteThisObject, Source={StaticResource DataContextProxy}}" />
+               </ContextMenu>
+            </local:RotatableBoxControl.ContextMenu>
+         </local:RotatableBoxControl>
       </DataTemplate>
       <DataTemplate DataType="{x:Type local:LfSpriteBoxViewModel}">
-         <local:RotatableBoxControl />
+         <local:RotatableBoxControl >
+            <local:RotatableBoxControl.ContextMenu>
+               <ContextMenu>
+                  <MenuItem Header="Locate in browser" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.LocateInBrowser, Source={StaticResource DataContextProxy}}" />
+                  <Separator />
+                  <MenuItem Header="Delete" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.DeleteThisObject, Source={StaticResource DataContextProxy}}" />
+               </ContextMenu>
+            </local:RotatableBoxControl.ContextMenu>
+         </local:RotatableBoxControl>
       </DataTemplate>
       <DataTemplate DataType="{x:Type local:LfStaticCircleViewModel}">
-         <local:RotatableCircleControl />
+         <local:RotatableCircleControl >
+            <local:RotatableCircleControl.ContextMenu>
+               <ContextMenu>
+                  <MenuItem Header="Locate in browser" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.LocateInBrowser, Source={StaticResource DataContextProxy}}" />
+                  <Separator />
+                  <MenuItem Header="Delete" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.DeleteThisObject, Source={StaticResource DataContextProxy}}" />
+               </ContextMenu>
+            </local:RotatableCircleControl.ContextMenu>
+         </local:RotatableCircleControl>
       </DataTemplate>
       <DataTemplate DataType="{x:Type local:ChildObjectViewModel}">
          <ItemsControl ItemsSource="{Binding StateProperties}">
@@ -61,7 +171,18 @@
                   <Binding Path="ObjectState" />
                   <Binding Path="DispState" />
                </MultiBinding>
-            </local:ChildCOObjectUserControl.Visibility>   
+            </local:ChildCOObjectUserControl.Visibility>
+            <local:ChildCOObjectUserControl.ContextMenu>
+               <ContextMenu>
+                  <MenuItem Header="Locate in browser" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.LocateInBrowser, Source={StaticResource DataContextProxy}}" />
+                  <Separator />
+                  <MenuItem Header="Delete" 
+                                 CommandParameter="{Binding}"
+                                 Command="{Binding Path=Data.DeleteThisObject, Source={StaticResource DataContextProxy}}" />
+               </ContextMenu>
+            </local:ChildCOObjectUserControl.ContextMenu>
          </local:ChildCOObjectUserControl>
       </DataTemplate>
       <!--

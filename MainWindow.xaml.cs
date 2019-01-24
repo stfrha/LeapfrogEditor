@@ -111,7 +111,7 @@ namespace LeapfrogEditor
                      mouseHandlingMode = MouseHandlingMode.Zooming;
                   }
                   else */
-         if (mouseButtonDown == MouseButton.Right)
+         if (mouseButtonDown == MouseButton.Middle)
          {
             // Just a plain old left-down initiates panning mode.
             mouseHandlingMode = MouseHandlingMode.Panning;
@@ -603,5 +603,31 @@ namespace LeapfrogEditor
       {
          this.Close();
       }
+
+      public void ShowThisRect(Rect bb)
+      {
+         double w = zoomAndPanControl.ActualWidth;
+         double h = zoomAndPanControl.ActualHeight;
+
+         double desiredWidth = bb.Width * 1.1;
+         double desiredHeight = bb.Height * 1.1;
+
+         double wScale = w / desiredWidth;
+         double hScale = h / desiredHeight;
+
+         double scale = Math.Min(wScale, hScale);
+
+         double scaledActualWidth = w / scale;
+         double scaledActualHeight = h / scale;
+
+         double offsetX = bb.X + bb.Width / 2 - scaledActualWidth / 2;
+         double offsetY = bb.Y + bb.Height / 2 - scaledActualHeight / 2;
+
+         zoomAndPanControl.ContentOffsetX = offsetX + 2000;
+         zoomAndPanControl.ContentOffsetY = offsetY + 2000;
+         zoomAndPanControl.ContentScale = scale;
+
+      }
+
    }
 }

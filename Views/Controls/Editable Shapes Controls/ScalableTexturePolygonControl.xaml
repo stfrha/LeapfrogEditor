@@ -25,8 +25,7 @@
                StrokeThickness="0"
                Points="{Binding Points}"
 				   MouseDown="Shape_MouseDown"
-				   MouseUp="Shape_MouseUp"
-               >
+				   MouseUp="Shape_MouseUp">
          <Polygon.Fill>
             <ImageBrush
                      ViewportUnits="Absolute"
