@@ -45,8 +45,24 @@ namespace LeapfrogEditor
          get { return _fileName; }
          set
          {
-            _fileName = value;
-            OnPropertyChanged("FileName");
+            if (value != _fileName)
+            {
+               _fileName = value;
+               OnPropertyChanged("FileName");
+               OnPropertyChanged("FullPathFileName");
+            }
+         }
+      }
+
+      public string FullPathFileName
+      {
+         get
+         {
+            string s = @"..\..\..\leapfrog\data\" + FileName;
+            string fullPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            string fullFileName = System.IO.Path.Combine(fullPath, s);
+
+            return fullFileName;
          }
       }
 

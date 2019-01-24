@@ -41,7 +41,8 @@ namespace LeapfrogEditor
       {
          ChildStateModelObject = childStateModelObject;
 
-         int i = mainVm.GetEditableCoBehaviourStateIndex();
+         // Below we need to find the top level behavior. Must get it from the MainViewModel!
+         int i = MainVm.GetEditableCoBehaviourIndexOf(ChildStateModelObject.State);
 
          if (i < 0)
          {
@@ -95,14 +96,37 @@ namespace LeapfrogEditor
          }
          set
          {
-            if ((TreeParent != null) && (TreeParent.TreeParent != null) && (TreeParent.TreeParent is ChildObjectViewModel))
+            if ((TreeParent != null) && (TreeParent is ChildObjectViewModel))
             {
-               ChildObjectViewModel covm = TreeParent.TreeParent as ChildObjectViewModel;
+               ChildObjectViewModel covm = TreeParent as ChildObjectViewModel;
 
                covm.Name = value;
                OnPropertyChanged("Name");
+               OnPropertyChanged("DispName");
                covm.OnPropertyChanged("Name");
             }
+         }
+      }
+
+      public string DispName
+      {
+         get
+         {
+            string stateRef = "";
+
+            stateRef = " - " + State;
+
+            string fileRef = "";
+
+            if ((File != "") && (File != "undef_file.xml"))
+            {
+               fileRef = " - " + File;
+            }
+
+            return Name + stateRef + fileRef;
+         }
+         set
+         {
          }
       }
 
@@ -117,27 +141,6 @@ namespace LeapfrogEditor
             }
 
             return false;
-         }
-      }
-
-      public string ReferenceChildFileName
-      {
-         get { return ChildStateModelObject.State; }
-      }
-
-      public string RefName
-      {
-         get
-         {
-            if ((ReferenceChildFileName == "") || (ReferenceChildFileName == "undef_file.xml"))
-            {
-               return Name;
-            }
-
-            return Name + " - " + ReferenceChildFileName;
-         }
-         set
-         {
          }
       }
 
@@ -178,21 +181,20 @@ namespace LeapfrogEditor
                _selectedStateIndex = value;
             }
 
-            ChildStateModelObject.State = MainVm.GetEditableCoBehaviourStateName();
+            ChildStateModelObject.State = MainVm.EditedCpVm.Behaviour.States[_selectedStateIndex].StateName;
 
             OnPropertyChanged("");
 
             ParentVm.DeselectAllChildren();
 
+
+
             CompoundObjectViewModel p = ParentVm;
 
-            while (p != null)
+            while ((p != null) && (p is ChildCOViewModel))
             {
-               if (p is ChildCOViewModel)
-               {
-                  p.OnPropertyChanged("BoundingBox");
-                  p = p.ParentVm;
-               }
+               p.OnPropertyChanged("BoundingBox");
+               p = p.ParentVm;
             }
          }
       }

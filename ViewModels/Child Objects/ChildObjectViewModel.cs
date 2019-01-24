@@ -86,6 +86,12 @@ namespace LeapfrogEditor
             {
                TreeParent.OnPropertyChanged("");
             }
+
+            foreach (ChildCOViewModel covm in StateProperties)
+            {
+               covm.OnPropertyChanged("Name");
+               covm.OnPropertyChanged("DispName");
+            }
          }
       }
 

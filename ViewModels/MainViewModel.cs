@@ -77,8 +77,6 @@ namespace LeapfrogEditor
       // Object VM that is being edited
       private CompoundObjectViewModel _editedCpVm;
 
-      private ObservableCollection<TreeViewViewModel> _selectedItems = new ObservableCollection<TreeViewViewModel>();
-
       private ObservableCollection<ChildObjectViewModel> _selectedChildObjects = new ObservableCollection<ChildObjectViewModel>();
       private ObservableCollection<ChildCOViewModel> _selectedChildObjectStateProperties = new ObservableCollection<ChildCOViewModel>();
       private ObservableCollection<LfShapeViewModel> _selectedShapes = new ObservableCollection<LfShapeViewModel>();
@@ -146,34 +144,6 @@ namespace LeapfrogEditor
          set { _fileCollectionViewModel = value; }
       }
 
-      //public ChildObject MyChildObject
-      //{
-      //   get { return _myChildObject; }
-      //   set { _myChildObject = value; }
-      //}
-
-      //public TStateProperties<ChildObjectStateProperties> MyStateProp
-      //{
-      //   get { return _myStateProp; }
-      //   set { _myStateProp = value; }
-      //}
-
-      //public CompoundObject MyCP
-      //{
-      //   get { return _myCP; }
-      //   set { _myCP = value; }
-      //}
-
-      //public CompoundObjectViewModel MyCpVm
-      //{
-      //   get { return _myCpVm; }
-      //   set
-      //   {
-      //      _myCpVm = value;
-      //      OnPropertyChanged("MyCpVm");
-      //   }
-      //}
-
       public CompoundObjectViewModel EditedCpVm
       {
          get { return _editedCpVm; }
@@ -198,13 +168,6 @@ namespace LeapfrogEditor
             return EditedCpVm.Name;
          }
       }
-
-      public ObservableCollection<TreeViewViewModel> SelectedItems
-      {
-         get { return _selectedItems; }
-         set { _selectedItems = value; }
-      }
-
 
       public ObservableCollection<ChildObjectViewModel> SelectedChildObjects
       {
@@ -441,7 +404,7 @@ namespace LeapfrogEditor
          {
             ChildCOViewModel covm = parameter as ChildCOViewModel;
 
-            OpenFileToEdit(covm.ReferenceChildFileName);
+            OpenFileToEdit(covm.File);
          }
       }
 
@@ -482,7 +445,7 @@ namespace LeapfrogEditor
             // Generate Triangles before saving
             fcovm.GenerateTriangles();
 
-            fcovm.ModelObject.WriteToFile(fcovm.FileName);
+            fcovm.ModelObject.WriteToFile(fcovm.FullPathFileName);
 
             // Now, since we potentially have changed the contents of this file,
             // lets look if any object has this object as a child, in which case we 
@@ -552,7 +515,7 @@ namespace LeapfrogEditor
 
             EditedCpVm.GenerateTriangles();
 
-            EditedCpVm.ModelObject.WriteToFile(fvm.FileName);
+            EditedCpVm.ModelObject.WriteToFile(fvm.FullPathFileName);
          }
 
       }
@@ -584,13 +547,13 @@ namespace LeapfrogEditor
                // Generate Triangles before saving
                EditedCpVm.GenerateTriangles();
                fvm.FileName = sfd.FileName;
-               EditedCpVm.ModelObject.WriteToFile(fvm.FileName);
+               EditedCpVm.ModelObject.WriteToFile(fvm.FullPathFileName);
             }
 
 
             EditedCpVm.GenerateTriangles();
 
-            EditedCpVm.ModelObject.WriteToFile(fvm.FileName);
+            EditedCpVm.ModelObject.WriteToFile(fvm.FullPathFileName);
          }
 
 
@@ -1857,95 +1820,6 @@ namespace LeapfrogEditor
          }
       }
 
-      public void HandleSelectionChanged()
-      {
-         // Here we assess the current selection and updates 
-         // the selection collection of different types
-
-         SelectedChildObjects.Clear();
-         SelectedChildObjectStateProperties.Clear();
-         SelectedShapes.Clear();
-         SelectedJoints.Clear();
-         SelectedSystems.Clear();
-         SelectedPoints.Clear();
-         EditableSpawnObject = null;
-
-         foreach (TreeViewViewModel tvvm in SelectedItems)
-         {
-            if (tvvm is ChildObjectViewModel)
-            {
-               ChildObjectViewModel covm = tvvm as ChildObjectViewModel;
-
-               if (covm.ParentVm == EditedCpVm)
-               {
-                  // This is the child object of the object being edited, 
-                  SelectedChildObjects.Add(covm);
-               }
-            }
-
-            if (tvvm is ChildCOViewModel)
-            {
-               ChildCOViewModel cospvm = tvvm as ChildCOViewModel;
-
-               if (cospvm.ParentVm == EditedCpVm)
-               {
-                  // This is the child object of the object being edited, 
-                  SelectedChildObjectStateProperties.Add(cospvm);
-               }
-            }
-
-            if (tvvm is LfShapeViewModel)
-            {
-               LfShapeViewModel shvm = tvvm as LfShapeViewModel;
-
-               if (shvm.ParentVm == EditedCpVm)
-               {
-                  // This is the shape of the object being edited, 
-                  SelectedShapes.Add(shvm);
-               }
-            }
-
-            if (tvvm is WeldJointViewModel)
-            {
-               WeldJointViewModel jvm = tvvm as WeldJointViewModel;
-
-               if (jvm.ParentVm == EditedCpVm)
-               {
-                  // This is the shape of the object being edited, 
-                  SelectedJoints.Add(jvm);
-               }
-            }
-
-            if (tvvm is CoSystemViewModel)
-            {
-               CoSystemViewModel svm = tvvm as CoSystemViewModel;
-
-               if (svm.ParentVm == EditedCpVm)
-               {
-                  // This is the shape of the object being edited, 
-                  SelectedSystems.Add(svm);
-               }
-            }
-
-            if (tvvm is SpawnObjectViewModel)
-            {
-               EditableSpawnObject = tvvm as SpawnObjectViewModel;
-            }
-
-
-            if (tvvm is LfDragablePointViewModel)
-            {
-               LfDragablePointViewModel dpvm = tvvm as LfDragablePointViewModel;
-
-               if (dpvm.ParentVm == EditedCpVm)
-               {
-                  // This is the shape of the object being edited, 
-                  SelectedPoints.Add(dpvm);
-               }
-            }
-         }
-      }
-
       public bool AmISelectable(IParentInterface me)
       {
          return (me.ParentVm == EditedCpVm);
@@ -1983,6 +1857,126 @@ namespace LeapfrogEditor
          }
 
          return "#Error should not reach here#";
+      }
+
+      public int GetEditableCoBehaviourIndexOf(string state)
+      {
+         return EditedCpVm.Behaviour.States.IndexOf(EditedCpVm.Behaviour.FindStateVM(state));
+      }
+
+      public void BuildSelectionCollections()
+      {
+         // Here we assess the current selection and updates 
+         // the selection collection of different types
+
+         SelectedChildObjects.Clear();
+         SelectedChildObjectStateProperties.Clear();
+         SelectedShapes.Clear();
+         SelectedJoints.Clear();
+         SelectedSystems.Clear();
+         SelectedPoints.Clear();
+         EditableSpawnObject = null;
+
+         foreach (TreeViewViewModel tvvm in EditedCpVm.ChildObjectsWithStates.Children)
+         {
+            if (tvvm is ChildObjectViewModel)
+            {
+               ChildObjectViewModel covm = tvvm as ChildObjectViewModel;
+
+               if (covm.ParentVm == EditedCpVm)
+               {
+                  // This is the child object of the object being edited, 
+                  if (covm.IsSelected)
+                  {
+                     SelectedChildObjects.Add(covm);
+                  }
+
+                  foreach (ChildCOViewModel chvm in covm.StateProperties)
+                  {
+                     if (chvm is ChildCOViewModel)
+                     {
+                        ChildCOViewModel cospvm = chvm as ChildCOViewModel;
+
+                        if (cospvm.IsSelected)
+                        {
+                           SelectedChildObjectStateProperties.Add(cospvm);
+                        }
+                     }
+                  }
+               }
+            }
+         }
+
+         foreach (object o in EditedCpVm.StateShapes.Shapes)
+         {
+            if (o is LfShapeViewModel)
+            {
+               LfShapeViewModel shape = o as LfShapeViewModel;
+
+               if (shape.ParentVm == EditedCpVm)
+               {
+                  // This is the shape of the object being edited, 
+                  if (shape.IsSelected)
+                  {
+                     SelectedShapes.Add(shape);
+                  }
+
+                  if (shape is LfPolygonViewModel)
+                  {
+                     LfPolygonViewModel polygon = shape as LfPolygonViewModel;
+
+                     foreach (LfDragablePointViewModel dp in polygon.PointVms)
+                     {
+                        if (dp.IsSelected)
+                        {
+                           // This is the shape of the object being edited, 
+                           SelectedPoints.Add(dp);
+                        }
+                     }
+                  }
+               }
+            }
+         }
+
+         foreach (object o in EditedCpVm.StateJoints.Joints)
+         {
+            if (o is WeldJointViewModel)
+            {
+               WeldJointViewModel joint = o as WeldJointViewModel;
+
+               if (joint.ParentVm == EditedCpVm)
+               {
+                  if (joint.IsSelected)
+                  {
+                     // This is the shape of the object being edited, 
+                     SelectedJoints.Add(joint);
+                  }
+               }
+            }
+         }
+
+         foreach (object o in EditedCpVm.StateSystems.Systems)
+         {
+            if (o is CoSystemViewModel)
+            {
+               CoSystemViewModel system = o as CoSystemViewModel;
+
+               if (system.ParentVm == EditedCpVm)
+               {
+                  if (system.IsSelected)
+                  {
+                     // This is the shape of the object being edited, 
+                     SelectedSystems.Add(system);
+                  }
+               }
+            }
+         }
+
+
+         //if (tvvm is SpawnObjectViewModel)
+         //{
+         //   EditableSpawnObject = tvvm as SpawnObjectViewModel;
+         //}
       }
 
 
@@ -2042,11 +2036,11 @@ namespace LeapfrogEditor
       {
          // Loop like this since deselecting points will alter
          // the collection.
-         for (int i = SelectedItems.Count - 1; i >= 0; i--)
+         for (int i = SelectedPoints.Count - 1; i >= 0; i--)
          {
-            if (SelectedItems[i] is LfDragablePointViewModel)
+            if (SelectedPoints[i] is LfDragablePointViewModel)
             {
-               LfDragablePointViewModel ptvm = SelectedItems[i] as LfDragablePointViewModel;
+               LfDragablePointViewModel ptvm = SelectedPoints[i] as LfDragablePointViewModel;
 
                ptvm.IsSelected = false;
             }
@@ -2081,6 +2075,8 @@ namespace LeapfrogEditor
                   // If any child within this file has a reference to the 
                   // supplied object, we relaod the whole file
                   FileCollectionViewModel[i] = OpenFile(FileCollectionViewModel[i].FileName);
+                  FileCollectionViewModel[i].BuildViewModel();
+
                }
             }
          }
@@ -2106,7 +2102,6 @@ namespace LeapfrogEditor
          newChildObject.Name = fileName;
 
          FileCOViewModel newCpVm = new FileCOViewModel(null, null, this, fileName, newCP);
-         newCpVm.BuildViewModel();
 
          return newCpVm;
 
@@ -2123,6 +2118,7 @@ namespace LeapfrogEditor
             EditedCpVm = fcovm;
             EditedCpVm.OnPropertyChanged("");
             OnPropertyChanged("");
+
             return;
          }
 
@@ -2131,6 +2127,7 @@ namespace LeapfrogEditor
          FileCollectionViewModel.Add(newCpVm);
 
          EditedCpVm = newCpVm;
+         EditedCpVm.BuildViewModel();
          EditedCpVm.OnPropertyChanged("");
          OnPropertyChanged("");
 

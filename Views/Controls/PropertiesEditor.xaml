@@ -56,7 +56,7 @@
          <ItemsControl.Resources>
             <DataTemplate DataType="{x:Type local:ChildCOViewModel}">
                <local:ChildObjectStatePropEditor
-                  Headline="{Binding Converter={StaticResource StatePropertiesHeadlineConverter}}"/>
+                  Headline="{Binding Name, Converter={StaticResource StatePropertiesHeadlineConverter}}"/>
             </DataTemplate>
          </ItemsControl.Resources>
          <ItemsControl.ItemsPanel>

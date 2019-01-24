@@ -31,7 +31,7 @@ namespace LeapfrogEditor
          _parentVm = parentVm;
          _mainVm = mainVm;
          _isSelected = false;
-         _isExpanded = true;
+         _isExpanded = false;
          _isEnabled = enabled;
       }
 
@@ -68,6 +68,7 @@ namespace LeapfrogEditor
 
                _isSelected = value;
                OnPropertyChanged("IsSelected");
+               MainVm.BuildSelectionCollections();
 
             }
          }
@@ -78,12 +79,15 @@ namespace LeapfrogEditor
          get { return _isExpanded; }
          set
          {
-            _isExpanded = value;
-            OnPropertyChanged("IsExpanded");
-
-            if (_isExpanded && _treeParent != null)
+            if (_isExpanded != value)
             {
-               _treeParent.IsExpanded = true;
+               if (value && _treeParent != null)
+               {
+                  _treeParent.IsExpanded = true;
+               }
+
+               _isExpanded = value;
+               OnPropertyChanged("IsExpanded");
             }
          }
       }

@@ -472,69 +472,6 @@ namespace LeapfrogEditor
          return schcvm;
       }
 
-      //private ObservableCollection<ObservableCollection<CompoundObjectViewModel>> SetStateChildren(CompoundObject co)
-      //// This method creates the collection of StateChildCollectionViewModels for each state of the
-      //// CompoundObject. The StateChildCollectionViewModel for each state will hold the ChildObject that
-      //// mathches the state. However, if there is no match of the state, and the ChildObject has another
-      //// state that is "default", this is included in the state. If the ChildObject does not have a 
-      //// default state, either, it is not included in the state.
-      //// The default state is compulsory for all CompoundObjects. 
-      //// This method does not create and CompoundObjectViewModels since we want the same instances of these
-      //// in both the ChildObject collections.
-      //// 
-      //{
-      //   ObservableCollection<ObservableCollection<CompoundObjectViewModel>> stateChildrenCollection = new ObservableCollection<ObservableCollection<CompoundObjectViewModel>>();
-
-      //   // We iterate the list of states first
-      //   foreach (StateViewModel stateVm in Behaviour.States)
-      //   {
-
-      //      ObservableCollection<CompoundObjectViewModel> stateChildren = new ObservableCollection<CompoundObjectViewModel>();
-
-      //      bool matchedState = false;
-
-      //      //... then we iterate all ChildObjects of the CO and look if any of them
-      //      // has a matching state. 
-      //      foreach (ChildObject cho in co.ChildObjects)
-      //      {
-      //         // Now we iterate all state properties of this ChildObject and process it
-      //         // if the state of the ChildObject matches the current stateStr
-      //         foreach (TStateProperties<ChildObjectStateProperties> sp in cho.StateProperties)
-      //         {
-      //            if (sp.State == stateVm.StateName)
-      //            {
-      //               // Now process this ChildObject and insert this ChildObject in this state
-      //               CompoundObjectViewModel covm = FindCompoundObjectViewModelInChildrenObjects(sp.Properties);
-      //               covm.BuildViewModel(cho);
-      //               stateChildren.Add(covm);
-
-      //               matchedState = true;
-      //            }
-      //         }
-
-      //         if (!matchedState)
-      //         {
-      //            // There was no match, now we iterate all state properties again and process it
-      //            // if the state of the ChildObject is "default"
-      //            foreach (TStateProperties<ChildObjectStateProperties> sp in cho.StateProperties)
-      //            {
-      //               if (sp.State == "default")
-      //               {
-      //                  // Now process this ChildObject and insert this ChildObject in this state
-      //                  CompoundObjectViewModel covm = FindCompoundObjectViewModelInChildrenObjects(sp.Properties);
-      //                  covm.BuildViewModel(cho);
-      //                  stateChildren.Add(covm);
-      //               }
-      //            }
-      //         }
-      //      }
-
-      //      stateChildrenCollection.Add(stateChildren);
-      //   }
-
-      //   return stateChildrenCollection;
-      //}
-
       #endregion
 
       #region Public Methods

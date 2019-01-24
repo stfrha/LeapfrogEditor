@@ -603,10 +603,5 @@ namespace LeapfrogEditor
       {
          this.Close();
       }
-
-      private void HandleSelectionChanged(object sender, EventArgs e)
-      {
-         myMainViewModel.HandleSelectionChanged();
-      }
    }
 }

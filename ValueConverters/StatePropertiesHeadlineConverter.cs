@@ -22,6 +22,13 @@ namespace LeapfrogEditor
             return s;
          }
 
+         if (value is string)
+         {
+            string s = (string)value + " State Properties";
+
+            return s;
+         }
+
          return null;
 
       }

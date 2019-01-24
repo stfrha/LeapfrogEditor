@@ -238,10 +238,19 @@ namespace LeapfrogEditor
             {
                LfDragablePointViewModel origVertex = (LfDragablePointViewModel)values[2];
 
+               double shapeAngle = 0;
+
+               if (origVertex.Parent is LfShapeViewModel)
+               {
+                  LfShapeViewModel shape = origVertex.Parent as LfShapeViewModel;
+
+                  shapeAngle = shape.Angle;
+               }
+
                Point currP = TextureBorderHelperClass.GetOriginalPoint(origVertex);
                Point prevP = TextureBorderHelperClass.GetPreviousPoint(origVertex);
                double angle = TextureBorderHelperClass.GetAngle(origVertex, currP, prevP);
-               return angle / Math.PI * 180;
+               return (angle - shapeAngle) / Math.PI * 180;
             }
          }
 
