@@ -81,10 +81,10 @@ namespace LeapfrogEditor
          {
             if (_isExpanded != value)
             {
-               if (value && _treeParent != null)
-               {
-                  _treeParent.IsExpanded = true;
-               }
+               //if (value && _treeParent != null)
+               //{
+               //   _treeParent.IsExpanded = true;
+               //}
 
                _isExpanded = value;
                OnPropertyChanged("IsExpanded");

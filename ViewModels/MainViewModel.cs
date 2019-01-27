@@ -1168,7 +1168,47 @@ namespace LeapfrogEditor
          }
       }
 
-      
+      void LocateInBrowserExecute(Object parameter)
+      {
+         if (parameter is TreeViewViewModel)
+         {
+            TreeViewViewModel tvvm = parameter as TreeViewViewModel;
+            TreeViewViewModel originalTvvm = tvvm;
+
+            tvvm.IsSelected = false;
+
+            List<TreeViewViewModel> expandBransch = new List<TreeViewViewModel>();
+
+            while (tvvm.TreeParent != null)
+            {
+               expandBransch.Add(tvvm.TreeParent);
+               tvvm = tvvm.TreeParent;
+            }
+
+            for (int i = expandBransch.Count - 1; i>= 0; i--)
+            {
+               expandBransch[i].IsExpanded = true;
+            }
+
+
+            originalTvvm.IsSelected = true;
+         }
+      }
+
+      bool CanLocateInBrowserExecute(Object parameter)
+      {
+         return true;
+      }
+
+      public ICommand LocateInBrowser
+      {
+         get
+         {
+            return new MicroMvvm.RelayCommand<Object>(parameter => LocateInBrowserExecute(parameter), parameter => CanLocateInBrowserExecute(parameter));
+         }
+      }
+
+
 
 
       void DebugHaltExecute(Object parameter)
@@ -1983,13 +2023,19 @@ namespace LeapfrogEditor
                   localClickPoint = (Point)(clickPoint - shapeOrigo);
 
                   LfDragablePointViewModel newPoint = newPolygon.AddPoint(localClickPoint);
-                  foreach (LfDragablePointViewModel selpoint in _selectedPoints)
-                  {
-                     selpoint.IsSelected = false;
-                  }
-                  _selectedPoints.Clear();
 
-                  _selectedPoints.Add(newPoint);
+                  // Loop like this since deselecting points will alter
+                  // the collection.
+                  for (int i = SelectedPoints.Count - 1; i >= 0; i--)
+                  {
+                     if (SelectedPoints[i] is LfDragablePointViewModel)
+                     {
+                        LfDragablePointViewModel ptvm = SelectedPoints[i] as LfDragablePointViewModel;
+
+                        ptvm.IsSelected = false;
+                     }
+                  }
+
                   newPoint.IsSelected = true;
                }
 
